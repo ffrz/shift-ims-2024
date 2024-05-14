@@ -1,6 +1,6 @@
 <?php
 use App\Models\ServiceOrder;
-$title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
+$title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
 ?>
 @extends('admin._layouts.default', [
     'title' => $title,
@@ -11,17 +11,18 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
 
 @section('content')
   <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user-groups/edit/' . (int) $item->id) }}">
+    <form class="form-horizontal quick-form" method="POST"
+      action="{{ url('admin/service-order/edit/' . (int) $item->id) }}">
       @csrf
       <input type="hidden" name="id" value="{{ $item->id }}">
 
       @include('admin._components.card-header', ['title' => $title])
 
       <div class="card-body">
-        <h4>Info Penerimaan</h4>
+        <h4>Info Order</h4>
         <div class="form-row">
-          <div class="form-group col-md-4">
-            <label for="date_received">Tanggal:</label>
+          <div class="form-group col-md-3">
+            <label for="date_received">Tanggal Diterima:</label>
             <input type="date" class="form-control @error('date_received') is-invalid @enderror" autofocus
               id="date_received" name="date_received" value="{{ old('date_received', $item->date_received) }}">
             @error('date_received')
@@ -30,7 +31,17 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
+            <label for="date_taken">Tanggal Diambil:</label>
+            <input type="date" class="form-control @error('date_taken') is-invalid @enderror" autofocus id="date_taken"
+              name="date_taken" value="{{ old('date_taken', $item->date_taken) }}">
+            @error('date_taken')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group col-md-3">
             <label for="order_status">Status:</label>
             <select class="custom-select select2 form-control" id="order_status" name="order_status">
               <option value="{{ ServiceOrder::ORDER_STATUS_ACTIVE }}"
@@ -41,7 +52,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
                 {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
             </select>
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
             <label for="id">#No Order:</label>
             <input type="text" class="form-control" id="id" name=""
               value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
@@ -128,10 +139,10 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
             @enderror
           </div>
           <div class="form-group col-md-3">
-            <label for="serial">SN / IMEI:</label>
-            <input type="text" class="form-control @error('serial') is-invalid @enderror" id="serial"
-              placeholder="SN" name="serial" value="{{ old('serial', $item->serial) }}">
-            @error('serial')
+            <label for="device_sn">SN / IMEI:</label>
+            <input type="text" class="form-control @error('device_sn') is-invalid @enderror" id="device_sn"
+              placeholder="SN" name="device_sn" value="{{ old('device_sn', $item->device_sn) }}">
+            @error('device_sn')
               <span class="text-danger">
                 {{ $message }}
               </span>
@@ -250,8 +261,8 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Service Order';
         <h4 class="mt-3"><label for="notes">Catatan:</label></h4>
         <div class="form-row">
           <div class="form-group col-md-12">
-            <textarea class="form-control @error('textarea') is-invalid @enderror" id="textarea" name="textarea">{{ old('textarea', $item->textarea) }}</textarea>
-            @error('textarea')
+            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes">{{ old('notes', $item->notes) }}</textarea>
+            @error('notes')
               <span class="text-danger">
                 {{ $message }}
               </span>

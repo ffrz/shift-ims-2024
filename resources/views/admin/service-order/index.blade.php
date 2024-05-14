@@ -1,7 +1,7 @@
 <?php use App\Models\ServiceOrder; ?>
 
 @extends('admin._layouts.default', [
-    'title' => 'Service Order',
+    'title' => 'Order Servis',
     'menu_active' => 'service',
     'nav_active' => 'service-order',
 ])

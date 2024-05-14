@@ -30,7 +30,7 @@ class ServiceOrder extends Model
      */
     protected $fillable = [
         'customer_name', 'customer_contact', 'customer_address',
-        'device_type', 'device', 'equipments', 'devie_sn', 'problems', 'actions',
+        'device_type', 'device', 'equipments', 'device_sn', 'problems', 'actions',
         'date_checked', 'date_work_begin', 'date_completed', 'service_status',
         'order_status', ' date_received', 'date_completed', 'date_taken',
         'down_payment', 'estimated_cost', 'total_cost', 'payment_status',

@@ -35,7 +35,7 @@ if (!isset($menu_active)) {
               <a href="{{ url('/admin/service-order') }}"
                 class="nav-link {{ $nav_active == 'service' ? 'active' : '' }}">
                 <i class="nav-icon fas fa-warehouse"></i>
-                <p>Order</p>
+                <p>Order Servis</p>
               </a>
             </li>
           </ul>
