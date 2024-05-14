@@ -13,7 +13,7 @@ class UserGroupController extends Controller
     public function index()
     {
         $items = UserGroup::orderBy('name', 'asc')->get();
-        return view('admin.user-groups.index', compact('items'));
+        return view('admin.user-group.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)
@@ -45,15 +45,16 @@ class UserGroupController extends Controller
                 'Grup pengguna ' . e($group->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
-            
+
             return redirect('admin/user-groups')->with('info', 'Grup pengguna telah disimpan.');
         }
 
-        return view('admin.user-groups.edit', compact('group'));
+        return view('admin.user-group.edit', compact('group'));
     }
 
     public function delete($id)
     {
+        // fix me, notif kalo grup ga bisa dihapus
         if (!$group = UserGroup::find($id))
             $message = 'Grup pengguna tidak ditemukan.';
         else if ($group->delete($id)) {
@@ -66,6 +67,6 @@ class UserGroupController extends Controller
             );
         }
 
-        return redirect('admin/user-groups')->with('info', $message);
+        return redirect('admin/user-group')->with('info', $message);
     }
 }

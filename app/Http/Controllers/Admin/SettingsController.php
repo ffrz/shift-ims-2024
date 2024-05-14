@@ -19,7 +19,7 @@ class SettingsController extends Controller
             'business_phone' => Setting::value('app.business_phone', ''),
             'business_owner' => Setting::value('app.business_owner', ''),
         ];
-        return view('admin.settings.edit', compact('data'));
+        return view('admin.setting.edit', compact('data'));
     }
 
     public function save(Request $request)
@@ -50,6 +50,6 @@ class SettingsController extends Controller
 
         SysEvent::log(SysEvent::SETTINGS, 'Change Settings', 'Pengaturan telah diperbarui.', $data);
 
-        return redirect('admin/settings')->with('info', 'Pengaturan telah disimpan.');
+        return redirect('admin/setting')->with('info', 'Pengaturan telah disimpan.');
     }
 }

@@ -114,10 +114,6 @@ function current_user()
     return session()->get('current_user');
 }
 
-function format_service_order_code($id) {
-    return 'SVC-' . str_pad($id, 5, '0', STR_PAD_LEFT);;
-}
-
 function format_datetime($date, $format = 'dd-MM-yyyy HH:mm:ss', $locale = null) {
     if (!$date) {
         return '?';

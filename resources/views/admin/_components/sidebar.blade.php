@@ -21,6 +21,26 @@ if (!isset($menu_active)) {
             <p>Dashboard</p>
           </a>
         </li>
+
+        <li class="nav-item {{ $menu_active == 'service' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $menu_active == 'service' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-screwdriver-wrench"></i>
+            <p>
+              Servis
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('/admin/service-order') }}"
+                class="nav-link {{ $nav_active == 'service' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-warehouse"></i>
+                <p>Order</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
         @if (Auth::user()->is_admin)
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ $menu_active == 'system' ? 'active' : '' }}">
@@ -32,7 +52,8 @@ if (!isset($menu_active)) {
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('/admin/sys-events') }}" class="nav-link {{ $nav_active == 'sys-events' ? 'active' : '' }}">
+                <a href="{{ url('/admin/sys-events') }}"
+                  class="nav-link {{ $nav_active == 'sys-events' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-file-waveform"></i>
                   <p>Log Aktivitas</p>
                 </a>

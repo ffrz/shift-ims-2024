@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $faker = \Faker\Factory::create('id_ID');
         DB::beginTransaction();
         $pw = Hash::make('12345');
-        for ($i = 3; $i <= 10000; $i++) {
+        for ($i = 3; $i <= 100; $i++) {
             User::insert([
                 'id' => $i,
                 'username' => 'user' . $i,

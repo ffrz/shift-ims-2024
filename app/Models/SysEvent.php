@@ -12,6 +12,7 @@ class SysEvent extends Model
     public const AUTHENTICATION = 'Authentication';
     public const USER_MANAGEMENT = 'User Management';
     public const USERGROUP_MANAGEMENT = 'User Group Management';
+    public const SERVICEORDER_MANAGEMENT = 'Service Order Management';
     public const SETTINGS = 'Settings';
 
     protected $casts = [

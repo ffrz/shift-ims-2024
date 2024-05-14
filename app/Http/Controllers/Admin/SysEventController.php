@@ -14,19 +14,19 @@ class SysEventController extends Controller
         $q->orderBy('id', 'desc');
         $items = $q->get();
         
-        return view('admin.sys-events.index', compact('items'));
+        return view('admin.sys-event.index', compact('items'));
     }
 
     public function show(Request $request, $id = 0)
     {
         $item = SysEvent::findOrFail($id);
-        return view('admin.sys-events.show', compact('item'));
+        return view('admin.sys-event.show', compact('item'));
     }
 
     public function delete(Request $request)
     {
         $item = SysEvent::findOrFail($request->post('id', 0));
         $item->delete();
-        return redirect('admin/sys-events')->with('info', 'Rekaman log aktivitas <b>#' . $item->id . '</b> telah dihapus.');
+        return redirect('admin/sys-event')->with('info', 'Rekaman log aktivitas <b>#' . $item->id . '</b> telah dihapus.');
     }
 }
