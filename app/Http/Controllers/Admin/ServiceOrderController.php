@@ -56,6 +56,12 @@ class ServiceOrderController extends Controller
         return view('admin.service-order.edit', compact('item', 'device_types', 'devices'));
     }
 
+    public function detail($id)
+    {
+        $item = ServiceOrder::find($id);
+        return view('admin.service-order.detail', compact('item'));
+    }
+
     public function edit(Request $request, $id = 0)
     {
         if ($id) {

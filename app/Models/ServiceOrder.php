@@ -37,6 +37,11 @@ class ServiceOrder extends Model
         'technician', 'notes'
     ];
 
+    public function orderId()
+    {
+        return self::formatOrderId($this->id);
+    }
+
     static function formatOrderId($id)
     {
         return 'SVC-' . str_pad($id, 6, '0', STR_PAD_LEFT);
@@ -55,10 +60,10 @@ class ServiceOrder extends Model
     {
         switch ($status) {
             case self::SERVICE_STATUS_RECEIVED: return 'Diterima';
-            case self::SERVICE_STATUS_CHECKED: return 'Diperiksa';
-            case self::SERVICE_STATUS_WORKED: return 'Dikerjakan';
-            case self::SERVICE_STATUS_SUCCESS: return 'Sukses';
-            case self::SERVICE_STATUS_FAILED: return 'Gagal';
+            case self::SERVICE_STATUS_CHECKED: return 'Sedang Diperiksa';
+            case self::SERVICE_STATUS_WORKED: return 'Sedang Dikerjakan';
+            case self::SERVICE_STATUS_SUCCESS: return 'Selesai: Sukses';
+            case self::SERVICE_STATUS_FAILED: return 'Selesai: Gagal';
         }
 
         throw new Exception("Unknown service status.");
