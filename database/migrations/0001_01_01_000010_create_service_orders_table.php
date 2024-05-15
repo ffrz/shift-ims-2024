@@ -36,7 +36,6 @@ return new class extends Migration
             // order
             $table->unsignedTinyInteger('order_status');
             $table->date('date_received');
-            $table->date('date_completed')->nullable()->default(null);
             $table->date('date_taken')->nullable()->default(null);
 
             // // cost and payment
