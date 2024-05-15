@@ -12,6 +12,7 @@ class ServiceOrder extends Model
 
     const ORDER_STATUS_ACTIVE = 0;
     const ORDER_STATUS_COMPLETED = 1;
+    const ORDER_STATUS_CANCELED = 2;
 
     const SERVICE_STATUS_RECEIVED = 0;
     const SERVICE_STATUS_CHECKED = 1;
@@ -20,7 +21,7 @@ class ServiceOrder extends Model
     const SERVICE_STATUS_FAILED = 4;
 
     const PAYMENT_STATUS_UNPAID = 0;
-    //const PAYMENT_STATUS_PARTIALLY_PAID = 1;
+    const PAYMENT_STATUS_PARTIALLY_PAID = 1;
     const PAYMENT_STATUS_FULLY_PAID = 2;
     
     /**
@@ -52,6 +53,7 @@ class ServiceOrder extends Model
         switch ($status) {
             case self::ORDER_STATUS_ACTIVE: return 'Aktif';
             case self::ORDER_STATUS_COMPLETED: return 'Selesai';
+            case self::ORDER_STATUS_CANCELED: return 'Dibatalkan';
         }
         throw new Exception("Unknown order status.");
     }
@@ -72,8 +74,8 @@ class ServiceOrder extends Model
     static function formatPaymentStatus($status)
     {
         switch ($status) {
-            case self::PAYMENT_STATUS_UNPAID: return 'Belum Lunas';
-            // case self::PAYMENT_STATUS_PARTIALLY_PAID: return 'Belum Lunas';
+            case self::PAYMENT_STATUS_UNPAID: return 'Belum Dibayar';
+            case self::PAYMENT_STATUS_PARTIALLY_PAID: return 'Dibayar Sebagian';
             case self::PAYMENT_STATUS_FULLY_PAID: return 'Lunas';
         }
 

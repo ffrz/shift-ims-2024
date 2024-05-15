@@ -50,6 +50,9 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               <option value="{{ ServiceOrder::ORDER_STATUS_COMPLETED }}"
                 {{ $item->order_status == ServiceOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
                 {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
+              <option value="{{ ServiceOrder::ORDER_STATUS_CANCELED }}"
+                {{ $item->order_status == ServiceOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
+                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -252,6 +255,9 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               <option value="{{ ServiceOrder::PAYMENT_STATUS_UNPAID }}"
                 {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_UNPAID ? 'selected' : '' }}>
                 {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_UNPAID) }}</option>
+              <option value="{{ ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID }}"
+                {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID ? 'selected' : '' }}>
+                {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID) }}</option>
               <option value="{{ ServiceOrder::PAYMENT_STATUS_FULLY_PAID }}"
                 {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_FULLY_PAID ? 'selected' : '' }}>
                 {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_FULLY_PAID) }}</option>

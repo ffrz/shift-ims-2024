@@ -26,7 +26,7 @@
       </div>
       <div class="card-body">
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
             <label for="order_status">Status Order:</label>
             <select class="custom-select select2 form-control" id="order_status" name="order_status">
               <option value="-1" <?= $filter['order_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
@@ -36,9 +36,12 @@
               <option value="{{ ServiceOrder::ORDER_STATUS_COMPLETED }}"
                 {{ $filter['order_status'] == ServiceOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
                 {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
+              <option value="{{ ServiceOrder::ORDER_STATUS_CANCELED }}"
+                {{ $filter['order_status'] == ServiceOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
+                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
             </select>
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
             <label for="service_status">Status Servis:</label>
             <select class="custom-select select2 form-control" id="service_status" name="service_status">
               <option value="-1" <?= $filter['service_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
@@ -59,16 +62,27 @@
                 {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_FAILED) }}</option>
             </select>
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-3">
             <label for="payment_status">Status Pembayaran:</label>
             <select class="custom-select select2 form-control" id="payment_status" name="payment_status">
               <option value="-1" <?= $filter['payment_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
               <option value="{{ ServiceOrder::PAYMENT_STATUS_UNPAID }}"
                 {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_UNPAID ? 'selected' : '' }}>
                 {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_UNPAID) }}</option>
+              <option value="{{ ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID }}"
+                {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID ? 'selected' : '' }}>
+                {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID) }}</option>
               <option value="{{ ServiceOrder::PAYMENT_STATUS_FULLY_PAID }}"
                 {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_FULLY_PAID ? 'selected' : '' }}>
                 {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_FULLY_PAID) }}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="record_status">Tampilkan Rekaman:</label>
+            <select class="custom-select select2 form-control" id="record_status" name="record_status">
+              <option value="-1" {{ $filter['record_status'] == -1 ? 'selected' : '' }}>Semua</option>
+              <option value="0" {{ $filter['record_status'] == 0 ? 'selected' : '' }}>Dihapus</option>
+              <option value="1" {{ $filter['record_status'] == 1 ? 'selected' : '' }}>Aktif</option>
             </select>
           </div>
         </div>
@@ -146,7 +160,7 @@
                 <td class="text-center">
                   <div class="btn-group">
                     <a href="<?= url("/admin/service-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
-                      class="fa fa-eye" title="View"></i></a>
+                        class="fa fa-eye" title="View"></i></a>
                     <a href="<?= url("/admin/service-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                         class="fa fa-edit" title="Edit"></i></a>
                     <a href="<?= url("/admin/service-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i

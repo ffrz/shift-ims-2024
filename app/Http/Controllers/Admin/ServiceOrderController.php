@@ -17,6 +17,7 @@ class ServiceOrderController extends Controller
             'order_status'   => (int)$request->get('order_status',   $request->session()->get('service_order.filter.order_status',    0)),
             'service_status' => (int)$request->get('service_status', $request->session()->get('service_order.filter.service_status', -1)),
             'payment_status' => (int)$request->get('payment_status', $request->session()->get('service_order.filter.payment_status', -1)),
+            'record_status' => (int)$request->get('record_status', $request->session()->get('service_order.filter.record_status', 1)),
         ];
 
         $q = ServiceOrder::query();
@@ -28,6 +29,11 @@ class ServiceOrderController extends Controller
         if ($filter['payment_status'] != -1)
             $q->where('payment_status', '=', $filter['payment_status']);
 
+        if ($filter['record_status'] == -1)
+            $q->withTrashed();
+        else if ($filter['record_status'] == 0)
+            $q->onlyTrashed();
+
         $q->orderBy('id', 'asc');
 
         $items = $q->get();
@@ -35,6 +41,7 @@ class ServiceOrderController extends Controller
         $request->session()->put('service_order.filter.order_status', $filter['order_status']);
         $request->session()->put('service_order.filter.service_status', $filter['service_status']);
         $request->session()->put('service_order.filter.payment_status', $filter['payment_status']);
+        $request->session()->put('service_order.filter.record_status', $filter['record_status']);
 
         return view('admin.service-order.index', compact('items', 'filter'));
     }
