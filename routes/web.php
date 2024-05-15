@@ -48,6 +48,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('detail/{id}', 'detail');
         Route::post('action/{id}', 'action');
         Route::get('restore/{id}', 'restore');
+        Route::get('print/{id}', 'print');
     });
 
     Route::controller(SettingsController::class)->prefix('settings')->group(function () {
