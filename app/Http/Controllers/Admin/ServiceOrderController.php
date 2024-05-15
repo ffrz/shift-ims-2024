@@ -46,6 +46,39 @@ class ServiceOrderController extends Controller
         return view('admin.service-order.index', compact('items', 'filter'));
     }
 
+    public function action(Request $request, $id)
+    {
+        $item = ServiceOrder::findOrFail($id);
+        $action = $request->get('action');
+        if ($action == 'service_success') {
+            $item->service_status = ServiceOrder::SERVICE_STATUS_SUCCESS;
+            $item->date_completed = date('Y-m-d');
+        }
+        else if ($action == 'service_failed') {
+            $item->service_status = ServiceOrder::SERVICE_STATUS_FAILED;
+            $item->date_completed = date('Y-m-d');
+        }
+        else if ($action == 'fully_paid') {
+            $item->payment_status = ServiceOrder::PAYMENT_STATUS_FULLY_PAID;
+        }
+        else if ($action == 'complete_order') {
+            $item->order_status = ServiceOrder::ORDER_STATUS_COMPLETED;
+        }
+        else if ($action == 'cancel_order') {
+            $item->order_status = ServiceOrder::ORDER_STATUS_CANCELED;
+        }
+
+        $item->save();
+        SysEvent::log(
+            SysEvent::SERVICEORDER_MANAGEMENT,
+            'Memperbarui status servis',
+            'Status Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
+            $item->toArray()
+        );
+
+        return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Rekama order servis telah diperbarui.');
+    }
+
     public function duplicate(Request $request, $sourceId)
     {
         $item = ServiceOrder::findOrFail($sourceId);
@@ -126,7 +159,7 @@ class ServiceOrderController extends Controller
                 $data
             );
 
-            return redirect('admin/service-order')->with('info', 'Order servis ' . ServiceOrder::formatOrderId($item->id) . ' telah disimpan.');
+            return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Order servis ' . ServiceOrder::formatOrderId($item->id) . ' telah disimpan.');
         }
 
         $device_types = ServiceOrder::withTrashed(true)
@@ -145,10 +178,28 @@ class ServiceOrderController extends Controller
         if (!$item = ServiceOrder::find($id))
             $message = 'Order tidak ditemukan.';
         else if ($item->delete($id)) {
-            $message = 'Order #' . e($item->id) . ' telah dihapus.';
+            $message = 'Order #' . e($item->orderId()) . ' telah dihapus.';
             SysEvent::log(
                 SysEvent::SERVICEORDER_MANAGEMENT,
                 'Hapus Order',
+                $message,
+                $item->toArray()
+            );
+        }
+
+        return redirect('admin/service-order')->with('info', $message);
+    }
+
+    public function restore($id)
+    {
+        if (!$item = ServiceOrder::withTrashed()->find($id))
+            $message = 'Order tidak ditemukan.';
+        else {
+            $item->restore();
+            $message = 'Order #' . e($item->orderId()) . ' telah dipulihkan.';
+            SysEvent::log(
+                SysEvent::SERVICEORDER_MANAGEMENT,
+                'Pulihkan Order Servis',
                 $message,
                 $item->toArray()
             );

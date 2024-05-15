@@ -10,12 +10,11 @@ $title = 'Rincian Order Servis';
 ])
 
 @section('content')
-  <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST"
-      action="{{ url('admin/service-order/edit/' . (int) $item->id) }}">
-      @csrf
-      <input type="hidden" name="id" value="{{ $item->orderId() }}">
-
+  <form class="form-horizontal quick-form" method="POST"
+    action="{{ url('admin/service-order/action/' . (int) $item->id) }}">
+    @csrf
+    <input type="hidden" name="id" value="{{ $item->id }}">
+    <div class="card card-primary">
       @include('admin._components.card-header', ['title' => $title])
 
       <div class="card-body">
@@ -153,11 +152,37 @@ $title = 'Rincian Order Servis';
           </div>
         </div>
       </div> {{-- .card-body --}}
-  </div>
+    </div>
 
-  <div class="card-footer">
-    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
-  </div>
+    <div class="card-footer">
+      @if ($item->service_status < ServiceOrder::SERVICE_STATUS_SUCCESS)
+        <div class="btn-group mr-3">
+          <button type="submit" class="btn btn-success" name="action" value="service_success"><i
+              class="fas fa-check"></i> Sukses</button>
+          <button type="submit" class="btn btn-warning" name="action" value="service_failed"><i
+              class="fas fa-xmark"></i> Gagal</button>
+        </div>
+      @endif
+      @if ($item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
+        <button type="submit" class="btn btn-success mr-3" name="action" value="fully_paid"><i
+            class="fas fa-check"></i> Lunas</button>
+      @endif
+      @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
+        <div class="btn-group mr-3">
+          <button type="submit" class="btn btn-success" name="action" value="complete_order"><i
+              class="fas fa-check"></i> Selesai</button>
+          <button type="submit" class="btn btn-warning" name="action" value="cancel_order"><i class="fas fa-xmark"></i>
+            Batalkan</button>
+        </div>
+      @endif
+      <div class="btn-group">
+        <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-default"><i class="fas fa-print"></i>
+          Cetak</a>
+        <a href="/admin/service-order/edit/{{ $item->id }}" class="btn btn-default"><i class="fas fa-edit"></i>
+          Edit</a>
+        <a href="/admin/service-order/delete/{{ $item->id }}" onclick="return confirm('Hapus?')"
+          class="btn btn-danger"><i class="fas fa-edit"></i> Hapus</a>
+      </div>
+    </div>
   </form>
-  </div>
 @endSection
