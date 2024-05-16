@@ -4,24 +4,14 @@
     'nav_active' => 'sys-events',
 ])
 
-@section('right-menu')
-  {{-- <li class="nav-item">
-    <a href="{{ url('/admin/users/edit/0') }}" class="btn plus-btn btn-primary mr-2" title="Baru"><i class="fa fa-plus"></i></a>
-  </li> --}}
-@endsection
-
 @section('content')
   <div class="card card-light">
-    @include('admin._components.card-header', [
-        'title' => 'Pengguna',
-        'description' => 'Daftar pengguna sistem',
-    ])
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <form method="POST" action="{{ url('admin/sys-events/delete') }}" onsubmit="return confirm('Hapus rekaman?')">
+          <form method="POST" action="{{ url('admin/system-event/delete') }}" onsubmit="return confirm('Hapus rekaman?')">
             @csrf
-            <table class="data-table display table table-bordered table-striped table-condensed center-th"
+            <table class="data-table display table table-bordered table-striped table-condensed"
               style="width:100%">
               <thead>
                 <tr>
@@ -40,15 +30,15 @@
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->datetime }}</td>
                     <td>{{ $item->username }}</td>
-                    <td>{{ $item->type }}</td>
+                    <td>{{ $item->formattedType() }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
                     <td class="text-center">
                       <div class="btn-group">
                         <input type="hidden" name="id" value="{{ $item->id }}">
-                        <a href="{{ url("/admin/sys-events/show/$item->id") }}" class="btn btn-default btn-sm"
+                        <a href="{{ url("/admin/system-event/show/$item->id") }}" class="btn btn-default btn-sm"
                           title="Lihat"><i class="fa fa-eye"></i></a>
-                        <button href="{{ url("/admin/sys-events/delete") }}" class="btn btn-danger btn-sm"
+                        <button href="{{ url("/admin/system-event/delete") }}" class="btn btn-danger btn-sm"
                           type="submit" title="Hapus"><i class="fa fa-trash"></i></button>
                       </div>
                     </td>

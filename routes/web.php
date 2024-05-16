@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ServiceOrderController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\SysEventController;
+use App\Http\Controllers\Admin\SystemEventController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserGroupController;
 use App\Http\Middleware\Authenticate;
@@ -51,25 +52,31 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('print/{id}', 'print');
     });
 
-    Route::controller(SettingsController::class)->prefix('settings')->group(function () {
-        Route::get('', 'edit');
-        Route::post('save', 'save');
-    });
-
-    Route::controller(UserGroupController::class)->prefix('user-groups')->group(function () {
+    Route::controller(ProductCategoryController::class)->prefix('product-category')->group(function () {
         Route::get('', 'index');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::get('delete/{id}', 'delete');
     });
 
-    Route::controller(UserController::class)->prefix('users')->group(function () {
+    Route::controller(SettingsController::class)->prefix('settings')->group(function () {
+        Route::get('', 'edit');
+        Route::post('save', 'save');
+    });
+
+    Route::controller(UserGroupController::class)->prefix('user-group')->group(function () {
+        Route::get('', 'index');
+        Route::match(['get', 'post'], 'edit/{id}', 'edit');
+        Route::get('delete/{id}', 'delete');
+    });
+
+    Route::controller(UserController::class)->prefix('user')->group(function () {
         Route::get('', 'index');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::match(['get', 'post'], 'delete/{id}', 'delete');
         Route::match(['get', 'post'], 'profile', 'profile');
     });
 
-    Route::controller(SysEventController::class)->prefix('sys-events')->group(function () {
+    Route::controller(SystemEventController::class)->prefix('system-event')->group(function () {
         Route::get('', 'index');
         Route::get('show/{id}', 'show');
         Route::post('delete', 'delete');

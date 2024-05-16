@@ -41,6 +41,25 @@ if (!isset($menu_active)) {
           </ul>
         </li>
 
+        <li class="nav-item {{ $menu_active == 'inventory' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $menu_active == 'inventory' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-warehouse"></i>
+            <p>
+              Inventori
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('/admin/product-category') }}"
+                class="nav-link {{ $nav_active == 'product_category' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-boxes"></i>
+                <p>Kategori Produk</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
         @if (Auth::user()->is_admin)
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ $menu_active == 'system' ? 'active' : '' }}">
@@ -52,21 +71,21 @@ if (!isset($menu_active)) {
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('/admin/sys-events') }}"
-                  class="nav-link {{ $nav_active == 'sys-events' ? 'active' : '' }}">
+                <a href="{{ url('/admin/system-event') }}"
+                  class="nav-link {{ $nav_active == 'system-event' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-file-waveform"></i>
                   <p>Log Aktivitas</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('/admin/users') }}" class="nav-link {{ $nav_active == 'users' ? 'active' : '' }}">
+                <a href="{{ url('/admin/user') }}" class="nav-link {{ $nav_active == 'user' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-users"></i>
                   <p>Pengguna</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('/admin/user-groups') }}"
-                  class="nav-link {{ $nav_active == 'user-groups' ? 'active' : '' }}">
+                <a href="{{ url('/admin/user-group') }}"
+                  class="nav-link {{ $nav_active == 'user-group' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-user-group"></i>
                   <p>Grup Pengguna</p>
                 </a>

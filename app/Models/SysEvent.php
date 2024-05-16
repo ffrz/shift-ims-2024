@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -9,11 +10,12 @@ class SysEvent extends Model
 {
     public $timestamps = false;
 
-    public const AUTHENTICATION = 'Authentication';
-    public const USER_MANAGEMENT = 'User Management';
-    public const USERGROUP_MANAGEMENT = 'User Group Management';
-    public const SERVICEORDER_MANAGEMENT = 'Service Order Management';
-    public const SETTINGS = 'Settings';
+    public const AUTHENTICATION = 'authentication';
+    public const USER_MANAGEMENT = 'user-mgmt';
+    public const USER_GROUP_MANAGEMENT = 'user-group-mgmt';
+    public const SERVICE_ORDER_MANAGEMENT = 'service-order-mgmt';
+    public const SETTINGS = 'settings';
+    public const PRODUCT_CATEGORY_MANAGEMENT = 'product-category-mgmt';
 
     protected $casts = [
         'data' => 'json'
@@ -51,5 +53,24 @@ class SysEvent extends Model
             'description' => $description,
             'data' => $data,
         ]);
+    }
+
+    function formattedType()
+    {
+        return self::formatType($this->type);
+    }
+
+    static function formatType($type)
+    {
+        switch ($type) {
+            case self::AUTHENTICATION: return 'Otentikasi';
+            case self::USER_MANAGEMENT: return 'Pengelolaan Pengguna';
+            case self::USER_GROUP_MANAGEMENT: return 'Pengelolaan Grup Pengguna';
+            case self::SERVICE_ORDER_MANAGEMENT: return 'Pengelolaan Order Servis';
+            case self::PRODUCT_CATEGORY_MANAGEMENT: return 'Pengelolaan Kategori Produk';
+            case self::SETTINGS: return 'Pengaturan';
+        }
+
+        throw new Exception('tipe event tidak terdaftar');
     }
 }
