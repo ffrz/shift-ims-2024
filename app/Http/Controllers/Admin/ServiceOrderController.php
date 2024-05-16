@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceOrder;
+use App\Models\Setting;
 use App\Models\SysEvent;
 use App\Models\UserGroup;
 use Illuminate\Http\Request;
