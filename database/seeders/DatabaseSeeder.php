@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\CashTransactionCategory;
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UserGroupSeeder::class,
             UserSeeder::class,
             ServiceOrderSeeder::class,
+            ProductCategorySeeder::class,
         ]);
     }
 }
