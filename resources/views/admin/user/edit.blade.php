@@ -2,13 +2,13 @@
 @extends('admin._layouts.default', [
     'title' => $title,
     'menu_active' => 'system',
-    'nav_active' => 'users',
+    'nav_active' => 'user',
 ])
 
 @section('content')
   <div class="col-md-8">
     <div class="card card-primary">
-      <form class="form-horizontal quick-form" method="POST" action="{{ url('/admin/users/edit/' . (int)$user->id) }}">
+      <form class="form-horizontal quick-form" method="POST" action="{{ url('/admin/user/edit/' . (int)$user->id) }}">
         @csrf
         @include('admin._components.card-header', ['title' => $title])
         <input type="hidden" name="id" value="{{ (int)$user->id }}">

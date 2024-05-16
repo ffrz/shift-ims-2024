@@ -6,7 +6,7 @@
 
 @section('right-menu')
   <li class="nav-item">
-    <a href="{{ url('/admin/users/edit/0') }}" class="btn plus-btn btn-primary mr-2" title="Baru"><i class="fa fa-plus"></i></a>
+    <a href="{{ url('/admin/user/edit/0') }}" class="btn plus-btn btn-primary mr-2" title="Baru"><i class="fa fa-plus"></i></a>
   </li>
 @endsection
 
@@ -41,9 +41,9 @@
                 <td>{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</td>
                 <td class="text-center">
                   <div class="btn-group">
-                    <a href="{{ url("/admin/users/edit/$item->id") }}" class="btn btn-default btn-sm"><i
+                    <a href="{{ url("/admin/user/edit/$item->id") }}" class="btn btn-default btn-sm"><i
                         class="fa fa-edit"></i></a>
-                    <a href="{{ url("/admin/users/delete/$item->id") }}" class="btn btn-danger btn-sm"><i
+                    <a href="{{ url("/admin/user/delete/$item->id") }}" class="btn btn-danger btn-sm"><i
                         class="fa fa-trash"></i></a>
                   </div>
                 </td>

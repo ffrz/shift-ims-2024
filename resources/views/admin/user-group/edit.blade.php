@@ -2,13 +2,13 @@
 @extends('admin._layouts.default', [
     'title' => $title,
     'menu_active' => 'system',
-    'nav_active' => 'user-groups',
-    'back_button_link' => url('/admin/user-groups/'),
+    'nav_active' => 'user-group',
+    'back_button_link' => url('/admin/user-group/'),
 ])
 
 @section('content')
   <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user-groups/edit/' . (int) $group->id) }}">
+    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user-group/edit/' . (int) $group->id) }}">
       @csrf
       @include('admin._components.card-header', ['title' => $title])
       <div class="card-body">

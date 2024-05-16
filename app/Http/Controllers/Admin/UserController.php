@@ -31,7 +31,7 @@ class UserController extends Controller
     public function index()
     {
         $items = User::with('group')->orderBy('fullname', 'asc')->get();
-        return view('admin.users.index', compact('items'));
+        return view('admin.user.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)
@@ -39,10 +39,10 @@ class UserController extends Controller
         $user = (int)$id == 0 ? new User() : User::find($id);
 
         if (!$user) {
-            return redirect('admin/users')->with('warning', 'Pengguna tidak ditemukan.');
+            return redirect('admin/user')->with('warning', 'Pengguna tidak ditemukan.');
         }
         else if ($user->username == 'admin') {
-            return redirect('admin/users')->with('warning', 'Akun <b>' . $user->username . '</b> tidak boleh diubah.');
+            return redirect('admin/user')->with('warning', 'Akun <b>' . $user->username . '</b> tidak boleh diubah.');
         }
 
         if ($request->method() == 'POST') {
@@ -87,12 +87,12 @@ class UserController extends Controller
 
             SysEvent::log(SysEvent::USER_MANAGEMENT, ($id == 0 ? 'Tambah' : 'Perbarui') . ' Pengguna', $message);
 
-            return redirect('admin/users')->with('info', $message);
+            return redirect('admin/user')->with('info', $message);
         }
 
         $groups = UserGroup::orderBy('name', 'asc')->get();
 
-        return view('admin.users.edit', compact('user', 'groups'));
+        return view('admin.user.edit', compact('user', 'groups'));
     }
 
     public function profile(Request $request)
@@ -123,10 +123,10 @@ class UserController extends Controller
 
             SysEvent::log(SysEvent::USER_MANAGEMENT, 'Perbarui Profil Pengguna', 'Profil pengguna ' . e($user->username) . ' telah diperbarui.');
 
-            return redirect('admin/users/profile')->with('info', 'Profil anda telah diperbarui.');
+            return redirect('admin/user/profile')->with('info', 'Profil anda telah diperbarui.');
         }
 
-        return view('admin.users.profile', compact('user'));
+        return view('admin.user.profile', compact('user'));
     }
 
     public function delete(Request $request, $id)
@@ -134,16 +134,16 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->username == 'admin')
-            return redirect('admin/users')->with('error', 'Akun <b>' . e($user->username) . '</b> tidak boleh dihapus.');
+            return redirect('admin/user')->with('error', 'Akun <b>' . e($user->username) . '</b> tidak boleh dihapus.');
         else if ($user->id == Auth::user()->id)
-            return redirect('admin/users')->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+            return redirect('admin/user')->with('error', 'Anda tidak dapat menghapus akun sendiri.');
 
         if ($request->method() == 'POST') {
             $user->delete();
             SysEvent::log(SysEvent::USER_MANAGEMENT, 'Hapus Pengguna', 'Akun pengguna ' . e($user->username) . ' telah dihapus.');
-            return redirect('admin/users')->with('info', 'Akun <b>' . e($user->username) . '</b> telah dihapus.');
+            return redirect('admin/user')->with('info', 'Akun <b>' . e($user->username) . '</b> telah dihapus.');
         }
 
-        return view('admin.users.delete', compact('user'));
+        return view('admin.user.delete', compact('user'));
     }
 }

@@ -20,7 +20,7 @@ class UserGroupController extends Controller
     {
         $group = $id ? UserGroup::find($id) : new UserGroup();
         if (!$group)
-            return redirect('admin/user-groups')->with('warning', 'Grup Pengguna tidak ditemukan.');
+            return redirect('admin/user-group')->with('warning', 'Grup Pengguna tidak ditemukan.');
 
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
@@ -40,13 +40,13 @@ class UserGroupController extends Controller
             $data['New Data'] = $group->toArray();
 
             SysEvent::log(
-                SysEvent::USERGROUP_MANAGEMENT,
+                SysEvent::USER_GROUP_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Grup Pengguna',
                 'Grup pengguna ' . e($group->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
 
-            return redirect('admin/user-groups')->with('info', 'Grup pengguna telah disimpan.');
+            return redirect('admin/user-group')->with('info', 'Grup pengguna telah disimpan.');
         }
 
         return view('admin.user-group.edit', compact('group'));
@@ -60,7 +60,7 @@ class UserGroupController extends Controller
         else if ($group->delete($id)) {
             $message = 'Grup pengguna ' . e($group->name) . ' telah dihapus.';
             SysEvent::log(
-                SysEvent::USERGROUP_MANAGEMENT,
+                SysEvent::USER_GROUP_MANAGEMENT,
                 'Hapus Grup Pengguna',
                 $message,
                 $group->toArray()

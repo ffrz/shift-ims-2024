@@ -1,12 +1,12 @@
 @extends('admin._layouts.default', [
     'title' => 'Hapus Pengguna',
     'menu_active' => 'system',
-    'nav_active' => 'users',
+    'nav_active' => 'user',
 ])
 
 @section('content')
   <div class="card card-light">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('/admin/users/delete/' . $user->id) }}">
+    <form class="form-horizontal quick-form" method="POST" action="{{ url('/admin/user/delete/' . $user->id) }}">
       @csrf
       @include('admin._components.card-header', ['title' => 'Hapus Pengguna'])
       <div class="card-body">
@@ -42,7 +42,7 @@
       </div>
       <div class="card-footer">
         <div>
-          <a href="{{ url('/admin/users') }}" class="btn btn-default mr-2"><i class="fas fa-arrow-left mr-1"></i>
+          <a href="{{ url('/admin/user') }}" class="btn btn-default mr-2"><i class="fas fa-arrow-left mr-1"></i>
             Kembali</a>
           <button type="submit" class="btn btn-danger" onclick="return confirm('Anda yakin akan menghapus akun ini?')"><i class="fas fa-trash-can mr-1"></i> HAPUS</button>
         </div>

@@ -1,12 +1,12 @@
 @extends('admin._layouts.default', [
     'title' => 'Grup Pengguna',
     'menu_active' => 'system',
-    'nav_active' => 'user-groups'
+    'nav_active' => 'user-group'
 ])
 
 @section('right-menu')
   <li class="nav-item">
-    <a href="<?= url('/admin/user-groups/edit/0') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
+    <a href="<?= url('/admin/user-group/edit/0') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
         class="fa fa-plus"></i></a>
   </li>
 @endSection
@@ -33,10 +33,10 @@
               <td>{{ $item->description }}</td>
               <td class="text-center">
                 <div class="btn-group">
-                  <a href="<?= url("/admin/user-groups/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                  <a href="<?= url("/admin/user-group/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                       class="fa fa-edit"></i></a>
                   <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                    href="<?= url("/admin/user-groups/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                    href="<?= url("/admin/user-group/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
                       class="fa fa-trash"></i></a>
                 </div>
               </td>
