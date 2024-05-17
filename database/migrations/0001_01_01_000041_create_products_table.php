@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id')->nullable(true)->default(null);
-            $table->unsignedTinyInteger('type');
+            $table->unsignedBigInteger('category_id')->nullable()->default(null);
+            $table->unsignedTinyInteger('type')->default(0);
             $table->boolean('active')->default(true);
             $table->string('code')->unique();
-            $table->string('description');
-            $table->string('barcode');
-            $table->string('uom');
-            $table->integer('stock');
-            $table->decimal('cost');
-            $table->decimal('price');
-            $table->text('notes');
+            $table->string('description')->default('');
+            $table->string('barcode')->default('');
+            $table->integer('stock')->default(0);
+            $table->string('uom')->default('');
+            $table->decimal('cost', 12, 0)->default(0.);
+            $table->decimal('price', 12, 0)->default(0.);
+            $table->text('notes')->nullable(true)->default(null);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('category_id')->references('id')->on('product_categories');
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
         });
     }
 
