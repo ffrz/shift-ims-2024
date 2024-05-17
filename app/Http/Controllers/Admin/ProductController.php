@@ -18,7 +18,7 @@ class ProductController extends Controller
         if (!Auth::user()->canAccess(AclResource::PRODUCT_LIST))
             abort(403, 'AKSES DITOLAK');
 
-        $items = Product::orderBy('code', 'asc')->get();
+        $items = Product::with('category')->orderBy('code', 'asc')->get();
         return view('admin.product.index', compact('items'));
     }
 
