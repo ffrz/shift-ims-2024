@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Customer;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -54,8 +54,8 @@ class CustomerController extends Controller
             $item->save();
             $data['New Data'] = $item->toArray();
 
-            SysEvent::log(
-                SysEvent::CUSTOMER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::CUSTOMER_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Pelanggan',
                 'Pelanggan ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -78,8 +78,8 @@ class CustomerController extends Controller
             $message = 'Pelanggan tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Pelanggan ' . e($item->name) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::CUSTOMER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::CUSTOMER_MANAGEMENT,
                 'Hapus Pelanggan',
                 $message,
                 $item->toArray()

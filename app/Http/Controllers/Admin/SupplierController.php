@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Supplier;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -53,8 +53,8 @@ class SupplierController extends Controller
             $item->save();
             $data['New Data'] = $item->toArray();
 
-            SysEvent::log(
-                SysEvent::SUPPLIER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::SUPPLIER_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Supplier',
                 'Supplier ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -77,8 +77,8 @@ class SupplierController extends Controller
             $message = 'Supplier tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Supplier ' . e($item->name) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::SUPPLIER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::SUPPLIER_MANAGEMENT,
                 'Hapus Supplier',
                 $message,
                 $item->toArray()

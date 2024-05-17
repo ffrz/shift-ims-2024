@@ -30,7 +30,7 @@
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->datetime }}</td>
                     <td>{{ $item->username }}</td>
-                    <td>{{ $item->formattedType() }}</td>
+                    <td>{{ $item->typeFormatted() }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
                     <td class="text-center">

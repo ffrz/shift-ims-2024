@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\ProductCategory;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -48,8 +48,8 @@ class ProductCategoryController extends Controller
             $item->save();
             $data['New Data'] = $item->toArray();
 
-            SysEvent::log(
-                SysEvent::PRODUCT_CATEGORY_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Kategori Produk',
                 'Kategori Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -68,8 +68,8 @@ class ProductCategoryController extends Controller
             $message = 'Kategori tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Kategori ' . e($item->name) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::PRODUCT_CATEGORY_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
                 'Hapus Kategori',
                 $message,
                 $item->toArray()

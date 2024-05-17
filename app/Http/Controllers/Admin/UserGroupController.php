@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use App\Models\UserGroup;
 use App\Models\UserGroupAccess;
 use Illuminate\Http\Request;
@@ -63,8 +63,8 @@ class UserGroupController extends Controller
                 $access->save();
             }
 
-            SysEvent::log(
-                SysEvent::USER_GROUP_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::USER_GROUP_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Grup Pengguna',
                 'Grup pengguna ' . e($group->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -87,8 +87,8 @@ class UserGroupController extends Controller
             $message = 'Grup pengguna tidak ditemukan.';
         else if ($group->delete($id)) {
             $message = 'Grup pengguna ' . e($group->name) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::USER_GROUP_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::USER_GROUP_MANAGEMENT,
                 'Hapus Grup Pengguna',
                 $message,
                 $group->toArray()

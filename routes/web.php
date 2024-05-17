@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceOrderController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SupplierController;
-use App\Http\Controllers\Admin\SystemEventController;
+use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserGroupController;
 use App\Http\Middleware\Authenticate;
@@ -97,7 +97,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::match(['get', 'post'], 'profile', 'profile');
     });
 
-    Route::controller(SystemEventController::class)->prefix('system-event')->group(function () {
+    Route::controller(UserActivityController::class)->prefix('user-activity')->group(function () {
         Route::get('', 'index');
         Route::get('show/{id}', 'show');
         Route::post('delete', 'delete');

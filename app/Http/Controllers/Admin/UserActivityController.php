@@ -13,7 +13,7 @@ class UserActivityController extends Controller
     public function __construct()
     {
         /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::ACTIVITY_LOG))
+        if (!Auth::user()->canAccess(AclResource::USER_ACTIVITY))
             abort(403, 'AKSES DITOLAK');
     }
 

@@ -27,7 +27,7 @@
         <tr>
           <td>Tipe Aktivitas</td>
           <td>:</td>
-          <td>{{ $item->formattedType() }}</td>
+          <td>{{ $item->typeFormatted() }}</td>
         </tr>
         <tr>
           <td>Aktivitas</td>

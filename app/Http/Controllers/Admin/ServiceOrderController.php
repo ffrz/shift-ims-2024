@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\ServiceOrder;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -70,8 +70,8 @@ class ServiceOrderController extends Controller
         }
 
         $item->save();
-        SysEvent::log(
-            SysEvent::SERVICE_ORDER_MANAGEMENT,
+        UserActivity::log(
+            UserActivity::SERVICE_ORDER_MANAGEMENT,
             'Memperbarui status servis',
             'Status Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
             $item->toArray()
@@ -167,8 +167,8 @@ class ServiceOrderController extends Controller
             $item->save();
             $data['New Data'] = $item->toArray();
 
-            SysEvent::log(
-                SysEvent::SERVICE_ORDER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::SERVICE_ORDER_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Order Servis',
                 'Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -198,8 +198,8 @@ class ServiceOrderController extends Controller
             $message = 'Order tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Order #' . e($item->orderId()) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::SERVICE_ORDER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::SERVICE_ORDER_MANAGEMENT,
                 'Hapus Order',
                 $message,
                 $item->toArray()
@@ -220,8 +220,8 @@ class ServiceOrderController extends Controller
         else {
             $item->restore();
             $message = 'Order #' . e($item->orderId()) . ' telah dipulihkan.';
-            SysEvent::log(
-                SysEvent::SERVICE_ORDER_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::SERVICE_ORDER_MANAGEMENT,
                 'Pulihkan Order Servis',
                 $message,
                 $item->toArray()

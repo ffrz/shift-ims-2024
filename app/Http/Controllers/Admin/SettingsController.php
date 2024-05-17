@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Setting;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +56,7 @@ class SettingsController extends Controller
             'New Value' => Setting::values(),
         ];
 
-        SysEvent::log(SysEvent::SETTINGS, 'Change Settings', 'Pengaturan telah diperbarui.', $data);
+        UserActivity::log(UserActivity::SETTINGS, 'Change Settings', 'Pengaturan telah diperbarui.', $data);
 
         return redirect('admin/settings')->with('info', 'Pengaturan telah disimpan.');
     }

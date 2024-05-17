@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Product;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -49,8 +49,8 @@ class ProductController extends Controller
             $item->save();
             $data['New Data'] = $item->toArray();
 
-            SysEvent::log(
-                SysEvent::PRODUCT_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::PRODUCT_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Produk',
                 'Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -73,8 +73,8 @@ class ProductController extends Controller
             $message = 'Produk tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Produk ' . e($item->name) . ' telah dihapus.';
-            SysEvent::log(
-                SysEvent::PRODUCT_MANAGEMENT,
+            UserActivity::log(
+                UserActivity::PRODUCT_MANAGEMENT,
                 'Hapus Produk',
                 $message,
                 $item->toArray()
