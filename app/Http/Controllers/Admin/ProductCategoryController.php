@@ -21,7 +21,7 @@ class ProductCategoryController extends Controller
     
     public function index()
     {
-        $items = ProductCategory::orderBy('name', 'asc')->get();
+        $items = ProductCategory::with('products')->orderBy('name', 'asc')->get();
         return view('admin.product-category.index', compact('items'));
     }
 

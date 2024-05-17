@@ -21,7 +21,8 @@
           <thead>
             <tr>
               <th style="width:30%">Nama</th>
-              <th>Jenis</th>
+              <th>Deskripsi</th>
+              <th>Kategori</th>
               <th style="width:5%">Aksi</th>
             </tr>
           </thead>
@@ -30,6 +31,7 @@
             <tr>
               <td>{{ $item->code }}</td>
               <td>{{ $item->description }}</td>
+              <td>{{ $item->category->name }}</td>
               <td class="text-center">
                 <div class="btn-group">
                   <a href="<?= url("/admin/product/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
