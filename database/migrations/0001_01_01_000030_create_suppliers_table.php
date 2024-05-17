@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->boolean('active')->default(true);
-            $table->string('code')->unique();
             $table->string('name');
-            $table->string('phone');
-            $table->text('address');
-            $table->text('notes');
+            $table->string('phone')->default('');
+            $table->text('address')->nullable()->default(null);
+            $table->text('notes')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
         });
