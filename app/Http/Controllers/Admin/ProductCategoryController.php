@@ -3,13 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\ProductCategory;
 use App\Models\SysEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductCategoryController extends Controller
 {
+    public function __construct()
+    {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::PRODUCT_CATEGORY_MANAGEMENT))
+            abort(403, 'AKSES DITOLAK');
+    }
+    
     public function index()
     {
         $items = ProductCategory::orderBy('name', 'asc')->get();

@@ -8,11 +8,19 @@ use App\Models\SysEvent;
 use App\Models\UserGroup;
 use App\Models\UserGroupAccess;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserGroupController extends Controller
 {
+    public function __construct()
+    {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::USER_GROUP_MANAGEMENT))
+            abort(403, 'AKSES DITOLAK');
+    }
+
     public function index()
     {
         $items = UserGroup::orderBy('name', 'asc')->get();
@@ -40,7 +48,7 @@ class UserGroupController extends Controller
             $acl = (array)$request->post('acl');
 
             DB::beginTransaction();
-            
+
             $data = ['Old Data' => $group->toArray()];
             $group->fill($request->all());
             $group->save();
@@ -68,7 +76,7 @@ class UserGroupController extends Controller
         }
 
         $resources = AclResource::all();
-        
+
         return view('admin.user-group.edit', compact('group', 'resources'));
     }
 

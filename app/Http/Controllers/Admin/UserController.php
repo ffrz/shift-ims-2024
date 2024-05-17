@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\SysEvent;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -28,6 +29,13 @@ class UserController extends Controller
         'password_confirmation.required' => 'Anda belum mengkonfirmasi kata sandi.',
     ];
 
+    public function __construct()
+    {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::USER_MANAGEMENT))
+            abort(403, 'AKSES DITOLAK');
+    }
+    
     public function index()
     {
         $items = User::with('group')->orderBy('fullname', 'asc')->get();

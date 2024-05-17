@@ -3,21 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\Customer;
 use App\Models\SysEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
     public function index()
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::CUSTOMER_LIST))
+            abort(403, 'AKSES DITOLAK');
+
         $items = Customer::orderBy('name', 'asc')->get();
         return view('admin.customer.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)
     {
+        /** @disregard P1009 */
+        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_CUSTOMER)) || $id && !Auth::user()->canAccess(AclResource::EDIT_CUSTOMER))
+            abort(403, 'AKSES DITOLAK');
+
         $item = $id ? Customer::find($id) : new Customer();
         if (!$item)
             return redirect('admin/customer')->with('warning', 'Pelanggan tidak ditemukan.');
@@ -59,6 +69,10 @@ class CustomerController extends Controller
 
     public function delete($id)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::DELETE_CUSTOMER))
+            abort(403, 'AKSES DITOLAK');
+
         // fix me, notif kalo kategori ga bisa dihapus
         if (!$item = Customer::find($id))
             $message = 'Pelanggan tidak ditemukan.';

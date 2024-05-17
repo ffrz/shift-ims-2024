@@ -3,21 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\Product;
 use App\Models\SysEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     public function index()
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::PRODUCT_LIST))
+            abort(403, 'AKSES DITOLAK');
+
         $items = Product::orderBy('code', 'asc')->get();
         return view('admin.product.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)
     {
+        /** @disregard P1009 */
+        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_PRODUCT)) || ($id && !Auth::user()->canAccess(AclResource::EDIT_PRODUCT)))
+            abort(403, 'AKSES DITOLAK');
+
         $item = $id ? Product::find($id) : new Product();
         if (!$item)
             return redirect('admin/product')->with('warning', 'Produk tidak ditemukan.');
@@ -54,6 +64,10 @@ class ProductController extends Controller
 
     public function delete($id)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::DELETE_PRODUCT))
+            abort(403, 'AKSES DITOLAK');
+
         // fix me, notif kalo kategori ga bisa dihapus
         if (!$item = Product::find($id))
             $message = 'Produk tidak ditemukan.';

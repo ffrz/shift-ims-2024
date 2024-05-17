@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\ServiceOrder;
-use App\Models\Setting;
 use App\Models\SysEvent;
-use App\Models\UserGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceOrderController extends Controller
 {
     public function index(Request $request)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::SERVICE_ORDER_LIST))
+            abort(403, 'AKSES DITOLAK');
+
         $filter = [
             'order_status'   => (int)$request->get('order_status',   $request->session()->get('service_order.filter.order_status',    0)),
             'service_status' => (int)$request->get('service_status', $request->session()->get('service_order.filter.service_status', -1)),
@@ -54,24 +58,20 @@ class ServiceOrderController extends Controller
         if ($action == 'service_success') {
             $item->service_status = ServiceOrder::SERVICE_STATUS_SUCCESS;
             $item->date_completed = date('Y-m-d');
-        }
-        else if ($action == 'service_failed') {
+        } else if ($action == 'service_failed') {
             $item->service_status = ServiceOrder::SERVICE_STATUS_FAILED;
             $item->date_completed = date('Y-m-d');
-        }
-        else if ($action == 'fully_paid') {
+        } else if ($action == 'fully_paid') {
             $item->payment_status = ServiceOrder::PAYMENT_STATUS_FULLY_PAID;
-        }
-        else if ($action == 'complete_order') {
+        } else if ($action == 'complete_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_COMPLETED;
-        }
-        else if ($action == 'cancel_order') {
+        } else if ($action == 'cancel_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_CANCELED;
         }
 
         $item->save();
         SysEvent::log(
-            SysEvent::SERVICEORDER_MANAGEMENT,
+            SysEvent::SERVICE_ORDER_MANAGEMENT,
             'Memperbarui status servis',
             'Status Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
             $item->toArray()
@@ -82,6 +82,10 @@ class ServiceOrderController extends Controller
 
     public function duplicate(Request $request, $sourceId)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::ADD_SERVICE_ORDER))
+            abort(403, 'AKSES DITOLAK');
+
         $item = ServiceOrder::findOrFail($sourceId);
         $item = $item->replicate();
         $item->id = 0;
@@ -111,6 +115,10 @@ class ServiceOrderController extends Controller
 
     public function edit(Request $request, $id = 0)
     {
+        /** @disregard P1009 */
+        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_SERVICE_ORDER)) || ($id && !Auth::user()->canAccess(AclResource::EDIT_SERVICE_ORDER)))
+            abort(403, 'AKSES DITOLAK');
+
         if ($id) {
             $item = ServiceOrder::find($id);
         } else {
@@ -160,7 +168,7 @@ class ServiceOrderController extends Controller
             $data['New Data'] = $item->toArray();
 
             SysEvent::log(
-                SysEvent::SERVICEORDER_MANAGEMENT,
+                SysEvent::SERVICE_ORDER_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Order Servis',
                 'Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
@@ -182,12 +190,16 @@ class ServiceOrderController extends Controller
 
     public function delete($id)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::DELETE_SERVICE_ORDER))
+            abort(403, 'AKSES DITOLAK');
+
         if (!$item = ServiceOrder::find($id))
             $message = 'Order tidak ditemukan.';
         else if ($item->delete($id)) {
             $message = 'Order #' . e($item->orderId()) . ' telah dihapus.';
             SysEvent::log(
-                SysEvent::SERVICEORDER_MANAGEMENT,
+                SysEvent::SERVICE_ORDER_MANAGEMENT,
                 'Hapus Order',
                 $message,
                 $item->toArray()
@@ -199,13 +211,17 @@ class ServiceOrderController extends Controller
 
     public function restore($id)
     {
+        /** @disregard P1009 */
+        if (!Auth::user()->canAccess(AclResource::DELETE_SERVICE_ORDER))
+            abort(403, 'AKSES DITOLAK');
+
         if (!$item = ServiceOrder::withTrashed()->find($id))
             $message = 'Order tidak ditemukan.';
         else {
             $item->restore();
             $message = 'Order #' . e($item->orderId()) . ' telah dipulihkan.';
             SysEvent::log(
-                SysEvent::SERVICEORDER_MANAGEMENT,
+                SysEvent::SERVICE_ORDER_MANAGEMENT,
                 'Pulihkan Order Servis',
                 $message,
                 $item->toArray()
