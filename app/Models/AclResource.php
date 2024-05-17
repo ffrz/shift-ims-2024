@@ -4,30 +4,47 @@ namespace App\Models;
 
 class AclResource
 {
-    const OPEN_SYSTEM_MENU = 'open-system-menu';
-    const OPEN_PURCHASING_MENU = 'open-purchasing-menu';
-    const OPEN_SALES_MENU = 'open-sales-menu';
-    const OPEN_INVENTORY_MENU = 'open-inventory-menu';
+    // menus
+    const SYSTEM_MENU = 'system-menu';
+    const PURCHASING_MENU = 'purchasing-menu';
+    const SALES_MENU = 'sales-menu';
+    const INVENTORY_MENU = 'inventory-menu';
+    const SERVICE_MENU = 'service-menu';
 
-    const VIEW_ACTIVITY_LOG = 'view-activity-log';
+    // system
+    const ACTIVITY_LOG = 'activity-log';
+    const USER_MANAGEMENT = 'user-management';
+    const USER_GROUP_MANAGEMENT = 'user-group-management';
+    const SETTINGS = 'settings';
 
-    const MANAGE_PRODUCT_CATEGORIES = 'manage-product-categories';
+    const SERVICE_ORDER_LIST = 'service-order-list';
+    const ADD_SERVICE_ORDER = 'add-service-order';
+    const EDIT_SERVICE_ORDER = 'edit-service-order';
+    const DELETE_SERVICE_ORDER = 'delete-service-order';
 
-    const VIEW_USERS = 'view-users';
-    const VIEW_USER_GROUPS = 'view-user-groups';
-    const CHANGE_SETTINGS = 'change-settings';
+    const PRODUCT_CATEGORY_MANAGEMENT = 'product-category-management';
 
-    const VIEW_SUPPLIERS = 'manage-suppliers';
+    const PRODUCT_LIST = 'product-list';
+    const ADD_PRODUCT = 'add-product';
+    const EDIT_PRODUCT = 'edit-product';
+    const DELETE_PRODUCT = 'delete-product';
+
+    const SUPPLIER_LIST = 'supplier-list';
     const ADD_SUPPLIER = 'add-supplier';
     const EDIT_SUPPLIER = 'edit-supplier';
     const DELETE_SUPPLIER = 'delete-supplier';
 
-    const VIEW_CUSTOMERS = 'manage-customers';
+    const PURCHASE_ORDER_LIST = 'purchase-order-list';
+    const ADD_PURCHASE_ORDER = 'add-purchase-order';
+    const EDIT_PURCHASE_ORDER = 'edit-purchase-order';
+    const DELETE_PURCHASE_ORDER = 'delete-purchase-order';
+
+    const CUSTOMER_LIST = 'customer-list';
     const ADD_CUSTOMER = 'add-customer';
     const EDIT_CUSTOMER = 'edit-customer';
     const DELETE_CUSTOMER = 'delete-customer';
 
-    const VIEW_SALES_ORDERS = 'manage-sales-orders';
+    const SALES_ORDER_LIST = 'sales-order-list';
     const ADD_SALES_ORDER = 'add-sales-order';
     const EDIT_SALES_ORDER = 'edit-sales-order';
     const DELETE_SALES_ORDER = 'delete-sales-order';
@@ -36,43 +53,58 @@ class AclResource
     {
         return [
             'Penjualan' => [
-                self::OPEN_SALES_MENU => 'Mengakses menu penjualan',
+                self::SALES_MENU => 'Menu penjualan',
                 'Order Penjualan' => [
-                    self::VIEW_SALES_ORDERS => 'Melihat daftar penjualan',
-                    self::ADD_SALES_ORDER => 'Menambah order penjualan',
-                    self::EDIT_SALES_ORDER => 'Mengubah order penjualan',
-                    self::DELETE_SALES_ORDER => 'Menghapus order penjualan',
+                    self::SALES_ORDER_LIST => 'Lihat',
+                    self::ADD_SALES_ORDER => 'Tambah',
+                    self::EDIT_SALES_ORDER => 'Ubah',
+                    self::DELETE_SALES_ORDER => 'Hapus',
                 ],
                 'Pelanggan' => [
-                    self::VIEW_CUSTOMERS => 'Melihat daftar pelanggan',
-                    self::ADD_CUSTOMER => 'Menambah pelanggan',
-                    self::EDIT_CUSTOMER => 'Mengubah Pelanggan',
-                    self::DELETE_CUSTOMER => 'Menghapus pelanggan',
+                    self::CUSTOMER_LIST => 'Lihat',
+                    self::ADD_CUSTOMER => 'Tambah',
+                    self::EDIT_CUSTOMER => 'Ubah',
+                    self::DELETE_CUSTOMER => 'Hapus',
+                ],
+            ],
+            'Servis' => [
+                'Order Servis' => [
+                    self::SERVICE_ORDER_LIST => 'Lihat',
+                    self::ADD_SERVICE_ORDER => 'Tambah',
+                    self::EDIT_SERVICE_ORDER => 'Ubah',
+                    self::DELETE_SALES_ORDER => 'Hapus',
                 ],
             ],
             'Inventori' => [
-                self::MANAGE_PRODUCT_CATEGORIES => 'Pengelolaan kategori produk',
+                self::PRODUCT_CATEGORY_MANAGEMENT => 'Kategori produk',
+                'Produk' => [
+                    self::PRODUCT_LIST => 'Lihat',
+                    self::ADD_PRODUCT => 'Tambah',
+                    self::EDIT_PRODUCT => 'Ubah',
+                    self::DELETE_PRODUCT => 'Hapus',
+                ],
             ],
             'Pembelian' => [
-                self::OPEN_PURCHASING_MENU => 'Mengakses menu pembelian',
+                self::PURCHASING_MENU => 'Menu pembelian',
+                'Order Pembelian' => [
+                    self::PURCHASE_ORDER_LIST => 'Lihat',
+                    self::ADD_PURCHASE_ORDER => 'Tambah',
+                    self::EDIT_PURCHASE_ORDER => 'Ubah',
+                    self::DELETE_PURCHASE_ORDER => 'Hapus',
+                ],
                 'Pemasok' => [
-                    self::VIEW_SUPPLIERS => 'Melihat daftar pemasok',
-                    self::ADD_SUPPLIER => 'Menambah pPemasok',
-                    self::EDIT_SUPPLIER => 'Mengubah pemasok',
-                    self::DELETE_SUPPLIER => 'Menghapus pemasok',
+                    self::SUPPLIER_LIST => 'Lihat',
+                    self::ADD_SUPPLIER => 'Tambah',
+                    self::EDIT_SUPPLIER => 'Ubah',
+                    self::DELETE_SUPPLIER => 'Hapus',
                 ]
             ],
             'Sistem' => [
-                self::OPEN_SYSTEM_MENU => 'Mengakses menu sistem',
-                'Pengguna' => [
-                    self::VIEW_USERS => 'Melihat daftar pengguna',
-                ],
-                'Grup Pengguna' => [
-                    self::VIEW_USER_GROUPS => 'Melihat daftar grup pengguna',
-                ],
-                'Pengaturan' => [
-                    self::CHANGE_SETTINGS => 'Mengubah pengaturan',
-                ]
+                self::SYSTEM_MENU => 'Menu sistem',
+                self::ACTIVITY_LOG => 'Log Aktifitas',
+                self::USER_MANAGEMENT => 'Pengguna',
+                self::USER_GROUP_MANAGEMENT => 'Grup pengguna',
+                self::SETTINGS => 'Pengaturan',
             ]
         ];
     }
