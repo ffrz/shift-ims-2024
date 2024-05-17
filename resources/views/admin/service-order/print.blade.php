@@ -17,8 +17,8 @@
   <h4>{{ Setting::value('app.business_name') }}</h4>
   <div>{{ Setting::value('app.business_address') }}</div>
   <div>{{ Setting::value('app.business_phone') }}</div>
-  <hr>
   @for ($i = 1; $i <= 2; $i++)
+    <hr>
     <div style="width:58mm">
       <div>
         #{{ $item->orderId() }} | {{ format_date($item->date_received) }}<br>
@@ -41,6 +41,5 @@
         @endif
       </div>
     </div>
-    <hr>
   @endfor
 @endSection
