@@ -51,8 +51,15 @@ if (!isset($menu_active)) {
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
+              <a href="{{ url('/admin/product') }}"
+                class="nav-link {{ $nav_active == 'product' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-box"></i>
+                <p>Produk</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="{{ url('/admin/product-category') }}"
-                class="nav-link {{ $nav_active == 'product_category' ? 'active' : '' }}">
+                class="nav-link {{ $nav_active == 'product-category' ? 'active' : '' }}">
                 <i class="nav-icon fas fa-boxes"></i>
                 <p>Kategori Produk</p>
               </a>

@@ -16,6 +16,7 @@ class SysEvent extends Model
     public const SERVICE_ORDER_MANAGEMENT = 'service-order-mgmt';
     public const SETTINGS = 'settings';
     public const PRODUCT_CATEGORY_MANAGEMENT = 'product-category-mgmt';
+    public const PRODUCT_MANAGEMENT = 'product-mgmt';
 
     protected $casts = [
         'data' => 'json'
@@ -64,11 +65,12 @@ class SysEvent extends Model
     {
         switch ($type) {
             case self::AUTHENTICATION: return 'Otentikasi';
+            case self::SETTINGS: return 'Pengaturan';
             case self::USER_MANAGEMENT: return 'Pengelolaan Pengguna';
             case self::USER_GROUP_MANAGEMENT: return 'Pengelolaan Grup Pengguna';
             case self::SERVICE_ORDER_MANAGEMENT: return 'Pengelolaan Order Servis';
             case self::PRODUCT_CATEGORY_MANAGEMENT: return 'Pengelolaan Kategori Produk';
-            case self::SETTINGS: return 'Pengaturan';
+            case self::PRODUCT_MANAGEMENT: return 'Pengelolaan Produk';
         }
 
         throw new Exception('tipe event tidak terdaftar');
