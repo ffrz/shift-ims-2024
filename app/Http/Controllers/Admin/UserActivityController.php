@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SystemEventController extends Controller
+class UserActivityController extends Controller
 {
     public function __construct()
     {
@@ -19,23 +19,23 @@ class SystemEventController extends Controller
 
     public function index()
     {
-        $q = SysEvent::query();
+        $q = UserActivity::query();
         $q->orderBy('id', 'desc');
         $items = $q->get();
         
-        return view('admin.system-event.index', compact('items'));
+        return view('admin.user-activity.index', compact('items'));
     }
 
     public function show(Request $request, $id = 0)
     {
-        $item = SysEvent::findOrFail($id);
-        return view('admin.system-event.show', compact('item'));
+        $item = UserActivity::findOrFail($id);
+        return view('admin.user-activity.show', compact('item'));
     }
 
     public function delete(Request $request)
     {
-        $item = SysEvent::findOrFail($request->post('id', 0));
+        $item = UserActivity::findOrFail($request->post('id', 0));
         $item->delete();
-        return redirect('admin/system-event')->with('info', 'Rekaman log aktivitas <b>#' . $item->id . '</b> telah dihapus.');
+        return redirect('admin/user-activity')->with('info', 'Rekaman log aktivitas <b>#' . $item->id . '</b> telah dihapus.');
     }
 }

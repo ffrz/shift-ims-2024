@@ -113,7 +113,7 @@ if (!isset($menu_active)) {
         @endif
         {{-- Inventory Menu End --}}
 
-        {{-- Purchasing --}}
+        {{-- Purchasing Menu Begin --}}
         @if (Auth::user()->canAccess(AclResource::PURCHASING_MENU))
           <li class="nav-item {{ $menu_active == 'purchasing' ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ $menu_active == 'purchasing' ? 'active' : '' }}">
@@ -145,8 +145,9 @@ if (!isset($menu_active)) {
             </ul>
           </li>
         @endif
-        {{-- Purchasing --}}
+        {{-- End of Purchasing Menu --}}
 
+        {{-- System Menu --}}
         @if (Auth::user()->canAccess(AclResource::SYSTEM_MENU))
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ $menu_active == 'system' ? 'active' : '' }}">
@@ -157,10 +158,10 @@ if (!isset($menu_active)) {
               </p>
             </a>
             <ul class="nav nav-treeview">
-              @if (Auth::user()->canAccess(AclResource::ACTIVITY_LOG))
+              @if (Auth::user()->canAccess(AclResource::USER_ACTIVITY))
                 <li class="nav-item">
-                  <a href="{{ url('/admin/system-event') }}"
-                    class="nav-link {{ $nav_active == 'system-event' ? 'active' : '' }}">
+                  <a href="{{ url('/admin/user-activity') }}"
+                    class="nav-link {{ $nav_active == 'user-activity' ? 'active' : '' }}">
                     <i class="nav-icon fas fa-file-waveform"></i>
                     <p>Log Aktivitas</p>
                   </a>
@@ -195,6 +196,8 @@ if (!isset($menu_active)) {
             </ul>
           </li>
         @endif
+        {{-- End of System  menu --}}
+
         <li class="nav-item">
           <a href="{{ url('/admin/user/profile/') }}" class="nav-link {{ $nav_active == 'profile' ? 'active' : '' }}">
             <i class="nav-icon fas fa-user"></i>

@@ -1,13 +1,13 @@
 @extends('admin._layouts.default', [
-    'title' => 'Log Aktivitas',
+    'title' => 'Aktivitas Pengguna',
     'menu_active' => 'system',
-    'nav_active' => 'sys-events',
+    'nav_active' => 'user-activity',
 ])
 
 @section('content')
   <div class="card card-light">
     <div class="card-body">
-      <h5>Rincian Log Aktivitas Pengguna</h5>
+      <h5>Rincian Aktivitas Pengguna</h5>
       <table class="table table-sm" style="width='100%;'">
         <tr>
           <td>#ID Aktivitas</td>
@@ -71,7 +71,7 @@
     </div>
     <div class="card-footer">
       <div>
-        <a href="{{ url('/admin/system-event') }}" class="btn btn-default mr-2">
+        <a href="{{ url('/admin/user-activity') }}" class="btn btn-default mr-2">
           <i class="fas fa-arrow-left mr-1"></i>
           Kembali
         </a>

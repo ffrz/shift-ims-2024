@@ -12,7 +12,7 @@ class AclResource
     const SERVICE_MENU = 'service-menu';
 
     // system
-    const ACTIVITY_LOG = 'activity-log';
+    const USER_ACTIVITY = 'user-activity';
     const USER_MANAGEMENT = 'user-management';
     const USER_GROUP_MANAGEMENT = 'user-group-management';
     const SETTINGS = 'settings';
@@ -101,7 +101,7 @@ class AclResource
             ],
             'Sistem' => [
                 self::SYSTEM_MENU => 'Menu sistem',
-                self::ACTIVITY_LOG => 'Log Aktifitas',
+                self::USER_ACTIVITY => 'Aktifitas Pengguna',
                 self::USER_MANAGEMENT => 'Pengguna',
                 self::USER_GROUP_MANAGEMENT => 'Grup pengguna',
                 self::SETTINGS => 'Pengaturan',

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
-use App\Models\SysEvent;
+use App\Models\UserActivity;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Http\Request;
@@ -93,7 +93,7 @@ class UserController extends Controller
 
             $user->save();
 
-            SysEvent::log(SysEvent::USER_MANAGEMENT, ($id == 0 ? 'Tambah' : 'Perbarui') . ' Pengguna', $message);
+            UserActivity::log(UserActivity::USER_MANAGEMENT, ($id == 0 ? 'Tambah' : 'Perbarui') . ' Pengguna', $message);
 
             return redirect('admin/user')->with('info', $message);
         }
@@ -129,7 +129,7 @@ class UserController extends Controller
 
             $user->update($request->only($changedFields));
 
-            SysEvent::log(SysEvent::USER_MANAGEMENT, 'Perbarui Profil Pengguna', 'Profil pengguna ' . e($user->username) . ' telah diperbarui.');
+            UserActivity::log(UserActivity::USER_MANAGEMENT, 'Perbarui Profil Pengguna', 'Profil pengguna ' . e($user->username) . ' telah diperbarui.');
 
             return redirect('admin/user/profile')->with('info', 'Profil anda telah diperbarui.');
         }
@@ -148,7 +148,7 @@ class UserController extends Controller
 
         if ($request->method() == 'POST') {
             $user->delete();
-            SysEvent::log(SysEvent::USER_MANAGEMENT, 'Hapus Pengguna', 'Akun pengguna ' . e($user->username) . ' telah dihapus.');
+            UserActivity::log(UserActivity::USER_MANAGEMENT, 'Hapus Pengguna', 'Akun pengguna ' . e($user->username) . ' telah dihapus.');
             return redirect('admin/user')->with('info', 'Akun <b>' . e($user->username) . '</b> telah dihapus.');
         }
 

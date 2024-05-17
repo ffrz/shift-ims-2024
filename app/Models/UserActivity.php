@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class SysEvent extends Model
+class UserActivity extends Model
 {
     public $timestamps = false;
 
@@ -40,8 +40,11 @@ class SysEvent extends Model
 
     public static function log($type, $name, $description = '', $data = null, $username = null)
     {
-        if ($username === null && Auth::user()) {
-            $username = Auth::user()->username;
+        $user = Auth::user();
+        if ($username === null && $user) {
+            
+            $username = $user->username;
+            $id = $user->id;
         }
 
         if ($username === null) {
@@ -49,6 +52,7 @@ class SysEvent extends Model
         }
 
         return self::create([
+            'id' => $user->id,
             'username' => $username,
             'datetime' => now(),
             'type' => $type,
@@ -58,7 +62,7 @@ class SysEvent extends Model
         ]);
     }
 
-    function formattedType()
+    function typeFormatted()
     {
         return self::formatType($this->type);
     }
