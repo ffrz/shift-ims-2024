@@ -10,8 +10,8 @@
       <h5>Rincian Aktivitas Pengguna</h5>
       <table class="table table-sm" style="width='100%;'">
         <tr>
-          <td>#ID Aktivitas</td>
-          <td>:</td>
+          <td style="width:15%">#ID Aktivitas</td>
+          <td style="width:1%">:</td>
           <td>{{ $item->id }}</td>
         </tr>
         <tr>
@@ -20,9 +20,9 @@
           <td>{{ $item->datetime }}</td>
         </tr>
         <tr>
-          <td>Username</td>
+          <td>Pengguna</td>
           <td>:</td>
-          <td>{{ $item->username }}</td>
+          <td>{{ $item->user_id ? $item->user_id . ' - ' : '' }}{{ $item->username }}</td>
         </tr>
         <tr>
           <td>Tipe Aktivitas</td>
@@ -39,16 +39,18 @@
           <td>:</td>
           <td>{!! $item->description !!}</td>
         </tr>
-        <tr>
-          <td colspan="3">
-            @if ($item->data)
+        @if ($item->data)
+          <tr>
+            <td colspan="3">
               @if (!empty($item->data['Old Data']))
                 <h5 class="mt-3">Data Sebelumnya:</h5>
                 <table class="table-sm table">
                   @foreach ($item->data['Old Data'] as $key => $data)
-                  <tr>
-                    <td>{{ $key }}</td><td>:</td><td>{{ $data }}</td>
-                  </tr>
+                    <tr>
+                      <td>{{ $key }}</td>
+                      <td>:</td>
+                      <td>{{ $data }}</td>
+                    </tr>
                   @endforeach
                 </table>
               @endif
@@ -56,17 +58,23 @@
                 <h5 class="mt-3">Data Baru:</h5>
                 <table class="table table-sm">
                   @foreach ($item->data['New Data'] as $key => $data)
-                  <tr>
-                    <td>{{ $key }}</td><td>:</td><td>{{ $data }}</td>
-                  </tr>
+                    <tr>
+                      <td>{{ $key }}</td>
+                      <td>:</td>
+                      <td>{{ $data }}</td>
+                    </tr>
                   @endforeach
                 </table>
               @endif
-            @else
-              <i class="text-muted">Tidak ada data.</i>
-            @endif
-          </td>
-        </tr>
+            </td>
+          </tr>
+        @else
+          <tr>
+            <td>Data Ekstra</td>
+            <td>:</td>
+            <td>Tidak ada.</td>
+          </tr>
+        @endif
       </table>
     </div>
     <div class="card-footer">

@@ -15,7 +15,12 @@ class AuthController extends Controller
         $user = Auth::user();
         Auth::logout();
         if ($user) {
-            UserActivity::log(UserActivity::AUTHENTICATION, 'Logout', 'Logout sukses. Pengguna ' . e($user->username) . ' telah logout.', null, $user->username);
+            UserActivity::log(
+                UserActivity::AUTHENTICATION,
+                'Logout',
+                'Logout sukses. Pengguna ' . e($user->username) . ' telah logout.',
+                null, $user->username, $user->id
+            );
         }
         $request->session()->invalidate();
         $request->session()->regenerateToken();

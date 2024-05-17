@@ -30,6 +30,7 @@ class UserActivity extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'username',
         'datetime',
         'type',
@@ -38,11 +39,11 @@ class UserActivity extends Model
         'data',
     ];
 
-    public static function log($type, $name, $description = '', $data = null, $username = null)
+    public static function log($type, $name, $description = '', $data = null, $username = null, $user_id = null)
     {
         $user = Auth::user();
+        $id = $user_id;
         if ($username === null && $user) {
-            
             $username = $user->username;
             $id = $user->id;
         }
@@ -52,7 +53,7 @@ class UserActivity extends Model
         }
 
         return self::create([
-            'id' => $user->id,
+            'user_id' => $id,
             'username' => $username,
             'datetime' => now(),
             'type' => $type,
