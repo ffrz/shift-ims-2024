@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends Party
+class Customer extends Model
 {
     use SoftDeletes;
 
@@ -17,4 +17,9 @@ class Customer extends Party
     protected $fillable = [
         'active', 'name', 'phone', 'address', 'notes'
     ];
+
+    public function idFormatted()
+    {
+        return 'CS' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+    }
 }

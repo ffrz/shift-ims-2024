@@ -41,6 +41,33 @@ if (!isset($menu_active)) {
           </ul>
         </li>
 
+        {{-- Sales --}}
+        <li class="nav-item {{ $menu_active == 'sales' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $menu_active == 'sales' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-store"></i>
+            <p>
+              Penjualan
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('/admin/sales-order') }}"
+                class="nav-link {{ $nav_active == 'sales-order' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-cart-arrow-down"></i>
+                <p>Order Penjualan</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/admin/customer') }}" class="nav-link {{ $nav_active == 'customer' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Pelanggan</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        {{-- Sales --}}
+
         <li class="nav-item {{ $menu_active == 'inventory' ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ $menu_active == 'inventory' ? 'active' : '' }}">
             <i class="nav-icon fas fa-warehouse"></i>
@@ -51,8 +78,7 @@ if (!isset($menu_active)) {
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ url('/admin/product') }}"
-                class="nav-link {{ $nav_active == 'product' ? 'active' : '' }}">
+              <a href="{{ url('/admin/product') }}" class="nav-link {{ $nav_active == 'product' ? 'active' : '' }}">
                 <i class="nav-icon fas fa-box"></i>
                 <p>Produk</p>
               </a>
@@ -66,6 +92,33 @@ if (!isset($menu_active)) {
             </li>
           </ul>
         </li>
+
+        {{-- Purchasing --}}
+        <li class="nav-item {{ $menu_active == 'purchasing' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ $menu_active == 'purchasing' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-truck"></i>
+            <p>
+              Pembelian
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('/admin/purchase-order') }}"
+                class="nav-link {{ $nav_active == 'purchase-order' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-cart-shopping"></i>
+                <p>Order Pembelian</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/admin/supplier') }}" class="nav-link {{ $nav_active == 'supplier' ? 'active' : '' }}">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Pemasok</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        {{-- Purchasing --}}
 
         @if (Auth::user()->is_admin)
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">

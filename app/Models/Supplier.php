@@ -17,4 +17,9 @@ class Supplier extends Model
     protected $fillable = [
         'active', 'name', 'phone', 'address', 'notes'
     ];
+
+    public function idFormatted()
+    {
+        return 'SP' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+    }
 }

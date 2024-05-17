@@ -17,11 +17,11 @@ class SupplierSeeder extends Seeder
         Supplier::truncate();
         Schema::enableForeignKeyConstraints();
 
-        Supplier::insert(['id' => 1, 'name' => 'Tkpd Venusshop', '', '', '']);
-        Supplier::insert(['id' => 2, 'name' => 'Cemara Mas Indah', '', '', '']);
-        Supplier::insert(['id' => 3, 'name' => 'Calvin Com', '', '', '']);
-        Supplier::insert(['id' => 4, 'name' => 'Calvin Acc', '', '', '']);
-        Supplier::insert(['id' => 5, 'name' => 'Tkpd Fo Importir', '', '', '']);
-        Supplier::insert(['id' => 6, 'name' => 'Tkpd Aquarius', '', '', '']);
+        Supplier::insert(['id' => 1, 'name' => 'Tkpd Venusshop']);
+        Supplier::insert(['id' => 2, 'name' => 'Cemara Mas Indah']);
+        Supplier::insert(['id' => 3, 'name' => 'Calvin Com']);
+        Supplier::insert(['id' => 4, 'name' => 'Calvin Acc']);
+        Supplier::insert(['id' => 5, 'name' => 'Tkpd Fo Importir']);
+        Supplier::insert(['id' => 6, 'name' => 'Tkpd Aquarius']);
     }
 }

@@ -17,6 +17,8 @@ class SysEvent extends Model
     public const SETTINGS = 'settings';
     public const PRODUCT_CATEGORY_MANAGEMENT = 'product-category-mgmt';
     public const PRODUCT_MANAGEMENT = 'product-mgmt';
+    public const SUPPLIER_MANAGEMENT = 'supplier-mgmt';
+    public const CUSTOMER_MANAGEMENT = 'customer-mgmt';
 
     protected $casts = [
         'data' => 'json'
@@ -71,6 +73,8 @@ class SysEvent extends Model
             case self::SERVICE_ORDER_MANAGEMENT: return 'Pengelolaan Order Servis';
             case self::PRODUCT_CATEGORY_MANAGEMENT: return 'Pengelolaan Kategori Produk';
             case self::PRODUCT_MANAGEMENT: return 'Pengelolaan Produk';
+            case self::CUSTOMER_MANAGEMENT: return 'Pengelolaan Pelanggan';
+            case self::SUPPLIER_MANAGEMENT: return 'Pengelolaan Pemasok';
         }
 
         throw new Exception('tipe event tidak terdaftar');

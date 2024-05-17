@@ -2,8 +2,8 @@
 @extends('admin._layouts.default', [
     'title' => $title,
     'menu_active' => 'inventory',
-    'nav_active' => 'product_category',
-    'back_button_link' => url('/admin/prouct-category/'),
+    'nav_active' => 'product-category',
+    'back_button_link' => url('/admin/product-category/'),
 ])
 
 @section('content')
