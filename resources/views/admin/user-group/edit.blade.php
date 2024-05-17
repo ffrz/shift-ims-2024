@@ -40,31 +40,38 @@
             font-weight: normal;
           }
         </style>
-        <div class="form-row col-md-12">
-          <h4>Hak Akses</h4>
+        <div class="form-row col-md-12 mt-4">
+          <h5>Hak Akses Grup</h5>
         </div>
-        <div class="form-row col-md-12">
-          <p class="mt-16">Maaf, saat ini fitur kustomisasi hak akses belum tersedia.</p>
-        </div>
-        <div class="container">
-          <div class="row">
-            {{-- @foreach ($acl_resources as $category => $resource) : ?>
-                <div class="col">
-                <div class="form-row mt-2">
-                    <b>{{ $category }}</b>
-            </div>
-                @foreach ($resource as $name => $label) : ?>
-                    <div class="form-row">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="<?= $name ?>" name="acl[<?= $name ?>]" value="1" <?= $group->acl[$name] ? 'checked="checked"' : '' ?>>
-                            <label class="custom-control-label" style="font-weight:normal; white-space: nowrap;" for="<?= $name ?>"><?= $label ?></label>
-                        </div>
+        @foreach ($resources as $category => $resource)
+          <div style="border: 1px solid #ddd;border-radius:5px;" class="p-2 mt-2 mb-2">
+            <h5 class="mb-0">{{ $category }}</h5>
+            @foreach ($resource as $name => $label)
+              @if (is_array($label))
+                <h6 class="mt-3 mb-0">{{ $name }}</h6>
+                <div class="d-flex flex-row flex-wrap">
+                  @foreach ($label as $subname => $sublabel)
+                    <div class="mr-3 custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="{{ $subname }}"
+                        name="acl[{{ $subname }}]" value="1"
+                        @if (isset($group->acl()[$subname]) && $group->acl()[$subname] == true) {{ 'checked="checked"' }} @endif>
+                      <label class="custom-control-label" style="font-weight:normal; white-space: nowrap;"
+                        for="{{ $subname }}">{{ $sublabel }}</label>
                     </div>
-                @endforeach ?>
+                  @endforeach
                 </div>
-            @endforeach ?> --}}
+              @else
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="{{ $name }}"
+                    name="acl[{{ $name }}]" value="1"
+                    @if (isset($group->acl()[$name]) && $group->acl()[$name] == true) {{ 'checked="checked"' }} @endif>
+                  <label class="custom-control-label" style="font-weight:normal; white-space: nowrap;"
+                    for="{{ $name }}">{{ $label }}</label>
+                </div>
+              @endif
+            @endforeach
           </div>
-        </div>
+        @endforeach
       </div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>

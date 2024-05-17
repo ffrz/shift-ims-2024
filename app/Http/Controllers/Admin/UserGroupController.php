@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AclResource;
 use App\Models\SysEvent;
 use App\Models\UserGroup;
+use App\Models\UserGroupAccess;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserGroupController extends Controller
@@ -34,10 +37,23 @@ class UserGroupController extends Controller
             if ($validator->fails())
                 return redirect()->back()->withInput()->withErrors($validator);
 
+            $acl = (array)$request->post('acl');
+
+            DB::beginTransaction();
+            
             $data = ['Old Data' => $group->toArray()];
             $group->fill($request->all());
             $group->save();
             $data['New Data'] = $group->toArray();
+
+            DB::delete('delete from user_group_accesses where group_id = ?', [$group->id]);
+            foreach ($acl as $resource => $allowed) {
+                $access = new UserGroupAccess();
+                $access->group_id = $group->id;
+                $access->resource = $resource;
+                $access->allow = $allowed;
+                $access->save();
+            }
 
             SysEvent::log(
                 SysEvent::USER_GROUP_MANAGEMENT,
@@ -46,10 +62,14 @@ class UserGroupController extends Controller
                 $data
             );
 
-            return redirect('admin/user-group')->with('info', 'Grup pengguna telah disimpan.');
+            DB::commit();
+
+            return redirect('admin/user-group/edit/' . $group->id)->with('info', 'Grup pengguna telah disimpan.');
         }
 
-        return view('admin.user-group.edit', compact('group'));
+        $resources = AclResource::all();
+        
+        return view('admin.user-group.edit', compact('group', 'resources'));
     }
 
     public function delete($id)

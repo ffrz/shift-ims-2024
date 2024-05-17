@@ -46,4 +46,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserGroup::class);
     }
+
+    public function canAccess($resource)
+    {
+        if ($this->is_admin) return true;
+        $acl = $this->group->acl();
+        return isset($acl[$resource]) && $acl[$resource] == true;
+    }
 }

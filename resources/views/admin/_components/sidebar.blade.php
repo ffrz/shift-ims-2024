@@ -1,5 +1,5 @@
 <?php
-use App\Common\Acl;
+use App\Models\AclResource;
 
 if (!isset($menu_active)) {
     $menu_active = null;
@@ -110,17 +110,20 @@ if (!isset($menu_active)) {
                 <p>Order Pembelian</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{{ url('/admin/supplier') }}" class="nav-link {{ $nav_active == 'supplier' ? 'active' : '' }}">
-                <i class="nav-icon fas fa-user"></i>
-                <p>Pemasok</p>
-              </a>
-            </li>
+            @if (Auth::user()->canAccess(AclResource::VIEW_SUPPLIERS))
+              <li class="nav-item">
+                <a href="{{ url('/admin/supplier') }}"
+                  class="nav-link {{ $nav_active == 'supplier' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-user"></i>
+                  <p>Pemasok</p>
+                </a>
+              </li>
+            @endif
           </ul>
         </li>
         {{-- Purchasing --}}
 
-        @if (Auth::user()->is_admin)
+        @if (Auth::user()->canAccess(AclResource::OPEN_SYSTEM_MENU))
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ $menu_active == 'system' ? 'active' : '' }}">
               <i class="nav-icon fas fa-gears"></i>
@@ -130,19 +133,24 @@ if (!isset($menu_active)) {
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ url('/admin/system-event') }}"
-                  class="nav-link {{ $nav_active == 'system-event' ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-file-waveform"></i>
-                  <p>Log Aktivitas</p>
-                </a>
-              </li>
+              @if (Auth::user()->canAccess(AclResource::VIEW_ACTIVITY_LOG))
+                <li class="nav-item">
+                  <a href="{{ url('/admin/system-event') }}"
+                    class="nav-link {{ $nav_active == 'system-event' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-file-waveform"></i>
+                    <p>Log Aktivitas</p>
+                  </a>
+                </li>
+              @endif
+              @if (Auth::user()->canAccess(AclResource::VIEW_USERS))
               <li class="nav-item">
                 <a href="{{ url('/admin/user') }}" class="nav-link {{ $nav_active == 'user' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-users"></i>
                   <p>Pengguna</p>
                 </a>
               </li>
+              @endif
+              @if (Auth::user()->canAccess(AclResource::VIEW_USER_GROUPS))
               <li class="nav-item">
                 <a href="{{ url('/admin/user-group') }}"
                   class="nav-link {{ $nav_active == 'user-group' ? 'active' : '' }}">
@@ -150,6 +158,8 @@ if (!isset($menu_active)) {
                   <p>Grup Pengguna</p>
                 </a>
               </li>
+              @endif
+              @if (Auth::user()->canAccess(AclResource::CHANGE_SETTINGS))
               <li class="nav-item">
                 <a href="{{ url('/admin/settings') }}"
                   class="nav-link {{ $nav_active == 'settings' ? 'active' : '' }}">
@@ -157,12 +167,12 @@ if (!isset($menu_active)) {
                   <p>Pengaturan</p>
                 </a>
               </li>
+              @endif
             </ul>
           </li>
         @endif
         <li class="nav-item">
-          <a href="{{ url('/admin/users/profile/') }}"
-            class="nav-link {{ $nav_active == 'profile' ? 'active' : '' }}">
+          <a href="{{ url('/admin/user/profile/') }}" class="nav-link {{ $nav_active == 'profile' ? 'active' : '' }}">
             <i class="nav-icon fas fa-user"></i>
             <p>{{ Auth::user()->username }}</p>
           </a>
