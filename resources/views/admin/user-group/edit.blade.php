@@ -23,7 +23,9 @@
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-8">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
             <label for="description">Deskripsi</label>
             <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
               placeholder="Masukkan deskripsi grup" name="description"
