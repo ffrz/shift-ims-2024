@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ServiceOrderController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -43,6 +44,11 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
     Route::get('logout', [AuthController::class, 'logout']);
 
     Route::get('dashboard', [DashboardController::class, 'index']);
+    
+    Route::controller(ReportController::class)->prefix('report')->group(function () {
+        Route::get('', 'index');
+        Route::get('inventory-stock', 'inventoryStock');
+    });
 
     Route::controller(ServiceOrderController::class)->prefix('service-order')->group(function () {
         Route::get('', 'index');

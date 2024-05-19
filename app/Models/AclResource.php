@@ -10,8 +10,11 @@ class AclResource
     const SALES_MENU = 'sales-menu';
     const INVENTORY_MENU = 'inventory-menu';
     const SERVICE_MENU = 'service-menu';
+    const REPORT_MENU = 'report-menu';
 
     // system
+    const VIEW_REPORTS = 'view-reports'; // sementara digrup, mungkin kedepannya diset spesifik
+
     const USER_ACTIVITY = 'user-activity';
     const USER_MANAGEMENT = 'user-management';
     const USER_GROUP_MANAGEMENT = 'user-group-management';

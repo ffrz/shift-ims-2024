@@ -147,6 +147,29 @@ if (!isset($menu_active)) {
         @endif
         {{-- End of Purchasing Menu --}}
 
+        {{-- Report Menu --}}
+        @if (Auth::user()->canAccess(AclResource::REPORT_MENU))
+          <li class="nav-item {{ $menu_active == 'report' ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $menu_active == 'report' ? 'active' : '' }}">
+              <i class="nav-icon fas fa-file-waveform"></i>
+              <p>
+                Laporan
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('/admin/report/inventory-stock') }}"
+                  class="nav-link {{ $nav_active == 'report-inventory-stock' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-file-waveform"></i>
+                  <p>Stok Inventori</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        @endif
+        {{-- End Report Menu --}}
+
         {{-- System Menu --}}
         @if (Auth::user()->canAccess(AclResource::SYSTEM_MENU))
           <li class="nav-item {{ $menu_active == 'system' ? 'menu-open' : '' }}">
@@ -199,7 +222,8 @@ if (!isset($menu_active)) {
         {{-- End of System  menu --}}
 
         <li class="nav-item">
-          <a href="{{ url('/admin/user/profile/') }}" class="nav-link {{ $nav_active == 'profile' ? 'active' : '' }}">
+          <a href="{{ url('/admin/user/profile/') }}"
+            class="nav-link {{ $nav_active == 'profile' ? 'active' : '' }}">
             <i class="nav-icon fas fa-user"></i>
             <p>{{ Auth::user()->username }}</p>
           </a>
