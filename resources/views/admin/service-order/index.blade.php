@@ -93,34 +93,6 @@
     </div>
   </form>
 
-  <form method="GET" class="form-horizontal">
-    <div class="modal fade" id="modal-sm">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Penyaringan</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group row">
-              <label for="order_status" class="col-form-label col-md-3">Status Order</label>
-              <div class="col-sm-9">
-                <select class="custom-select" id="order_status" name="order_status">
-                  <option value="-1" <?= $filter['order_status'] == '-1' ? 'selected' : '' ?>>Semua Status</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer justify-content-between">
-            <button type="submit" class="btn btn-primary"><i class="fas fa-check mr-2"></i> Terapkan</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-
   <div class="card card-light">
     @include('admin._components.card-header', [
         'title' => 'Grup Pengguna',

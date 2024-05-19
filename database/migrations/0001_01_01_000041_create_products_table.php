@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id')->nullable()->default(null);
+            $table->unsignedBigInteger('supplier_id')->nullable()->default(null);
             $table->unsignedTinyInteger('type')->default(0);
             $table->boolean('active')->default(true);
             $table->string('code')->unique();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('set null');
         });
     }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,40 +14,88 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::PRODUCT_LIST))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::PRODUCT_LIST);
 
-        $items = Product::with('category')->orderBy('code', 'asc')->get();
-        return view('admin.product.index', compact('items'));
+        $filter = [
+            'type' => (int)$request->get('type', $request->session()->get('product.filter.type', -1)),
+            'active' => (int)$request->get('active', $request->session()->get('product.filter.active', -1)),
+            'category_id' => (int)$request->get('category_id', $request->session()->get('product.filter.category_id', -1)),
+            'supplier_id' => (int)$request->get('supplier_id', $request->session()->get('product.filter.supplier_id', -1)),
+            'record_status' => (int)$request->get('record_status', $request->session()->get('product.filter.record_status', 1)),
+        ];
+
+        $q = Product::query();
+
+        if ($filter['type'] != -1) {
+            $q->where('type', '=', $filter['type']);
+        }
+        if ($filter['active'] != -1) {
+            $q->where('active', '=', $filter['active']);
+        }
+        if ($filter['category_id'] != -1) {
+            $q->where('category_id', '=', $filter['category_id']);
+        }
+        if ($filter['supplier_id'] != -1) {
+            $q->where('supplier_id', '=', $filter['supplier_id']);
+        }
+
+        if ($filter['record_status'] == 0)
+            $q->onlyTrashed();
+
+        $categories = ProductCategory::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $items = $q->with(['category', 'supplier'])->orderBy('id', 'desc')->get();
+
+        return view('admin.product.index', compact('items', 'filter', 'suppliers', 'categories'));
     }
 
     public function edit(Request $request, $id = 0)
     {
-        /** @disregard P1009 */
-        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_PRODUCT)) || ($id && !Auth::user()->canAccess(AclResource::EDIT_PRODUCT)))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::ADD_PRODUCT);
+        ensure_user_can_access(AclResource::EDIT_PRODUCT);
 
-        $item = $id ? Product::find($id) : new Product();
-        if (!$item)
-            return redirect('admin/product')->with('warning', 'Produk tidak ditemukan.');
+        if ($id) {
+            $item = Product::find($id);
+            if (!$item) {
+                return redirect('admin/product')->with('warning', 'Produk tidak ditemukan.');
+            }
+        } else {
+            $item = new Product();
+            $item->active = true;
+            $item->price = 0;
+            $item->cost = 0;
+            $item->stock = 0;
+        }
 
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:product_categories,name,' . $request->id . '|max:100',
+                'code' => 'required|unique:products,code,' . $id . '|max:100',
             ], [
-                'name.required' => 'Nama produk harus diisi.',
-                'name.unique' => 'Nama produk sudah digunakan.',
-                'name.max' => 'Nama produk terlalu panjang, maksimal 100 karakter.',
+                'code.required' => 'Nama / kode produk harus diisi.',
+                'code.unique' => 'Nama / kode produk sudah digunakan.',
+                'code.max' => 'Nama / kode produk terlalu panjang, maksimal 100 karakter.',
             ]);
 
-            if ($validator->fails())
+            if ($validator->fails()) {
                 return redirect()->back()->withInput()->withErrors($validator);
+            }
 
             $data = ['Old Data' => $item->toArray()];
-            $item->fill($request->all());
+            $newData = $request->all();
+
+            if (empty($newData['category_id']) || $newData['category_id'] == -1) {
+                $newData['category_id'] = null;
+            }
+
+            if (empty($newData['supplier_id']) || $newData['supplier_id'] == -1) {
+                $newData['supplier_id'] = null;
+            }
+
+            fill_with_default_value($newData, ['active', 'stock', 'cost', 'price'], 0.);
+
+            $item->fill($newData);
             $item->save();
             $data['New Data'] = $item->toArray();
 
@@ -59,23 +109,53 @@ class ProductController extends Controller
             return redirect('admin/product')->with('info', 'Produk telah disimpan.');
         }
 
-        return view('admin.product.edit', compact('item'));
+        $categories = ProductCategory::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        return view('admin.product.edit', compact('item', 'categories', 'suppliers'));
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::DELETE_PRODUCT))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::DELETE_PRODUCT);
 
-        // fix me, notif kalo kategori ga bisa dihapus
-        if (!$item = Product::find($id))
+        if ($request->force === 'true') {
+            $item = Product::withTrashed()->findOrFail($id);
+            $msg = ' telah dihapus selamanya.';
+            $action = 'forceDelete';
+        }
+        else {
+            $item = Product::findOrFail($id);
+            $msg = ' telah dipindahkan ke tong sampah.';
+            $action = 'delete';
+        }
+        
+        if (!$item) {
             $message = 'Produk tidak ditemukan.';
-        else if ($item->delete($id)) {
-            $message = 'Produk ' . e($item->name) . ' telah dihapus.';
+        } else if ($item->$action($id)) {
+            $message = 'Produk ' . e($item->name) . $msg;
             UserActivity::log(
                 UserActivity::PRODUCT_MANAGEMENT,
                 'Hapus Produk',
+                $message,
+                $item->toArray()
+            );
+        }
+
+        return redirect('admin/product')->with('info', $message);
+    }
+
+    public function restore($id)
+    {
+        ensure_user_can_access(AclResource::DELETE_PRODUCT);
+
+        if (!$item = Product::withTrashed()->find($id))
+            $message = 'Produk tidak ditemukan.';
+        else {
+            $item->restore();
+            $message = 'Produk #' . e($item->idFormatted()) . ' telah dipulihkan.';
+            UserActivity::log(
+                UserActivity::PRODUCT_MANAGEMENT,
+                'Pulihkan Produk',
                 $message,
                 $item->toArray()
             );
