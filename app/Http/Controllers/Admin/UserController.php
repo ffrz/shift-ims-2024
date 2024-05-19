@@ -31,9 +31,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::USER_MANAGEMENT))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::USER_MANAGEMENT);
     }
     
     public function index()

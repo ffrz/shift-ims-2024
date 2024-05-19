@@ -7,16 +7,13 @@ use App\Models\AclResource;
 use App\Models\Customer;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::CUSTOMER_LIST))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::CUSTOMER_LIST);
 
         $items = Customer::orderBy('name', 'asc')->get();
         return view('admin.customer.index', compact('items'));
@@ -24,13 +21,16 @@ class CustomerController extends Controller
 
     public function edit(Request $request, $id = 0)
     {
-        /** @disregard P1009 */
-        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_CUSTOMER)) || $id && !Auth::user()->canAccess(AclResource::EDIT_CUSTOMER))
-            abort(403, 'AKSES DITOLAK');
-
-        $item = $id ? Customer::find($id) : new Customer();
-        if (!$item)
-            return redirect('admin/customer')->with('warning', 'Pelanggan tidak ditemukan.');
+        if (!$id) {
+            ensure_user_can_access(AclResource::ADD_CUSTOMER);
+            $item = new Customer();
+        } else {
+            ensure_user_can_access(AclResource::EDIT_CUSTOMER);
+            $item = Customer::find($id);
+            if (!$item) {
+                return redirect('admin/customer')->with('warning', 'Pelanggan tidak ditemukan.');
+            }
+        }
 
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
@@ -69,9 +69,7 @@ class CustomerController extends Controller
 
     public function delete($id)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::DELETE_CUSTOMER))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::DELETE_CUSTOMER);
 
         // fix me, notif kalo kategori ga bisa dihapus
         if (!$item = Customer::find($id))

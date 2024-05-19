@@ -8,7 +8,6 @@ use App\Models\UserActivity;
 use App\Models\UserGroup;
 use App\Models\UserGroupAccess;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,9 +15,7 @@ class UserGroupController extends Controller
 {
     public function __construct()
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::USER_GROUP_MANAGEMENT))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::USER_GROUP_MANAGEMENT);
     }
 
     public function index()

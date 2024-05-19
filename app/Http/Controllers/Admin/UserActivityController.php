@@ -6,15 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserActivityController extends Controller
 {
     public function __construct()
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::USER_ACTIVITY))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::USER_ACTIVITY);
     }
 
     public function index()

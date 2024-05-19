@@ -7,16 +7,13 @@ use App\Models\AclResource;
 use App\Models\ServiceOrder;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceOrderController extends Controller
 {
     public function index(Request $request)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::SERVICE_ORDER_LIST))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::SERVICE_ORDER_LIST);
 
         $filter = [
             'order_status'   => (int)$request->get('order_status',   $request->session()->get('service_order.filter.order_status',    0)),
@@ -53,6 +50,8 @@ class ServiceOrderController extends Controller
 
     public function action(Request $request, $id)
     {
+        ensure_user_can_access(AclResource::EDIT_SERVICE_ORDER);
+
         $item = ServiceOrder::findOrFail($id);
         $action = $request->get('action');
         if ($action == 'service_success') {
@@ -82,9 +81,7 @@ class ServiceOrderController extends Controller
 
     public function duplicate(Request $request, $sourceId)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::ADD_SERVICE_ORDER))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::ADD_SERVICE_ORDER);
 
         $item = ServiceOrder::findOrFail($sourceId);
         $item = $item->replicate();
@@ -115,19 +112,17 @@ class ServiceOrderController extends Controller
 
     public function edit(Request $request, $id = 0)
     {
-        /** @disregard P1009 */
-        if ((!$id && !Auth::user()->canAccess(AclResource::ADD_SERVICE_ORDER)) || ($id && !Auth::user()->canAccess(AclResource::EDIT_SERVICE_ORDER)))
-            abort(403, 'AKSES DITOLAK');
-
-        if ($id) {
-            $item = ServiceOrder::find($id);
-        } else {
+        if (!$id) {
+            ensure_user_can_access(AclResource::ADD_SERVICE_ORDER);
             $item = new ServiceOrder();
             $item->date_received = date('Y-m-d');
             $item->order_status = ServiceOrder::ORDER_STATUS_ACTIVE;
             $item->down_payment = 0;
             $item->total_cost = 0;
             $item->estimated_cost = 0;
+        } else {
+            ensure_user_can_access(AclResource::EDIT_SERVICE_ORDER);
+            $item = ServiceOrder::find($id);
         }
 
         if (!$item)
@@ -190,9 +185,7 @@ class ServiceOrderController extends Controller
 
     public function delete($id)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::DELETE_SERVICE_ORDER))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::DELETE_SERVICE_ORDER);
 
         if (!$item = ServiceOrder::find($id))
             $message = 'Order tidak ditemukan.';
@@ -211,9 +204,7 @@ class ServiceOrderController extends Controller
 
     public function restore($id)
     {
-        /** @disregard P1009 */
-        if (!Auth::user()->canAccess(AclResource::DELETE_SERVICE_ORDER))
-            abort(403, 'AKSES DITOLAK');
+        ensure_user_can_access(AclResource::DELETE_SERVICE_ORDER);
 
         if (!$item = ServiceOrder::withTrashed()->find($id))
             $message = 'Order tidak ditemukan.';

@@ -9,7 +9,6 @@ use App\Models\ProductCategory;
 use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -53,20 +52,19 @@ class ProductController extends Controller
 
     public function edit(Request $request, $id = 0)
     {
-        ensure_user_can_access(AclResource::ADD_PRODUCT);
-        ensure_user_can_access(AclResource::EDIT_PRODUCT);
-
-        if ($id) {
-            $item = Product::find($id);
-            if (!$item) {
-                return redirect('admin/product')->with('warning', 'Produk tidak ditemukan.');
-            }
-        } else {
+        if (!$id) {
+            ensure_user_can_access(AclResource::ADD_PRODUCT);
             $item = new Product();
             $item->active = true;
             $item->price = 0;
             $item->cost = 0;
             $item->stock = 0;
+        } else {
+            ensure_user_can_access(AclResource::EDIT_PRODUCT);
+            $item = Product::find($id);
+            if (!$item) {
+                return redirect('admin/product')->with('warning', 'Produk tidak ditemukan.');
+            }
         }
 
         if ($request->method() == 'POST') {
@@ -122,13 +120,12 @@ class ProductController extends Controller
             $item = Product::withTrashed()->findOrFail($id);
             $msg = ' telah dihapus selamanya.';
             $action = 'forceDelete';
-        }
-        else {
+        } else {
             $item = Product::findOrFail($id);
             $msg = ' telah dipindahkan ke tong sampah.';
             $action = 'delete';
         }
-        
+
         if (!$item) {
             $message = 'Produk tidak ditemukan.';
         } else if ($item->$action($id)) {
