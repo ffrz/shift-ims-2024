@@ -14,10 +14,16 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
 
 @section('content')
   <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST"
-      action="{{ url('admin/product/edit/' . (int) $item->id) }}">
+    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/product/edit/' . (int) $item->id) }}">
       @csrf
       <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="id">Kode Produk</label>
+            <input type="text" class="form-control @error('code') is-invalid @enderror" id="id" readonly
+              value="{{ $item->id ? $item->formattedId() : '-otomatis-' }}">
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="type">Jenis</label>
@@ -30,9 +36,9 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
         </div>
         <div class="form-row">
           <div class="form-group col-md-4">
-            <label for="code">Kode / Nama Produk</label>
+            <label for="code">Nama Produk</label>
             <input type="text" class="form-control @error('code') is-invalid @enderror" autofocus id="code"
-              placeholder="Masukkan kode/nama produk" name="code" value="{{ old('code', $item->code) }}">
+              placeholder="Masukkan nama produk" name="code" value="{{ old('code', $item->code) }}">
             @error('code')
               <span class="text-danger">
                 {{ $message }}
