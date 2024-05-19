@@ -112,6 +112,19 @@ class ProductController extends Controller
         return view('admin.product.edit', compact('item', 'categories', 'suppliers'));
     }
 
+    public function duplicate(Request $request, $sourceId)
+    {
+        ensure_user_can_access(AclResource::ADD_PRODUCT);
+
+        $item = Product::findOrFail($sourceId);
+        $item = $item->replicate();
+        $item->id = 0;
+
+        $categories = ProductCategory::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        return view('admin.product.edit', compact('item', 'categories', 'suppliers'));
+    }
+
     public function delete(Request $request, $id)
     {
         ensure_user_can_access(AclResource::DELETE_PRODUCT);

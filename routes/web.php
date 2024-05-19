@@ -84,6 +84,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::get('delete/{id}', 'delete');
         Route::get('restore/{id}', 'restore');
+        Route::get('duplicate/{id}', 'duplicate');
     });
 
     Route::controller(SettingsController::class)->prefix('settings')->group(function () {
