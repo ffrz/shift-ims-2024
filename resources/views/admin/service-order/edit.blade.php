@@ -15,9 +15,6 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
       action="{{ url('admin/service-order/edit/' . (int) $item->id) }}">
       @csrf
       <input type="hidden" name="id" value="{{ $item->id }}">
-
-      @include('admin._components.card-header', ['title' => $title])
-
       <div class="card-body">
         <h4>Info Order</h4>
         <div class="form-row">
