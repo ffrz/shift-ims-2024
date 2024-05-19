@@ -21,7 +21,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           <div class="form-group col-md-4">
             <label for="id">Kode Produk</label>
             <input type="text" class="form-control @error('code') is-invalid @enderror" id="id" readonly
-              value="{{ $item->id ? $item->formattedId() : '-otomatis-' }}">
+              value="{{ $item->id ? $item->idFormatted() : '-otomatis-' }}">
           </div>
         </div>
         <div class="form-row">
