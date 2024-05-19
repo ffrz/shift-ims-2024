@@ -5,7 +5,7 @@ use App\Models\Product;
     'title' => $filter['record_status'] == 0 ? 'Produk Dihapus' : 'Produk',
     'menu_active' => 'inventory',
     'nav_active' => 'product',
-    'back_button_link' => $filter['record_status'] == 0 ? url('/admin/product') : '',
+    'back_button_link' => $filter['record_status'] == 0 ? url('/admin/product?record_status=1') : '',
 ])
 
 @section('right-menu')
@@ -21,14 +21,12 @@ use App\Models\Product;
       <div class="card">
         <form mmethod="GET" action="?">
           <div class="card-header" id="filterHeading">
-            <h2 class="mb-0">
-              <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
-                data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                <i class="fa fa-filter mr-2"> </i> Penyaringan
-              </button>
-            </h2>
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+              data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+              <i class="fa fa-filter mr-2"> </i> Penyaringan
+            </button>
           </div>
-          <div id="collapseThree" class="collapse" aria-labelledby="filterHeading" data-parent="#filterBox">
+          <div id="filterCollapse" class="collapse" aria-labelledby="filterHeading" data-parent="#filterBox">
             <div class="card-body">
               <div class="form-row">
                 <div class="form-group col-md-2">
