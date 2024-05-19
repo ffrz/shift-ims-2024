@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -27,6 +28,7 @@ class UserController extends Controller
         'password.max' => 'Kata sandi terlalu panjang, maksimal 40 karakter.',
         'password.confirmed' => 'Kata sandi yang anda konfirmasi salah.',
         'password_confirmation.required' => 'Anda belum mengkonfirmasi kata sandi.',
+        'current_password.required' => 'Kata sandi harus diisi.',
     ];
 
     public function __construct()
@@ -110,16 +112,21 @@ class UserController extends Controller
             $changedFields = ['fullname'];
             $rules = [
                 'fullname' => self::VALIDATION_RULE_NAME,
+                'current_password' => 'required',
             ];
 
             if (!empty($request->password)) {
                 $changedFields[] = 'password';
-
                 $rules['password'] = self::VALIDATION_RULE_PASSWORD . '|confirmed';
                 $rules['password_confirmation'] = 'required';
             }
 
             $validator = Validator::make($request->all(), $rules, $this->validation_messages);
+
+            if (!Hash::check($request->current_password, $user->password)) {
+                $validator->errors()->add('current_password', 'Password anda salah.');   
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
 
             if ($validator->fails()) {
                 return redirect()->back()->withInput()->withErrors($validator);

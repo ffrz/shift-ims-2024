@@ -29,7 +29,7 @@
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="current_password">Kata Sandi Saat Ini</label>
-            <input type="text" class="form-control @error('current_password') is-invalid @enderror"
+            <input type="password" class="form-control @error('current_password') is-invalid @enderror"
               id="current_password" placeholder="Kata Sandi sekarang" name="current_password"
               value="{{ old('current_password') }}">
             @error('current_password')
