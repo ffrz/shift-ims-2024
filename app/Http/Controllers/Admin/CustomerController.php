@@ -24,6 +24,7 @@ class CustomerController extends Controller
         if (!$id) {
             ensure_user_can_access(AclResource::ADD_CUSTOMER);
             $item = new Customer();
+            $item->active = true;
         } else {
             ensure_user_can_access(AclResource::EDIT_CUSTOMER);
             $item = Customer::find($id);

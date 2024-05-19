@@ -24,6 +24,7 @@ class SupplierController extends Controller
         if (!$id) {
             ensure_user_can_access(AclResource::ADD_SUPPLIER);
             $item = new Supplier();
+            $item->active = true;
         } else {
             ensure_user_can_access(AclResource::EDIT_SUPPLIER);
             $item = Supplier::find($id);
