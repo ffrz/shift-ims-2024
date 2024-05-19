@@ -15,8 +15,6 @@ $title = 'Rincian Order Servis';
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
     <div class="card card-primary">
-      @include('admin._components.card-header', ['title' => $title])
-
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
