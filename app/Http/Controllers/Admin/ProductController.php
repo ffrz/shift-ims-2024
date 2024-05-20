@@ -10,6 +10,7 @@ use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Number;
 
 class ProductController extends Controller
 {
@@ -92,7 +93,11 @@ class ProductController extends Controller
             }
 
             fill_with_default_value($newData, ['active', 'stock', 'cost', 'price'], 0.);
-
+            
+            $newData['stock'] = numberFromInput($newData['stock']);
+            $newData['cost'] = numberFromInput($newData['cost']);
+            $newData['price'] = numberFromInput($newData['price']);
+            
             $item->fill($newData);
             $item->save();
             $data['New Data'] = $item->toArray();

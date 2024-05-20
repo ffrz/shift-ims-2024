@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use App\Models\Setting;
 
 $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
 
@@ -46,31 +47,37 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
             @enderror
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label for="description">Deskripsi</label>
-            <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
-              placeholder="Masukkan deskripsi produk" name="description"
-              value="{{ old('description', $item->description) }}">
-            @error('description')
-              <span class="text-danger">
-                {{ $message }}
-              </span>
-            @enderror
+        {{-- buat setting show hide deskripsi --}}
+        @if (Setting::value('inv.show_description'))
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="description">Deskripsi</label>
+              <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
+                placeholder="Masukkan deskripsi produk" name="description"
+                value="{{ old('description', $item->description) }}">
+              @error('description')
+                <span class="text-danger">
+                  {{ $message }}
+                </span>
+              @enderror
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label for="barcode">Barcode</label>
-            <input type="text" class="form-control @error('barcode') is-invalid @enderror" id="barcode"
-              placeholder="Masukkan barcode produk" name="barcode" value="{{ old('barcode', $item->barcode) }}">
-            @error('barcode')
-              <span class="text-danger">
-                {{ $message }}
-              </span>
-            @enderror
+        @endif
+        {{-- buat setting show hide barcode --}}
+        @if (Setting::value('inv.show_barcode'))
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="barcode">Barcode</label>
+              <input type="text" class="form-control @error('barcode') is-invalid @enderror" id="barcode"
+                placeholder="Masukkan barcode produk" name="barcode" value="{{ old('barcode', $item->barcode) }}">
+              @error('barcode')
+                <span class="text-danger">
+                  {{ $message }}
+                </span>
+              @enderror
+            </div>
           </div>
-        </div>
+        @endif
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="category_id">Kategori</label>
@@ -102,8 +109,8 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="stock">Stok</label>
-            <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock"
-              placeholder="Masukkan stok produk" name="stock" value="{{ old('stock', $item->stock) }}">
+            <input type="text" class="form-control text-right @error('stock') is-invalid @enderror" id="stock"
+              placeholder="Masukkan stok produk" name="stock" value="{{ format_number(old('stock', $item->stock)) }}">
             @error('stock')
               <span class="text-danger">
                 {{ $message }}
@@ -126,8 +133,8 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="cost">Modal / Harga Beli</label>
-            <input type="number" class="form-control @error('cost') is-invalid @enderror" id="cost"
-              placeholder="Masukkan modal / harga beli produk" name="cost" value="{{ old('cost', $item->cost) }}">
+            <input type="text" class="form-control text-right @error('cost') is-invalid @enderror" id="cost"
+              placeholder="Masukkan modal / harga beli produk" name="cost" value="{{ format_number(old('cost', $item->cost)) }}">
             @error('cost')
               <span class="text-danger">
                 {{ $message }}
@@ -138,13 +145,20 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="price">Harga Jual</label>
-            <input type="number" class="form-control @error('price') is-invalid @enderror" id="price"
-              placeholder="Masukkan harga jual produk" name="price" value="{{ old('price', $item->price) }}">
+            <input type="text" class="form-control text-right @error('price') is-invalid @enderror" id="price"
+              placeholder="Masukkan harga jual produk" name="price" value="{{ format_number(old('price', $item->price)) }}">
             @error('price')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="#profit">Laba</label>
+            <input type="text" readonly class="form-control text-right" id="profit"
+              value="{{ format_number(old('price', $item->price) - old('cost', $item->cost)) }}">
           </div>
         </div>
         <div class="form-row">
@@ -176,3 +190,31 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
     </form>
   </div>
 @endSection
+@section('footscript')
+  <script>
+    $(function() {
+      //js
+      function updateProfitMargin() {
+        let cost = localeNumberToNumber($('#cost').val());
+        let price = localeNumberToNumber($('#price').val());
+        let profit = price - cost;
+        $('#profit').val(toLocaleNumber(profit));
+      }
+
+      Inputmask("decimal", INPUTMASK_OPTIONS).mask("#stock");
+      Inputmask("decimal", Object.assign({
+        allowMinus: false
+      }, INPUTMASK_OPTIONS)).mask("#price,#cost");
+
+      $('.select2').select2({
+        minimumResultsForSearch: -1
+      });
+      $('#cost').change(function() {
+        updateProfitMargin();
+      });
+      $('#price').change(function() {
+        updateProfitMargin();
+      });
+    });
+  </script>
+@endsection

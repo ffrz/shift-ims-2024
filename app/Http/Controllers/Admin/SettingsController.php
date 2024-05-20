@@ -19,21 +19,15 @@ class SettingsController extends Controller
     
     public function edit(Request $request)
     {
-        $data = [
-            'business_name' => Setting::value('app.business_name', ''),
-            'business_address' => Setting::value('app.business_address', ''),
-            'business_phone' => Setting::value('app.business_phone', ''),
-            'business_owner' => Setting::value('app.business_owner', ''),
-        ];
-        return view('admin.settings.edit', compact('data'));
+        return view('admin.settings.edit');
     }
 
     public function save(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'business_name' => 'required'
+            'company_name' => 'required'
         ], [
-            'business_name.required' => 'Nama Usaha harus diisi.'
+            'company_name.required' => 'Nama Perusahaan harus diisi.'
         ]);
 
         if ($validator->fails()) {
@@ -43,10 +37,14 @@ class SettingsController extends Controller
         $oldValues = Setting::values();
 
         DB::beginTransaction();
-        Setting::setValue('app.business_name', $request->post('business_name', ''));
-        Setting::setValue('app.business_address', $request->post('business_address', ''));
-        Setting::setValue('app.business_phone', $request->post('business_phone', ''));
-        Setting::setValue('app.business_owner', $request->post('business_owner', ''));
+        // inventory
+        Setting::setValue('inv.show_barcode', $request->post('inv_show_barcode', false));
+        Setting::setValue('inv.show_description', $request->post('inv_show_description', false));
+        // app
+        Setting::setValue('company.name', $request->post('company_name', ''));
+        Setting::setValue('company.address', $request->post('company_address', ''));
+        Setting::setValue('company.phone', $request->post('company_phone', ''));
+        Setting::setValue('company.owner', $request->post('company_owner', ''));
         DB::commit();
 
         $data = [

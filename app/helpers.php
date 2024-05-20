@@ -11,6 +11,11 @@ function fill_with_default_value(&$array, $keys, $default)
     }
 }
 
+function numberFromInput($input)
+{
+    return floatval(str_replace(',', '.', str_replace('.', '', $input)));
+}
+
 function ensure_user_can_access($resource, $message = 'ACCESS DENIED', $code = 403)
 {
     /** @disregard P1009 */

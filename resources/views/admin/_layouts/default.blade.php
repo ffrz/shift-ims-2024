@@ -89,9 +89,17 @@
   <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
   <script src="{{ asset('plugins/datatables-select/js/dataTables.select.min.js') }}"></script>
   <script src="{{ asset('plugins/datatables-select/js/select.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('assets/js/helper.js') }}"></script>
   @yield('footscripts')
   <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
   <script>
+    INPUTMASK_OPTIONS = {
+      groupSeparator: '.',
+      radixPoint: ',',
+      allowMinus: true,
+      inputtype: "text"
+    };
+    
     DATE_FORMAT = 'DD-MM-YYYY';
     DATETIME_FORMAT = 'DD-MM-YYYY HH:mm:ss';
     DATATABLES_OPTIONS = {

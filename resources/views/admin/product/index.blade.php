@@ -129,6 +129,8 @@ use App\Models\Product;
                 <td class="text-center">
                   <div class="btn-group">
                     @if (!$item->deleted_at)
+                      <a href="<?= url("/admin/product/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                          class="fa fa-eye" title="Rincian"></i></a>
                       <a href="<?= url("/admin/product/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-copy" title="Duplikat"></i></a>
                       <a href="<?= url("/admin/product/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
