@@ -158,6 +158,10 @@ class ServiceOrderController extends Controller
             if (empty($requestData['date_completed']))
                 $requestData['date_completed'] = null;
 
+            $requestData['down_payment'] = numberFromInput($requestData['down_payment']);
+            $requestData['estimated_cost'] = numberFromInput($requestData['estimated_cost']);
+            $requestData['total_cost'] = numberFromInput($requestData['total_cost']);
+            
             $item->fill($requestData);
             $item->save();
             $data['New Data'] = $item->toArray();

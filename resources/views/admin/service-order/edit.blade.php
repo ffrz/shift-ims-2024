@@ -219,7 +219,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           <div class="form-group col-md-3">
             <label for="estimated_cost">Perkiraan Biaya:</label>
             <input type="text" class="form-control text-right @error('estimated_cost') is-invalid @enderror"
-              id="estimated_cost" name="estimated_cost" value="{{ old('estimated_cost', $item->estimated_cost) }}">
+              id="estimated_cost" name="estimated_cost" value="{{ format_number(old('estimated_cost', $item->estimated_cost)) }}">
             @error('estimated_cost')
               <span class="text-danger">
                 {{ $message }}
@@ -229,7 +229,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           <div class="form-group col-md-3">
             <label for="down_payment">Uang Muka:</label>
             <input type="text" class="form-control text-right @error('down_payment') is-invalid @enderror"
-              id="down_payment" name="down_payment" value="{{ old('down_payment', $item->down_payment) }}">
+              id="down_payment" name="down_payment" value="{{ format_number(old('down_payment', $item->down_payment)) }}">
             @error('down_payment')
               <span class="text-danger">
                 {{ $message }}
@@ -239,7 +239,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           <div class="form-group col-md-3">
             <label for="total_cost">Total Biaya:</label>
             <input type="text" class="form-control text-right @error('total_cost') is-invalid @enderror"
-              id="total_cost" name="total_cost" value="{{ old('total_cost', $item->total_cost) }}">
+              id="total_cost" name="total_cost" value="{{ format_number(old('total_cost', $item->total_cost)) }}">
             @error('total_cost')
               <span class="text-danger">
                 {{ $message }}
@@ -289,5 +289,8 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
         minimumResultsForSearch: -1
       });
     });
+    Inputmask("decimal", Object.assign({
+      allowMinus: false
+    }, INPUTMASK_OPTIONS)).mask("#down_payment,#estimated_cost,#total_cost");
   </script>
 @endsection
