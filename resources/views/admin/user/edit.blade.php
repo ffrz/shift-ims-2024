@@ -85,6 +85,7 @@
         </div>
         <div class="card-footer">
           <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
+          <a class="btn btn-default ml-2" href="/admin/user"><i class="fas fa-cancel mr-1"></i> Batal</a>
         </div>
       </form>
     </div>

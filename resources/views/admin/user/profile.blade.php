@@ -6,7 +6,6 @@
 @section('content')
   <div class="card card-light">
     <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user/profile') }}">
-      @include('admin._components.card-header', ['title' => 'Profil Saya'])
       <div class="card-body">
         @csrf
         <div class="form-row">

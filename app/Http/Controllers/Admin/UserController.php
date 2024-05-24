@@ -36,10 +36,27 @@ class UserController extends Controller
         ensure_user_can_access(AclResource::USER_MANAGEMENT);
     }
     
-    public function index()
+    public function index(Request $request)
     {
-        $items = User::with('group')->orderBy('fullname', 'asc')->get();
-        return view('admin.user.index', compact('items'));
+        $filter = [
+            'search' => $request->get('search', ''),
+            'status' => $request->get('status', '-1'),
+            'type' => $request->get('type', '-1'),
+            'group_id' => $request->get('group_id', ''),
+        ];
+        $q = User::with('group');
+        if ($filter['status'] != -1) {
+            $q->where('is_active', '=', $filter['status']);
+        }
+        if ($filter['type'] != -1) {
+            $q->where('is_admin', '=', $filter['type']);
+        }
+        if ($filter['group_id'] > 0) {
+            $q->where('group_id', '=', $filter['group_id']);
+        }
+        $items = $q->orderBy('fullname', 'asc')->paginate(10);
+        $groups = UserGroup::orderBy('name', 'asc')->get();
+        return view('admin.user.index', compact('items', 'filter', 'groups'));
     }
 
     public function edit(Request $request, $id = 0)

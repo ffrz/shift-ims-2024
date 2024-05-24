@@ -20,14 +20,14 @@ class UserGroupController extends Controller
 
     public function index()
     {
-        $items = UserGroup::orderBy('name', 'asc')->get();
+        $items = UserGroup::orderBy('name', 'asc')->paginate(10);
         return view('admin.user-group.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)
     {
-        $group = $id ? UserGroup::find($id) : new UserGroup();
-        if (!$group)
+        $item = $id ? UserGroup::find($id) : new UserGroup();
+        if (!$item)
             return redirect('admin/user-group')->with('warning', 'Grup Pengguna tidak ditemukan.');
 
         if ($request->method() == 'POST') {
@@ -39,22 +39,23 @@ class UserGroupController extends Controller
                 'name.max' => 'Nama grup terlalu panjang, maksimal 100 karakter.',
             ]);
 
-            if ($validator->fails())
+            if ($validator->fails()) {
                 return redirect()->back()->withInput()->withErrors($validator);
+            }
 
             $acl = (array)$request->post('acl');
 
             DB::beginTransaction();
 
-            $data = ['Old Data' => $group->toArray()];
-            $group->fill($request->all());
-            $group->save();
-            $data['New Data'] = $group->toArray();
+            $data = ['Old Data' => $item->toArray()];
+            $item->fill($request->all());
+            $item->save();
+            $data['New Data'] = $item->toArray();
 
-            DB::delete('delete from user_group_accesses where group_id = ?', [$group->id]);
+            DB::delete('delete from user_group_accesses where group_id = ?', [$item->id]);
             foreach ($acl as $resource => $allowed) {
                 $access = new UserGroupAccess();
-                $access->group_id = $group->id;
+                $access->group_id = $item->id;
                 $access->resource = $resource;
                 $access->allow = $allowed;
                 $access->save();
@@ -63,32 +64,31 @@ class UserGroupController extends Controller
             UserActivity::log(
                 UserActivity::USER_GROUP_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Grup Pengguna',
-                'Grup pengguna ' . e($group->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
+                'Grup pengguna ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
 
             DB::commit();
 
-            return redirect('admin/user-group/edit/' . $group->id)->with('info', 'Grup pengguna telah disimpan.');
+            return redirect('admin/user-group/edit/' . $item->id)->with('info', 'Grup pengguna telah disimpan.');
         }
 
         $resources = AclResource::all();
 
-        return view('admin.user-group.edit', compact('group', 'resources'));
+        return view('admin.user-group.edit', compact('item', 'resources'));
     }
 
     public function delete($id)
     {
-        // fix me, notif kalo grup ga bisa dihapus
-        if (!$group = UserGroup::find($id))
+        if (!$item = UserGroup::find($id))
             $message = 'Grup pengguna tidak ditemukan.';
-        else if ($group->delete($id)) {
-            $message = 'Grup pengguna ' . e($group->name) . ' telah dihapus.';
+        else if ($item->delete($id)) {
+            $message = 'Grup pengguna ' . e($item->name) . ' telah dihapus.';
             UserActivity::log(
                 UserActivity::USER_GROUP_MANAGEMENT,
                 'Hapus Grup Pengguna',
                 $message,
-                $group->toArray()
+                $item->toArray()
             );
         }
 

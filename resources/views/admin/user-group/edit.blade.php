@@ -1,22 +1,20 @@
-<?php $title = ($group->id ? 'Edit' : 'Tambah') . ' Grup Pengguna'; ?>
+<?php $title = ($item->id ? 'Edit' : 'Tambah') . ' Grup Pengguna'; ?>
 @extends('admin._layouts.default', [
     'title' => $title,
     'menu_active' => 'system',
     'nav_active' => 'user-group',
-    'back_button_link' => url('/admin/user-group/'),
 ])
 
 @section('content')
   <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user-group/edit/' . (int) $group->id) }}">
+    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/user-group/edit/' . (int) $item->id) }}">
       @csrf
-      @include('admin._components.card-header', ['title' => $title])
       <div class="card-body">
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="name">Nama Grup</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" autofocus id="name"
-              placeholder="Masukkan Nama Grup" name="name" value="{{ old('name', $group->name) }}">
+              placeholder="Masukkan Nama Grup" name="name" value="{{ old('name', $item->name) }}">
             @error('name')
               <span class="text-danger">
                 {{ $message }}
@@ -29,7 +27,7 @@
             <label for="description">Deskripsi</label>
             <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
               placeholder="Masukkan deskripsi grup" name="description"
-              value="{{ old('description', $group->description) }}">
+              value="{{ old('description', $item->description) }}">
             @error('description')
               <span class="text-danger">
                 {{ $message }}
@@ -56,7 +54,7 @@
                     <div class="mr-3 custom-control custom-checkbox">
                       <input type="checkbox" class="custom-control-input" id="{{ $subname }}"
                         name="acl[{{ $subname }}]" value="1"
-                        @if (isset($group->acl()[$subname]) && $group->acl()[$subname] == true) {{ 'checked="checked"' }} @endif>
+                        @if (isset($item->acl()[$subname]) && $item->acl()[$subname] == true) {{ 'checked="checked"' }} @endif>
                       <label class="custom-control-label" style="font-weight:normal; white-space: nowrap;"
                         for="{{ $subname }}">{{ $sublabel }}</label>
                     </div>
@@ -66,7 +64,7 @@
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="{{ $name }}"
                     name="acl[{{ $name }}]" value="1"
-                    @if (isset($group->acl()[$name]) && $group->acl()[$name] == true) {{ 'checked="checked"' }} @endif>
+                    @if (isset($item->acl()[$name]) && $item->acl()[$name] == true) {{ 'checked="checked"' }} @endif>
                   <label class="custom-control-label" style="font-weight:normal; white-space: nowrap;"
                     for="{{ $name }}">{{ $label }}</label>
                 </div>
@@ -77,6 +75,7 @@
       </div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
+        <a class="btn btn-default ml-2" href="/admin/user-group"><i class="fas fa-cancel mr-1"></i> Batal</a>
       </div>
     </form>
   </div>
