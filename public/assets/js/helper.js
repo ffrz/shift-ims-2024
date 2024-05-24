@@ -4,5 +4,7 @@ function localeNumberToNumber(str) {
 }
 
 function toLocaleNumber(num) {
+    if (typeof num === 'string')
+        num = Number(num);
     return num.toLocaleString('id-ID');
 }
