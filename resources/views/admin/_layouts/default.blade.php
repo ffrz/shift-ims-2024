@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ $title }} - {{ env('APP_NAME') }}</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
@@ -99,7 +100,7 @@
       allowMinus: true,
       inputtype: "text"
     };
-    
+
     DATE_FORMAT = 'DD-MM-YYYY';
     DATETIME_FORMAT = 'DD-MM-YYYY HH:mm:ss';
     DATATABLES_OPTIONS = {
@@ -146,6 +147,13 @@
     @endif
   </script>
   @yield('footscript')
+  <script type="text/javascript">
+    setInterval(function() {
+      $.get('{{ url('admin/refresh-csrf') }}').done(function(data) {
+        $('[name="csrf-token"]').attr('content', data)
+      });
+    }, 60 * 60 * 1000);
+  </script>
 </body>
 
 </html>
