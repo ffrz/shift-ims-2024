@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
+use App\Models\Party;
 use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class SupplierController extends Controller
     {
         ensure_user_can_access(AclResource::SUPPLIER_LIST);
 
-        $items = Supplier::orderBy('name', 'asc')->paginate(10);
+        $q = Supplier::query();
+        $items = $q->orderBy('name', 'asc')->paginate(10);
         return view('admin.supplier.index', compact('items'));
     }
 
@@ -24,6 +26,7 @@ class SupplierController extends Controller
         if (!$id) {
             ensure_user_can_access(AclResource::ADD_SUPPLIER);
             $item = new Supplier();
+            $item->id2 = Party::getNextId2(Party::TYPE_SUPPLIER);
             $item->active = true;
         } else {
             ensure_user_can_access(AclResource::EDIT_SUPPLIER);
@@ -72,9 +75,9 @@ class SupplierController extends Controller
         ensure_user_can_access(AclResource::DELETE_SUPPLIER);
 
         // fix me, notif kalo kategori ga bisa dihapus
-        if (!$item = Supplier::find($id))
+        if (!$item = Supplier::find($id)) {
             $message = 'Supplier tidak ditemukan.';
-        else if ($item->delete($id)) {
+        } else if ($item->delete($id)) {
             $message = 'Supplier ' . e($item->name) . ' telah dihapus.';
             UserActivity::log(
                 UserActivity::SUPPLIER_MANAGEMENT,

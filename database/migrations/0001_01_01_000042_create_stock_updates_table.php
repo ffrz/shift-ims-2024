@@ -16,7 +16,6 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedTinyInteger('type')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
-            $table->boolean('active')->default(true);
             $table->decimal('total_cost', 12, 0)->default(0.);
             $table->decimal('total_price', 12, 0)->default(0.);
             $table->text('notes')->nullable(true)->default(null);

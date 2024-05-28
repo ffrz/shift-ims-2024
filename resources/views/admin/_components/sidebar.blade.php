@@ -92,10 +92,19 @@ if (!isset($menu_active)) {
             <ul class="nav nav-treeview">
               @if (true)
                 <li class="nav-item">
-                  <a href="{{ url('/admin/stock-update') }}"
-                    class="nav-link {{ $nav_active == 'stock-update' ? 'active' : '' }}">
+                  <a href="{{ url('/admin/stock-adjustment') }}"
+                    class="nav-link {{ $nav_active == 'stock-adjustment' ? 'active' : '' }}">
                     <i class="nav-icon fas fa-box"></i>
-                    <p>Pembaruan Stok</p>
+                    <p>Penyesuaian Stok</p>
+                  </a>
+                </li>
+              @endif
+              @if (true)
+                <li class="nav-item">
+                  <a href="{{ url('/admin/stock-update-history') }}"
+                    class="nav-link {{ $nav_active == 'stock-update-history' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>Riwayat Stok</p>
                   </a>
                 </li>
               @endif

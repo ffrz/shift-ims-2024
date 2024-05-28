@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('id');
             $table->unsignedBigInteger('update_id');
             $table->unsignedBigInteger('product_id');
-            $table->date('date');
             $table->integer('quantity')->default(0);
             $table->decimal('cost', 12, 0)->default(0.);
             $table->decimal('price', 12, 0)->default(0.);

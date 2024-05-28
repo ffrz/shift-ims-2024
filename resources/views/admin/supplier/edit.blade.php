@@ -15,7 +15,7 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="id">Kode</label>
-            <input type="text" readonly class="form-control" id="id" value="{{ $item->id ? $item->idFormatted() : '--otomatis terisi--' }}">
+            <input type="text" readonly class="form-control" id="id" value="{{ $item->idFormatted() }}">
             @error('id')
               <span class="text-danger">
                 {{ $message }}

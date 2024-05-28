@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Customer;
+use App\Models\Party;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +16,7 @@ class CustomerController extends Controller
     {
         ensure_user_can_access(AclResource::CUSTOMER_LIST);
 
-        $items = Customer::orderBy('name', 'asc')->paginate(10);
+        $items = Customer::query()->orderBy('name', 'asc')->paginate(10);
         return view('admin.customer.index', compact('items'));
     }
 
@@ -24,6 +25,7 @@ class CustomerController extends Controller
         if (!$id) {
             ensure_user_can_access(AclResource::ADD_CUSTOMER);
             $item = new Customer();
+            $item->id2 = Party::getNextId2(Party::TYPE_CUSTOMER);
             $item->active = true;
         } else {
             ensure_user_can_access(AclResource::EDIT_CUSTOMER);

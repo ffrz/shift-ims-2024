@@ -13,6 +13,17 @@
       <div class="card-body">
         <div class="form-row">
           <div class="form-group col-md-3">
+            <label for="id">Kode</label>
+            <input type="text" readonly class="form-control" id="id" value="{{ $item->idFormatted() }}">
+            @error('id')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
             <label for="name">Nama Pelanggan</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" autofocus id="name"
               placeholder="Masukkan nama pelanggan" name="name" value="{{ old('name', $item->name) }}">

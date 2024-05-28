@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SalesOrderController;
 use App\Http\Controllers\Admin\ServiceOrderController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\StockAdjustmentController;
+use App\Http\Controllers\Admin\StockUpdateController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
@@ -45,7 +47,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
     Route::get('logout', [AuthController::class, 'logout']);
 
     Route::get('dashboard', [DashboardController::class, 'index']);
-    
+
     Route::controller(ReportController::class)->prefix('report')->group(function () {
         Route::get('', 'index');
         Route::get('inventory-stock', 'inventoryStock');
@@ -120,7 +122,20 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::post('delete', 'delete');
     });
 
-    Route::get('refresh-csrf', function() {
+    Route::controller(StockUpdateController::class)->prefix('stock-update-history')->group(function () {
+        Route::get('', 'index');
+        Route::get('view/{id}', 'view');
+    });
+
+    Route::controller(StockAdjustmentController::class)->prefix('stock-adjustment')->group(function () {
+        Route::get('', 'index');
+        Route::get('create', 'create');
+        Route::get('view/{id}', 'view');
+        Route::get('edit/{id}', 'edit');
+        Route::get('delete/{id}', 'delete');
+    });
+
+    Route::get('refresh-csrf', function () {
         return csrf_token();
     });
 });

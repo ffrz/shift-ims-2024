@@ -2,24 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Supplier extends Model
+class Supplier extends Party
 {
-    use SoftDeletes;
+    public $table = 'parties';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'active', 'name', 'phone', 'address', 'notes'
-    ];
+    public function __construct()
+    {
+        $this->type = Party::TYPE_SUPPLIER;
+    }
 
     public function idFormatted()
     {
-        return 'SP' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+        return 'SP' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
+    }
+
+    public static function query()
+    {
+        $q = parent::query();
+        $q->where('type', '=', Party::TYPE_SUPPLIER);
+        return $q;
     }
 }
