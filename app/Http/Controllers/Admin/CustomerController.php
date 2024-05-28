@@ -15,7 +15,7 @@ class CustomerController extends Controller
     {
         ensure_user_can_access(AclResource::CUSTOMER_LIST);
 
-        $items = Customer::orderBy('name', 'asc')->get();
+        $items = Customer::orderBy('name', 'asc')->paginate(10);
         return view('admin.customer.index', compact('items'));
     }
 

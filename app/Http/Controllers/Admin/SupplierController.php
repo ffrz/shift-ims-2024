@@ -15,7 +15,7 @@ class SupplierController extends Controller
     {
         ensure_user_can_access(AclResource::SUPPLIER_LIST);
 
-        $items = Supplier::orderBy('name', 'asc')->get();
+        $items = Supplier::orderBy('name', 'asc')->paginate(10);
         return view('admin.supplier.index', compact('items'));
     }
 

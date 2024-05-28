@@ -92,17 +92,25 @@ use App\Models\Product;
   @endif
   <div class="card card-light">
     <div class="card-body">
-      <div class="row">
-        <div class="col-md-12">
-          @if ($filter['record_status'] != 0)
-            <a class="btn btn-default" aria-current="page" href="product?record_status=0"><i
-                class="fa fa-trash mr-2"></i>Tong Sampah</a>
-          @endif
+      <form action="?">
+        <div class="row">
+          <div class="col-md-6">
+            @if ($filter['record_status'] != 0)
+              <a class="btn btn-default" aria-current="page" href="product?record_status=0"><i
+                  class="fa fa-trash mr-2"></i>Tong Sampah</a>
+            @endif
+          </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <div class="form-group form-inline">
+              <label class="mr-2" for="search">Cari:</label>
+              <input type="text" class="form-control" name="search" id="search" value="{{ $filter['search'] }}"
+                placeholder="Cari produk">
+            </div>
+          </div>
         </div>
-      </div>
+      </form>
       <div class="row mt-3">
         <div class="col-md-12">
-
           <table class="data-table display table table-bordered table-striped table-condensed" style="width:100%">
             <thead>
               <tr>
@@ -117,7 +125,7 @@ use App\Models\Product;
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($items as $item) : ?>
+              @forelse ($items as $item)
               <tr>
                 <td>{{ $item->idFormatted() }}</td>
                 <td>{{ $item->code }}</td>
@@ -149,29 +157,16 @@ use App\Models\Product;
                   </div>
                 </td>
               </tr>
-              <?php endforeach ?>
+              @empty
+              <tr>
+                <td colspan="8" class="text-center text-muted font-italic">Tidak ada rekaman yang dapat ditampilkan.</td>
+              </tr>
+              @endforelse
             </tbody>
           </table>
+          @include('admin._components.paginator', ['items' => $items])
         </div>
       </div>
     </div>
   </div>
 @endSection
-
-@section('footscript')
-  <script>
-    $(function() {
-      DATATABLES_OPTIONS.order = [
-        [1, 'asc']
-      ];
-      DATATABLES_OPTIONS.columnDefs = [{
-        orderable: false,
-        targets: 4
-      }];
-      $('.data-table').DataTable(DATATABLES_OPTIONS);
-    });
-    $('.select2').select2({
-      minimumResultsForSearch: -1
-    });
-  </script>
-@endsection

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SalesOrderController;
 use App\Http\Controllers\Admin\ServiceOrderController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -61,6 +62,14 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('print/{id}', 'print');
     });
 
+    Route::controller(SalesOrderController::class)->prefix('sales-order')->group(function () {
+        Route::get('', 'index');
+        Route::get('create', 'create');
+        Route::match(['get', 'post'], 'edit/{id}', 'edit');
+        Route::get('delete/{id}', 'delete');
+        Route::post('save-detail/{id}', 'saveDetail');
+    });
+
     Route::controller(SupplierController::class)->prefix('supplier')->group(function () {
         Route::get('', 'index');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
@@ -109,5 +118,9 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('', 'index');
         Route::get('show/{id}', 'show');
         Route::post('delete', 'delete');
+    });
+
+    Route::get('refresh-csrf', function() {
+        return csrf_token();
     });
 });

@@ -1,21 +1,21 @@
-<?php use App\Models\ServiceOrder; ?>
+<?php use App\Models\SalesOrder; ?>
 
 @extends('admin._layouts.default', [
-    'title' => 'Order Servis',
-    'menu_active' => 'service',
-    'nav_active' => 'service-order',
-    'back_button_link' => $filter['record_status'] == 0 ? url('/admin/service-order?record_status=1') : '',
+    'title' => 'Order Penjualan',
+    'menu_active' => 'sales',
+    'nav_active' => 'sales-order',
+    'back_button_link' => url('/admin/sales-order'),
 ])
 
 @section('right-menu')
   <li class="nav-item">
-    <a href="<?= url('/admin/service-order/edit/0') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
+    <a href="<?= url('/admin/sales-order/create') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
         class="fa fa-plus"></i></a>
   </li>
 @endSection
 
 @section('content')
-  @if ($filter['record_status'] == 1)
+  @if (false)
     <div class="accordion" id="filterBox">
       <div class="card">
         <form mmethod="GET" action="?">
@@ -91,59 +91,43 @@
   @endif
   <div class="card card-light">
     <div class="card-body">
-      <div class="row">
-        <div class="col-md-12">
-          @if ($filter['record_status'] != 0)
-            <a class="btn btn-default" aria-current="page" href="service-order?record_status=0"><i
-                class="fa fa-trash mr-2"></i>Tong Sampah</a>
-          @endif
-        </div>
-      </div>
       <div class="row mt-3">
         <div class="col-md-12">
-          <table class="data-table display table table-bordered table-striped table-condensed center-th table-sm"
+          <table class="display table table-bordered table-striped table-condensed center-th table-sm"
             style="width:100%">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Tgl Masuk</th>
-                <th>Atas Nama</th>
-                <th>Kontak</th>
-                <th>Alamat</th>
-                <th>Perangkat</th>
-                <th>Status Order</th>
-                <th>Status Servis</th>
-                <th>Status Pembayaran</th>
+                <th>Tanggal</th>
+                <th>Pelanggan</th>
+                <th>Total</th>
+                <th>Piutang</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($items as $item) : ?>
               <tr>
-                <td>{{ $item->formatOrderId($item->id) }}</td>
-                <td>{{ $item->date_received }}</td>
-                <td>{{ $item->customer_name }}</td>
-                <td>{{ $item->customer_contact }}</td>
-                <td>{{ $item->customer_address }}</td>
-                <td>{{ $item->device }}</td>
-                <td>{{ $item->formatOrderStatus($item->order_status) }}</td>
-                <td>{{ $item->formatServiceStatus($item->service_status) }}</td>
-                <td>{{ $item->formatPaymentStatus($item->payment_status) }}</td>
+                <td>{{ $item->idFormatted() }}</td>
+                <td>{{ $item->date }}</td>
+                <td>{{ $item->customer ? $item->customer->name : '' }}</td>
+                <td>{{ $item->total }}</td>
+                <td>{{ $item->total_receivable }}</td>
                 <td class="text-center">
                   <div class="btn-group">
                     @if (empty($item->deleted_at))
-                      <a href="<?= url("/admin/service-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      <a href="<?= url("/admin/sales-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-eye" title="View"></i></a>
-                      <a href="<?= url("/admin/service-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-edit" title="Edit"></i></a>
-                      <a href="<?= url("/admin/service-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      <a href="<?= url("/admin/sales-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-copy" title="Duplikat"></i></a>
                       <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                        href="<?= url("/admin/service-order/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                        href="<?= url("/admin/sales-order/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
                           class="fa fa-trash" title="Hapus"></i></a>
                     @else
                       <a onclick="return confirm('Anda yakin akan mengembalikan rekaman ini?')"
-                        href="<?= url("/admin/service-order/restore/$item->id") ?>" class="btn btn-default btn-sm"><i
+                        href="<?= url("/admin/sales-order/restore/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-trash-arrow-up" title="Pulihkan"></i></a>
                     @endif
                   </div>

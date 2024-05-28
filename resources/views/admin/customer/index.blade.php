@@ -27,27 +27,32 @@
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($items as $i => $item) : ?>
-              <tr>
-                <td>{{ $item->idFormatted() }}</td>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->phone }}</td>
-                <td>{{ $item->address }}</td>
-                <td class="text-center">
-                  <div class="btn-group">
-                    <a href="<?= url("/admin/customer/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                        class="fa fa-edit"></i></a>
-                    <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                      href="<?= url("/admin/customer/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
-                        class="fa fa-trash"></i></a>
-                  </div>
-                </td>
-              </tr>
-              <?php endforeach ?>
+              @forelse ($items as $i => $item)
+                <tr>
+                  <td>{{ $item->idFormatted() }}</td>
+                  <td>{{ $item->name }}</td>
+                  <td>{{ $item->phone }}</td>
+                  <td>{{ $item->address }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <a href="<?= url("/admin/customer/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                          class="fa fa-edit"></i></a>
+                      <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
+                        href="<?= url("/admin/customer/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                          class="fa fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5" class="text-center text-muted font-italic">Belum ada rekaman</td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
         </div>
       </div>
+      @include('admin._components.paginator', ['items' => $items])
     </div>
   </div>
 @endSection
