@@ -90,6 +90,15 @@ if (!isset($menu_active)) {
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @if (true)
+                <li class="nav-item">
+                  <a href="{{ url('/admin/stock-update') }}"
+                    class="nav-link {{ $nav_active == 'stock-update' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>Pembaruan Stok</p>
+                  </a>
+                </li>
+              @endif
               @if (Auth::user()->canAccess(AclResource::PRODUCT_LIST))
                 <li class="nav-item">
                   <a href="{{ url('/admin/product') }}"
