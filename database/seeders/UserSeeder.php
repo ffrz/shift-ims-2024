@@ -36,20 +36,20 @@ class UserSeeder extends Seeder
             'group_id' => 2,
         ]);
 
-        // $faker = \Faker\Factory::create('id_ID');
-        // DB::beginTransaction();
-        // $pw = Hash::make('12345');
-        // for ($i = 3; $i <= 100; $i++) {
-        //     User::insert([
-        //         'id' => $i,
-        //         'username' => 'user' . $i,
-        //         'password' => $pw,
-        //         'is_active' => rand(0, 1),
-        //         'is_admin' => rand(0, 1),
-        //         'fullname' => $faker->name(),
-        //         'group_id' => rand(1, 2),
-        //     ]);
-        // }
-        // DB::commit();
+        $faker = \Faker\Factory::create('id_ID');
+        DB::beginTransaction();
+        $pw = Hash::make('12345');
+        for ($i = 3; $i <= 100; $i++) {
+            User::insert([
+                'id' => $i,
+                'username' => 'user' . $i,
+                'password' => $pw,
+                'is_active' => rand(0, 1),
+                'is_admin' => rand(0, 1),
+                'fullname' => $faker->name(),
+                'group_id' => rand(1, 2),
+            ]);
+        }
+        DB::commit();
     }
 }

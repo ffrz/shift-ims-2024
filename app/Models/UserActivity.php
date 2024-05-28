@@ -20,6 +20,18 @@ class UserActivity extends Model
     public const SUPPLIER_MANAGEMENT = 'supplier-mgmt';
     public const CUSTOMER_MANAGEMENT = 'customer-mgmt';
 
+    private static $_types = [
+        self::AUTHENTICATION => 'Otentikasi',
+        self::SETTINGS => 'Pengaturan',
+        self::USER_MANAGEMENT => 'Pengelolaan Pengguna',
+        self::USER_GROUP_MANAGEMENT => 'Pengelolaan Grup Pengguna',
+        self::SERVICE_ORDER_MANAGEMENT => 'Pengelolaan Order Servis',
+        self::PRODUCT_CATEGORY_MANAGEMENT => 'Pengelolaan Kategori Produk',
+        self::PRODUCT_MANAGEMENT => 'Pengelolaan Produk',
+        self::CUSTOMER_MANAGEMENT => 'Pengelolaan Pelanggan',
+        self::SUPPLIER_MANAGEMENT => 'Pengelolaan Pemasok',
+    ];
+
     protected $casts = [
         'data' => 'json'
     ];
@@ -63,12 +75,16 @@ class UserActivity extends Model
         ]);
     }
 
-    function typeFormatted()
+    public function typeFormatted()
     {
         return self::formatType($this->type);
     }
 
-    static function formatType($type)
+    public static function types() {
+        return self::$_types;
+    }
+
+    public static function formatType($type)
     {
         switch ($type) {
             case self::AUTHENTICATION: return 'Otentikasi';

@@ -10,7 +10,6 @@
   <div class="card card-primary">
     <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/customer/edit/' . (int) $item->id) }}">
       @csrf
-      @include('admin._components.card-header', ['title' => $title])
       <div class="card-body">
         <div class="form-row">
           <div class="form-group col-md-3">

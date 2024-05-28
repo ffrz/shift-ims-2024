@@ -90,14 +90,10 @@
     </div>
   @endif
   <div class="card card-light">
-    @include('admin._components.card-header', [
-        'title' => 'Grup Pengguna',
-        'description' => 'Daftar grup pengguna pada sistem',
-    ])
     <div class="card-body">
       <div class="row mt-3">
         <div class="col-md-12">
-          <table class="data-table display table table-bordered table-striped table-condensed center-th table-sm"
+          <table class="display table table-bordered table-striped table-condensed center-th table-sm"
             style="width:100%">
             <thead>
               <tr>
@@ -144,21 +140,4 @@
       </div>
     </div>
   </div>
-@endSection
-@section('footscript')
-  <script>
-    $(function() {
-      DATATABLES_OPTIONS.order = [
-        [0, 'asc']
-      ];
-      DATATABLES_OPTIONS.columnDefs = [{
-        orderable: false,
-        targets: 0
-      }];
-      $('.data-table').DataTable(DATATABLES_OPTIONS);
-    });
-    $('.select2').select2({
-      minimumResultsForSearch: -1
-    });
-  </script>
 @endSection
