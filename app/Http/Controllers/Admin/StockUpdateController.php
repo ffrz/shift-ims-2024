@@ -19,7 +19,9 @@ class StockUpdateController extends Controller
 
     public function index()
     {
-        $items = StockUpdate::where('status', '=', StockUpdate::STATUS_COMPLETED)->orderBy('id', 'desc')->get();
+        $items = StockUpdate::where('status', '=', StockUpdate::STATUS_COMPLETED)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         return view('admin.stock-update.index', compact('items'));
     }
 

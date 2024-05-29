@@ -6,13 +6,6 @@
     'nav_active' => 'stock-update',
 ])
 
-@section('right-menu')
-  <li class="nav-item">
-    <a href="<?= url('/admin/stock-update/create') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
-        class="fa fa-plus"></i></a>
-  </li>
-@endSection
-
 @section('content')
   <div class="card card-light">
     <div class="card-body">
@@ -22,36 +15,35 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>Tanggal</th>
-                <th>Jenis</th>
-                <th>Total Modal</th>
-                <th>Total Harga</th>
-                <th>Aksi</th>
+                <th style="width:20%">Dibuat</th>
+                <th style="width:20%">Selesai</th>
+                <th style="width:10%">Jenis</th>
+                <th style="width:10%">Selisih Modal</th>
+                <th style="width:10%">Selisih Harga</th>
+                <th style="width:5%">Aksi</th>
               </tr>
             </thead>
             <tbody>
               @forelse ($items as $item)
                 <tr>
                   <td>{{ $item->id2Formatted() }}</td>
-                  <td class="text-center">{{ format_date($item->date) }}</td>
+                  <td class="text-center">{{ format_datetime($item->creation_datetime) }} -
+                    {{ $item->creation_user->username }}</td>
+                  <td class="text-center">{{ format_datetime($item->closing_datetime) }} -
+                    {{ $item->closing_user->username }}</td>
                   <td class="text-center">{{ $item->typeFormatted() }}</td>
                   <td class="text-right">{{ format_number($item->total_cost) }}</td>
                   <td class="text-right">{{ format_number($item->total_price) }}</td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="<?= url("/admin/stock-update-history/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      <a href="<?= url("/admin/stock-update/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-eye" title="View"></i></a>
-                      {{-- <a href="<?= url("/admin/stock-update-history/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-edit" title="Edit"></i></a>
-                      <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                        href="<?= url("/admin/stock-update-history/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
-                          class="fa fa-trash" title="Hapus"></i></a> --}}
                     </div>
                   </td>
                 </tr>
               @empty
                 <tr>
-                  <td class="text-center text-muted font-italic" colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
+                  <td class="text-center text-muted font-italic" colspan="7">Tidak ada rekaman untuk ditampilkan.</td>
                 </tr>
               @endforelse
             </tbody>

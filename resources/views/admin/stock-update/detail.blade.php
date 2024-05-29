@@ -16,27 +16,22 @@ $title = 'Rincian Pembaruan Stok';
         <div class="col-md-12">
           <table class="table no-border table-sm" style="width:100%">
             <tr>
-              <td style="width:10%">Kode Update</td>
-              <td style="width:2%">:</td>
+              <td style="width:5%">#ID</td>
+              <td style="width:1%">:</td>
               <td>{{ $item->id2Formatted() }}</td>
-            </tr>
-            <tr>
-              <td>Tanggal</td>
-              <td>:</td>
-              <td>{{ format_date($item->date) }}</td>
             </tr>
             <tr>
               <td>Dibuat</td>
               <td>:</td>
               <td>{{ format_datetime($item->creation_datetime) }} oleh
-                #{{ $item->creation_user->id . '-' . $item->creation_user->username }}</td>
+                {{ $item->creation_user->username }}</td>
             </tr>
             @if ($item->status != 0)
               <tr>
                 <td>Ditutup</td>
                 <td>:</td>
                 <td>{{ format_datetime($item->closing_datetime) }} oleh
-                  #{{ $item->closing_user->id . '-' . $item->closing_user->username }}</td>
+                  {{ $item->closing_user->username }}</td>
               </tr>
             @endif
             <tr>

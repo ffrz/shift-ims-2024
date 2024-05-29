@@ -21,19 +21,25 @@
           <table class="display table table-bordered table-striped table-condensed center-th table-sm" style="width:100%">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Tanggal</th>
+                <th style="width:15%">#</th>
+                <th>Dibuat</th>
+                <th>Selesai</th>
                 <th>Status</th>
-                <th>Nilai Modal</th>
-                <th>Nilai Harga Jual</th>
+                <th>Selisih Modal</th>
+                <th>Selisih Harga</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               @forelse ($items as $item)
-                <tr>
+                <tr class="{{ $item->status == 0 ? 'table-warning' : '' }}">
                   <td>{{ $item->id2Formatted() }}</td>
-                  <td class="text-center">{{ format_date($item->date) }}</td>
+                  <td class="text-center">{{ format_datetime($item->creation_datetime) }} - {{ $item->creation_user->username }}</td>
+                  <td class="text-center">
+                    @if ($item->status != 0)
+                      {{ format_datetime($item->closing_datetime) }} - {{ $item->closing_user->username }}
+                    @endif
+                  </td>
                   <td class="text-center">{{ $item->statusFormatted() }}</td>
                   <td class="text-right">{{ format_number($item->total_cost) }}</td>
                   <td class="text-right">{{ format_number($item->total_price) }}</td>
@@ -54,7 +60,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td class="text-center text-muted font-italic" colspan="6">Tidak ada rekaman untuk ditampilkan.
+                  <td class="text-center text-muted font-italic" colspan="7">Tidak ada rekaman untuk ditampilkan.
                   </td>
                 </tr>
               @endforelse

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('type')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedBigInteger('ref_id')->nullable()->default(null);
-            $table->date('date');
             $table->datetime('creation_datetime');
             $table->datetime('closing_datetime')->nullable(true)->default(null);
             $table->unsignedBigInteger('creation_uid')->nullable(true)->default(null);

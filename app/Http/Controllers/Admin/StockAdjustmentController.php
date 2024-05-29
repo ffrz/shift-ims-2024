@@ -21,7 +21,9 @@ class StockAdjustmentController extends Controller
 
     public function index()
     {
-        $items = StockUpdate::where('type', '=', StockUpdate::TYPE_MASS_ADJUSTMENT)->get();
+        $items = StockUpdate::where('type', '=', StockUpdate::TYPE_MASS_ADJUSTMENT)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         return view('admin.stock-adjustment.index', compact('items'));
     }
 
@@ -155,10 +157,10 @@ class StockAdjustmentController extends Controller
             $item->delete($id);
             DB::commit();
 
-            $message = 'Penyesuaian stok ' . e($item->id) . ' telah dihapus.';
+            $message = 'Penyesuaian stok ' . e($item->id2Formatted()) . ' telah dihapus.';
             // UserActivity::log(
-            //     UserActivity::USER_GROUP_MANAGEMENT,
-            //     'Hapus Grup Pengguna',
+            //     UserActivity::STOCK_ADJUSTMENT_MANAGEMENT,
+            //     'Hapus Stok Opname',
             //     $message,
             //     $item->toArray()
             // );

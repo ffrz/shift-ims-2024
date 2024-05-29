@@ -28,7 +28,6 @@ class StockUpdate extends Model
      */
     protected $fillable = [
         'id2',
-        'date',
         'type',
         'status',
         'total_cost',
@@ -43,7 +42,6 @@ class StockUpdate extends Model
     public function open()
     {
         $this->status = StockUpdate::STATUS_OPEN;
-        $this->date = date('Y-m-d');
         $this->creation_datetime = date('Y-m-d H:m:s');
         $this->creation_uid = Auth::user()->id;
     }
@@ -65,7 +63,13 @@ class StockUpdate extends Model
 
     public function idFormatted()
     {
-        return 'SU-' . $this->date . '-' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+        return 'SU-' . $this->date() . '-' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    public function date()
+    {
+        $dt = explode(' ', $this->creation_datetime);
+        return $dt[0];
     }
 
     public function id2Formatted()
@@ -91,7 +95,7 @@ class StockUpdate extends Model
                 $prefix = 'POR';
                 break;
         }
-        return $prefix . '-' . $this->date . '-' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
+        return $prefix . '-' . $this->date() . '-' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
     }
 
     public function statusFormatted()

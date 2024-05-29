@@ -107,7 +107,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="stock">Stok</label>
             <input type="text" class="form-control text-right @error('stock') is-invalid @enderror" id="stock"
               placeholder="Masukkan stok produk" name="stock" value="{{ format_number(old('stock', $item->stock)) }}">
@@ -119,7 +119,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="uom">Satuan</label>
             <input type="text" class="form-control @error('uom') is-invalid @enderror" id="uom"
               placeholder="Masukkan satuan produk" name="uom" value="{{ old('uom', $item->uom) }}">
@@ -131,7 +131,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="cost">Modal / Harga Beli</label>
             <input type="text" class="form-control text-right @error('cost') is-invalid @enderror" id="cost"
               placeholder="Masukkan modal / harga beli produk" name="cost" value="{{ format_number(old('cost', $item->cost)) }}">
@@ -143,7 +143,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="price">Harga Jual</label>
             <input type="text" class="form-control text-right @error('price') is-invalid @enderror" id="price"
               placeholder="Masukkan harga jual produk" name="price" value="{{ format_number(old('price', $item->price)) }}">
@@ -155,7 +155,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-2">
             <label for="#profit">Laba</label>
             <input type="text" readonly class="form-control text-right" id="profit"
               value="{{ format_number(old('price', $item->price) - old('cost', $item->cost)) }}">
