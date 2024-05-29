@@ -70,7 +70,7 @@ if (!isset($menu_active)) {
                 <li class="nav-item">
                   <a href="{{ url('/admin/service-order') }}"
                     class="nav-link {{ $nav_active == 'service' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-warehouse"></i>
+                    <i class="nav-icon fas fa-hand-holding-medical"></i>
                     <p>Order Servis</p>
                   </a>
                 </li>
@@ -94,7 +94,7 @@ if (!isset($menu_active)) {
                 <li class="nav-item">
                   <a href="{{ url('/admin/stock-adjustment') }}"
                     class="nav-link {{ $nav_active == 'stock-adjustment' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-box"></i>
+                    <i class="nav-icon fas fa-right-left"></i>
                     <p>Penyesuaian Stok</p>
                   </a>
                 </li>
@@ -103,7 +103,7 @@ if (!isset($menu_active)) {
                 <li class="nav-item">
                   <a href="{{ url('/admin/stock-update') }}"
                     class="nav-link {{ $nav_active == 'stock-update' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-box"></i>
+                    <i class="nav-icon fas fa-file-waveform"></i>
                     <p>Riwayat Stok</p>
                   </a>
                 </li>
