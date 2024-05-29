@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\StockUpdate;
+use App\Models\StockUpdateDetail;
 use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
 
@@ -91,6 +94,27 @@ class ProductController extends Controller
             $data = ['Old Data' => $item->toArray()];
             $newData = $request->all();
 
+            DB::beginTransaction();
+            
+            if ($item->stock != $newData['stock']) {
+                $qty = $newData['stock'] - $item->stock;
+                $update = new StockUpdate();
+                $update->type = StockUpdate::TYPE_SINGLE_ADJUSTMENT;
+                $update->total_cost = $qty * $item->cost;
+                $update->total_price = $qty * $item->price;
+                $update->date = date('Y-m-d');
+                $update->save();
+                
+                $detail = new StockUpdateDetail();
+                $detail->id = 1;
+                $detail->update_id = $update->id;
+                $detail->product_id = $item->id;
+                $detail->quantity = $qty;
+                $detail->cost = $item->cost;
+                $detail->price = $item->price;
+                $detail->save();
+            }
+
             if (empty($newData['category_id']) || $newData['category_id'] == -1) {
                 $newData['category_id'] = null;
             }
@@ -115,6 +139,8 @@ class ProductController extends Controller
                 'Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
+
+            DB::commit();
 
             return redirect('admin/product')->with('info', 'Produk telah disimpan.');
         }

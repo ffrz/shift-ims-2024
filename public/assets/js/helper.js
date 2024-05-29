@@ -3,6 +3,11 @@ function localeNumberToNumber(str) {
     return parseInt(num);
 }
 
+function ToNumber(str) {
+    let num = str.replace(/\./g, '');
+    return parseInt(num);
+}
+
 function toLocaleNumber(num) {
     if (typeof num === 'string')
         num = Number(num);

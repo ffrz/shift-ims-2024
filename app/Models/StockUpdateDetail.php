@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockUpdateDetail extends Model
 {
-    public $timestaps = false;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -25,5 +25,10 @@ class StockUpdateDetail extends Model
     public function stockUpdate()
     {
         return $this->belongsTo(StockUpdate::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

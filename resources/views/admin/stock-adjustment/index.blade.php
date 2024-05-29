@@ -1,4 +1,4 @@
-<?php use App\Models\SalesOrder; ?>
+<?php use App\Models\StockUpdate; ?>
 
 @extends('admin._layouts.default', [
     'title' => 'Stok Opname',
@@ -23,6 +23,7 @@
               <tr>
                 <th>#</th>
                 <th>Tanggal</th>
+                <th>Status</th>
                 <th>Nilai Modal</th>
                 <th>Nilai Harga Jual</th>
                 <th>Aksi</th>
@@ -32,16 +33,19 @@
               @forelse ($items as $item)
                 <tr>
                   <td>{{ $item->idFormatted() }}</td>
-                  <td>{{ $item->date }}</td>
-                  <td>{{ $item->customer ? $item->customer->name : '' }}</td>
-                  <td>{{ $item->total }}</td>
-                  <td>{{ $item->total_receivable }}</td>
+                  <td class="text-center">{{ format_date($item->date) }}</td>
+                  <td class="text-center">{{ $item->statusFormatted() }}</td>
+                  <td class="text-right">{{ format_number($item->total_cost) }}</td>
+                  <td class="text-right">{{ format_number($item->total_price) }}</td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="<?= url("/admin/stock-adjustment/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-eye" title="View"></i></a>
-                      <a href="<?= url("/admin/stock-adjustment/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-edit" title="Edit"></i></a>
+                      @if ($item->status == StockUpdate::STATUS_CLOSED)
+                        <a href="<?= url("/admin/stock-adjustment/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-eye" title="View"></i></a>
+                      @else
+                        <a href="<?= url("/admin/stock-adjustment/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-edit" title="Edit"></i></a>
+                      @endif
                       <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
                         href="<?= url("/admin/stock-adjustment/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
                           class="fa fa-trash" title="Hapus"></i></a>
@@ -50,14 +54,14 @@
                 </tr>
               @empty
                 <tr>
-                  <td class="text-center text-muted font-italic" colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
+                  <td class="text-center text-muted font-italic" colspan="6">Tidak ada rekaman untuk ditampilkan.
+                  </td>
                 </tr>
               @endforelse
             </tbody>
           </table>
         </div>
       </div>
-
     </div>
   </div>
 @endSection

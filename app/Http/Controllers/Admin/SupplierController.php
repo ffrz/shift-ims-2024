@@ -38,10 +38,9 @@ class SupplierController extends Controller
 
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:suppliers,name,' . $request->id . '|max:100',
+                'name' => 'required|max:100',
             ], [
                 'name.required' => 'Nama pemasok harus diisi.',
-                'name.unique' => 'Nama pemasok sudah digunakan.',
                 'name.max' => 'Nama pemasok terlalu panjang, maksimal 100 karakter.',
             ]);
 
@@ -51,8 +50,9 @@ class SupplierController extends Controller
             $data = ['Old Data' => $item->toArray()];
 
             $tmpData = $request->all();
-            if (empty($tmpData['active']))
+            if (empty($tmpData['active'])) {
                 $tmpData['active'] = false;
+            }
             $item->fill($tmpData);
             $item->save();
             $data['New Data'] = $item->toArray();

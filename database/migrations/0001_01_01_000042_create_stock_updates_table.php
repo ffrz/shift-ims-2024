@@ -14,13 +14,12 @@ return new class extends Migration
         Schema::create('stock_updates', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->unsignedBigInteger('ref_id')->nullable()->default(null);
             $table->unsignedTinyInteger('type')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
             $table->decimal('total_cost', 12, 0)->default(0.);
             $table->decimal('total_price', 12, 0)->default(0.);
-            $table->text('notes')->nullable(true)->default(null);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->text('notes')->nullable()->default(null);
         });
     }
 

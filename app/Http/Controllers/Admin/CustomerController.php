@@ -37,10 +37,9 @@ class CustomerController extends Controller
 
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:customers,name,' . $request->id . '|max:100',
+                'name' => 'required|max:100',
             ], [
                 'name.required' => 'Nama pelanggan harus diisi.',
-                'name.unique' => 'Nama pelanggan sudah digunakan.',
                 'name.max' => 'Nama pelanggan terlalu panjang, maksimal 100 karakter.',
             ]);
 

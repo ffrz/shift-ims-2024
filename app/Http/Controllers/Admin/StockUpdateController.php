@@ -18,7 +18,7 @@ class StockUpdateController extends Controller
     
     public function index()
     {
-        $items = [];
+        $items = StockUpdate::all();
         return view('admin.stock-update.index', compact('items'));
     }
 

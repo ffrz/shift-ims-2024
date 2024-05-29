@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('set null');
+            $table->foreign('supplier_id')->references('id')->on('parties')->onDelete('set null');
         });
     }
 

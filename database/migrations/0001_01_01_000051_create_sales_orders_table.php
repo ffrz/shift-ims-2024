@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales_orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('stock_update_id');
             $table->tinyInteger('status')->default(0); // 0
             $table->tinyInteger('paid')->default(0);
             $table->date('date')->nullable()->default(null);
@@ -24,7 +25,8 @@ return new class extends Migration
             $table->decimal('total_receivable', 12, 0)->default(0.);
             $table->text('notes')->nullable(true)->default(null);
             $table->timestamps();
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
+            $table->foreign('customer_id')->references('id')->on('parties')->onDelete('set null');
+            $table->foreign('stock_update_id')->references('id')->on('stock_updates');
         });
     }
 

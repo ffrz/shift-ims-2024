@@ -22,11 +22,16 @@
   <link rel="stylesheet" href="{{ asset('plugins/datatables-select/css/select.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+  @vite([]);
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed">
+  @if (!empty($form_action))
+    <form action="{{ $form_action }}" method="POST">
+      @csrf
+  @endif
   <div class="wrapper">
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <ul class="navbar-nav">
@@ -69,6 +74,9 @@
       Shift IT Solution 2024
     </footer>
   </div>
+  @if (!empty($form_action))
+    </form>
+  @endif
   <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('plugins/pace-progress/pace.min.js') }}"></script>
@@ -95,7 +103,8 @@
   <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table-locale-all.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js">
+  </script>
   <script src="{{ asset('assets/js/helper.js') }}"></script>
   @yield('footscripts')
   <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
