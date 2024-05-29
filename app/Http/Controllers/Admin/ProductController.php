@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
+use App\Models\Party;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\StockUpdate;
@@ -153,7 +154,7 @@ class ProductController extends Controller
         }
 
         $categories = ProductCategory::orderBy('name', 'asc')->get();
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $suppliers = Supplier::where('type', Party::TYPE_SUPPLIER)->orderBy('name', 'asc')->get();
         return view('admin.product.edit', compact('item', 'categories', 'suppliers'));
     }
 
