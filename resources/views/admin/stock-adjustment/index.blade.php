@@ -32,14 +32,14 @@
             <tbody>
               @forelse ($items as $item)
                 <tr>
-                  <td>{{ $item->idFormatted() }}</td>
+                  <td>{{ $item->id2Formatted() }}</td>
                   <td class="text-center">{{ format_date($item->date) }}</td>
                   <td class="text-center">{{ $item->statusFormatted() }}</td>
                   <td class="text-right">{{ format_number($item->total_cost) }}</td>
                   <td class="text-right">{{ format_number($item->total_price) }}</td>
                   <td class="text-center">
                     <div class="btn-group">
-                      @if ($item->status == StockUpdate::STATUS_CLOSED)
+                      @if ($item->status == StockUpdate::STATUS_COMPLETED)
                         <a href="<?= url("/admin/stock-adjustment/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
                             class="fa fa-eye" title="View"></i></a>
                       @else

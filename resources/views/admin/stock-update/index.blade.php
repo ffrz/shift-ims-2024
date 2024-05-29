@@ -32,7 +32,7 @@
             <tbody>
               @forelse ($items as $item)
                 <tr>
-                  <td>{{ $item->idFormatted() }}</td>
+                  <td>{{ $item->id2Formatted() }}</td>
                   <td class="text-center">{{ format_date($item->date) }}</td>
                   <td class="text-center">{{ $item->typeFormatted() }}</td>
                   <td class="text-right">{{ format_number($item->total_cost) }}</td>

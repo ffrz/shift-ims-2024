@@ -16,9 +16,9 @@ $title = 'Rincian Pembaruan Stok';
         <div class="col-md-12">
           <table class="table table-sm" style="width:100%">
             <tr>
-              <td style="width:10%">#</td>
+              <td style="width:10%">Kode Update</td>
               <td style="width:2%">:</td>
-              <td>{{ $item->idFormatted() }}</td>
+              <td>{{ $item->id2Formatted() }}</td>
             </tr>
             <tr>
               <td>Tanggal</td>

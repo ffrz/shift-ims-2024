@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SalesOrder extends Model
 {
     const ORDER_STATUS_OPEN = 0;
-    const ORDER_STATUS_CLOSED = 1;
+    const ORDER_STATUS_COMPLETED = 1;
     const ORDER_STATUS_CANCELED = 2;
 
     /**
@@ -39,7 +39,7 @@ class SalesOrder extends Model
     {
         switch ($status) {
             case self::ORDER_STATUS_OPEN: return 'Aktif';
-            case self::ORDER_STATUS_CLOSED: return 'Selesai';
+            case self::ORDER_STATUS_COMPLETED: return 'Selesai';
             case self::ORDER_STATUS_CANCELED: return 'Dibatalkan';
         }
         throw new Exception("Unknown order status.");

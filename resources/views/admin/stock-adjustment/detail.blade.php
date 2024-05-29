@@ -19,7 +19,7 @@ $title = 'Rincian Stok Opname';
             <tr>
               <td style="width:30%">#</td>
               <td style="width:2%">:</td>
-              <td>{{ $item->idFormatted() }}</td>
+              <td>{{ $item->id2Formatted() }}</td>
             </tr>
             <tr>
               <td>Tanggal</td>

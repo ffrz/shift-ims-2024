@@ -31,6 +31,7 @@ class StockAdjustmentController extends Controller
         $item->date = date('Y-m-d');
         $item->type = StockUpdate::TYPE_MASS_ADJUSTMENT;
         $item->status = StockUpdate::STATUS_OPEN;
+        $item->id2 = StockUpdate::getNextId2($item->type);
 
         if ($request->method() == 'POST') {
             $action = $request->get('action');
@@ -110,7 +111,7 @@ class StockAdjustmentController extends Controller
             }
 
             if ($action == 'complete') {
-                $item->status = StockUpdate::STATUS_CLOSED;
+                $item->status = StockUpdate::STATUS_COMPLETED;
             }
 
             $item->total_cost = $total_cost;
@@ -147,7 +148,7 @@ class StockAdjustmentController extends Controller
             $products = Product::whereIn('id', array_keys($quantities))->get();
 
             DB::beginTransaction();
-            if ($item->status == StockUpdate::STATUS_CLOSED) { // restore stok hanya jika sudah diselesaikan
+            if ($item->status == StockUpdate::STATUS_COMPLETED) { // restore stok hanya jika sudah diselesaikan
                 foreach ($products as $product) {
                     $product->stock += -$quantities[$product->id];
                     $product->save();

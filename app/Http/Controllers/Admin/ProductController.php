@@ -100,6 +100,8 @@ class ProductController extends Controller
                 $qty = $newData['stock'] - $item->stock;
                 $update = new StockUpdate();
                 $update->type = StockUpdate::TYPE_SINGLE_ADJUSTMENT;
+                $update->status = StockUpdate::STATUS_COMPLETED;
+                $update->id2 = StockUpdate::getNextId2($update->type);
                 $update->total_cost = $qty * $item->cost;
                 $update->total_price = $qty * $item->price;
                 $update->date = date('Y-m-d');

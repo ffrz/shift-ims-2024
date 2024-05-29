@@ -89,9 +89,9 @@ $title = 'Order Penjualan';
                   <option value="{{ SalesOrder::ORDER_STATUS_OPEN }}"
                     {{ $item->status == SalesOrder::ORDER_STATUS_OPEN ? 'selected' : '' }}>
                     {{ SalesOrder::formatOrderStatus(SalesOrder::ORDER_STATUS_OPEN) }}</option>
-                  <option value="{{ SalesOrder::ORDER_STATUS_CLOSED }}"
-                    {{ $item->status == SalesOrder::ORDER_STATUS_CLOSED ? 'selected' : '' }}>
-                    {{ SalesOrder::formatOrderStatus(SalesOrder::ORDER_STATUS_CLOSED) }}</option>
+                  <option value="{{ SalesOrder::ORDER_STATUS_COMPLETED }}"
+                    {{ $item->status == SalesOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
+                    {{ SalesOrder::formatOrderStatus(SalesOrder::ORDER_STATUS_COMPLETED) }}</option>
                   <option value="{{ SalesOrder::ORDER_STATUS_CANCELED }}"
                     {{ $item->status == SalesOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
                     {{ SalesOrder::formatOrderStatus(SalesOrder::ORDER_STATUS_CANCELED) }}</option>
