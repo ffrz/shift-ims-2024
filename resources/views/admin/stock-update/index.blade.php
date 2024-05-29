@@ -1,9 +1,9 @@
 <?php use App\Models\SalesOrder; ?>
 
 @extends('admin._layouts.default', [
-    'title' => 'Riwayat Stok',
+    'title' => 'Riwayat Pembaruan Stok',
     'menu_active' => 'inventory',
-    'nav_active' => 'stock-update',
+    'nav_active' => 'stock-update-history',
 ])
 
 @section('right-menu')
@@ -23,8 +23,9 @@
               <tr>
                 <th>#</th>
                 <th>Tanggal</th>
-                <th>Nilai Modal</th>
-                <th>Nilai Harga Jual</th>
+                <th>Jenis</th>
+                <th>Total Modal</th>
+                <th>Total Harga</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -32,19 +33,19 @@
               @forelse ($items as $item)
                 <tr>
                   <td>{{ $item->idFormatted() }}</td>
-                  <td>{{ $item->date }}</td>
-                  <td>{{ $item->customer ? $item->customer->name : '' }}</td>
-                  <td>{{ $item->total }}</td>
-                  <td>{{ $item->total_receivable }}</td>
+                  <td class="text-center">{{ format_date($item->date) }}</td>
+                  <td class="text-center">{{ $item->typeFormatted() }}</td>
+                  <td class="text-right">{{ format_number($item->total_cost) }}</td>
+                  <td class="text-right">{{ format_number($item->total_price) }}</td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="<?= url("/admin/stock-update/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      <a href="<?= url("/admin/stock-update-history/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-eye" title="View"></i></a>
-                      <a href="<?= url("/admin/stock-update/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                      {{-- <a href="<?= url("/admin/stock-update-history/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-edit" title="Edit"></i></a>
                       <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                        href="<?= url("/admin/stock-update/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
-                          class="fa fa-trash" title="Hapus"></i></a>
+                        href="<?= url("/admin/stock-update-history/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                          class="fa fa-trash" title="Hapus"></i></a> --}}
                     </div>
                   </td>
                 </tr>

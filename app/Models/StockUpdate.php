@@ -50,6 +50,20 @@ class StockUpdate extends Model
         return 'Unknown Status';
     }
 
+    public function typeFormatted()
+    {
+        switch ($this->type) {
+            case self::TYPE_SINGLE_ADJUSTMENT: return 'Edit Stok';
+            case self::TYPE_MASS_ADJUSTMENT: return 'Stok Opname';
+            case self::TYPE_PURCHASE_ORDER: return 'Pembelian';
+            case self::TYPE_PURCHASE_ORDER_RETURN: return 'Retur Pembelian';
+            case self::TYPE_SALES_ORDER: return 'Penjualan';
+            case self::TYPE_SALES_ORDER_RETURN: return 'Retur Penjualan';
+        }
+
+        return 'Unknown Status';
+    }
+
     public function details(): HasMany
     {
         return $this->hasMany(StockUpdateDetail::class, 'update_id');

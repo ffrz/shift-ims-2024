@@ -124,7 +124,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
 
     Route::controller(StockUpdateController::class)->prefix('stock-update-history')->group(function () {
         Route::get('', 'index');
-        Route::get('view/{id}', 'view');
+        Route::get('detail/{id}', 'detail');
     });
 
     Route::controller(StockAdjustmentController::class)->prefix('stock-adjustment')->group(function () {
