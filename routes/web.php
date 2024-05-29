@@ -122,7 +122,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::post('delete', 'delete');
     });
 
-    Route::controller(StockUpdateController::class)->prefix('stock-update-history')->group(function () {
+    Route::controller(StockUpdateController::class)->prefix('stock-update')->group(function () {
         Route::get('', 'index');
         Route::get('detail/{id}', 'detail');
     });

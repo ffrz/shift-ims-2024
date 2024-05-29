@@ -3,7 +3,7 @@
 @extends('admin._layouts.default', [
     'title' => 'Riwayat Pembaruan Stok',
     'menu_active' => 'inventory',
-    'nav_active' => 'stock-update-history',
+    'nav_active' => 'stock-update',
 ])
 
 @section('right-menu')

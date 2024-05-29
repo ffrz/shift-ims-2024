@@ -101,8 +101,8 @@ if (!isset($menu_active)) {
               @endif
               @if (true)
                 <li class="nav-item">
-                  <a href="{{ url('/admin/stock-update-history') }}"
-                    class="nav-link {{ $nav_active == 'stock-update-history' ? 'active' : '' }}">
+                  <a href="{{ url('/admin/stock-update') }}"
+                    class="nav-link {{ $nav_active == 'stock-update' ? 'active' : '' }}">
                     <i class="nav-icon fas fa-box"></i>
                     <p>Riwayat Stok</p>
                   </a>

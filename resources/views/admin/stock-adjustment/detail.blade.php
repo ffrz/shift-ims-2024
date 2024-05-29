@@ -14,10 +14,9 @@ $title = 'Rincian Stok Opname';
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <h4>Info Stok Opname</h4>
-          <table class="table table-sm" style="width:100%">
+         <table class="table table-sm no-border" style="width:100%">
             <tr>
-              <td style="width:30%">#</td>
+              <td style="width:5%">Kode</td>
               <td style="width:2%">:</td>
               <td>{{ $item->id2Formatted() }}</td>
             </tr>
@@ -25,6 +24,11 @@ $title = 'Rincian Stok Opname';
               <td>Tanggal</td>
               <td>:</td>
               <td>{{ format_date($item->date) }}</td>
+            </tr>
+            <tr>
+              <td>Tanggal Dibuat</td>
+              <td>:</td>
+              <td>{{ format_datetime($item->creation_datetime) }}</td>
             </tr>
             <tr>
               <td>Status</td>

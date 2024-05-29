@@ -40,7 +40,7 @@
                   <td class="text-center">
                     <div class="btn-group">
                       @if ($item->status == StockUpdate::STATUS_COMPLETED)
-                        <a href="<?= url("/admin/stock-adjustment/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                        <a href="<?= url("/admin/stock-update/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
                             class="fa fa-eye" title="View"></i></a>
                       @else
                         <a href="<?= url("/admin/stock-adjustment/edit/$item->id") ?>" class="btn btn-default btn-sm"><i

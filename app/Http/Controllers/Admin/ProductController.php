@@ -11,6 +11,7 @@ use App\Models\StockUpdateDetail;
 use App\Models\Supplier;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
@@ -93,29 +94,11 @@ class ProductController extends Controller
 
             $data = ['Old Data' => $item->toArray()];
             $newData = $request->all();
+            
+            $initial_stock = $item->stock;
+            $new_stock = $newData['stock'];
 
             DB::beginTransaction();
-            
-            if ($item->stock != $newData['stock']) {
-                $qty = $newData['stock'] - $item->stock;
-                $update = new StockUpdate();
-                $update->type = StockUpdate::TYPE_SINGLE_ADJUSTMENT;
-                $update->status = StockUpdate::STATUS_COMPLETED;
-                $update->id2 = StockUpdate::getNextId2($update->type);
-                $update->total_cost = $qty * $item->cost;
-                $update->total_price = $qty * $item->price;
-                $update->date = date('Y-m-d');
-                $update->save();
-                
-                $detail = new StockUpdateDetail();
-                $detail->id = 1;
-                $detail->update_id = $update->id;
-                $detail->product_id = $item->id;
-                $detail->quantity = $qty;
-                $detail->cost = $item->cost;
-                $detail->price = $item->price;
-                $detail->save();
-            }
 
             if (empty($newData['category_id']) || $newData['category_id'] == -1) {
                 $newData['category_id'] = null;
@@ -133,6 +116,28 @@ class ProductController extends Controller
             
             $item->fill($newData);
             $item->save();
+            
+            if ($new_stock != $initial_stock) {
+                $qty = $new_stock - $initial_stock;
+                $update = new StockUpdate();
+                $update->type = StockUpdate::TYPE_SINGLE_ADJUSTMENT;
+                $update->id2 = StockUpdate::getNextId2($update->type);
+                $update->total_cost = $qty * $item->cost;
+                $update->total_price = $qty * $item->price;
+                $update->open();
+                $update->close(StockUpdate::STATUS_COMPLETED);
+                $update->save();
+                
+                $detail = new StockUpdateDetail();
+                $detail->id = 1;
+                $detail->update_id = $update->id;
+                $detail->product_id = $item->id;
+                $detail->quantity = $qty;
+                $detail->cost = $item->cost;
+                $detail->price = $item->price;
+                $detail->save();
+            }
+
             $data['New Data'] = $item->toArray();
 
             UserActivity::log(

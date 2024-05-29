@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StockUpdate extends Model
@@ -34,7 +34,26 @@ class StockUpdate extends Model
         'total_cost',
         'total_price',
         'notes',
+        'creation_datetime',
+        'closing_datetime',
+        'creation_uid',
+        'closing_uid',
     ];
+
+    public function open()
+    {
+        $this->status = StockUpdate::STATUS_OPEN;
+        $this->date = date('Y-m-d');
+        $this->creation_datetime = date('Y-m-d H:m:s');
+        $this->creation_uid = Auth::user()->id;
+    }
+
+    public function close($status)
+    {
+        $this->status = $status;
+        $this->closing_datetime = date('Y-m-d H:m:s');
+        $this->closing_uid = Auth::user()->id;
+    }
 
     public static function getNextId2($type)
     {
@@ -109,8 +128,18 @@ class StockUpdate extends Model
         return 'Unknown Status';
     }
 
-    public function details(): HasMany
+    public function details()
     {
         return $this->hasMany(StockUpdateDetail::class, 'update_id');
+    }
+
+    public function creation_user()
+    {
+        return $this->belongsTo(User::class, 'creation_uid');
+    }
+
+    public function closing_user()
+    {
+        return $this->belongsTo(User::class, 'closing_uid');
     }
 }

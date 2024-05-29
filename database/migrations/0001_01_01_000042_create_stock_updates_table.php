@@ -18,9 +18,15 @@ return new class extends Migration
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedBigInteger('ref_id')->nullable()->default(null);
             $table->date('date');
+            $table->datetime('creation_datetime');
+            $table->datetime('closing_datetime')->nullable(true)->default(null);
+            $table->unsignedBigInteger('creation_uid')->nullable(true)->default(null);
+            $table->unsignedBigInteger('closing_uid')->nullable(true)->default(null);
             $table->decimal('total_cost', 12, 0)->default(0.);
             $table->decimal('total_price', 12, 0)->default(0.);
             $table->text('notes')->nullable()->default(null);
+            $table->foreign('creation_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('closing_uid')->references('id')->on('users')->onDelete('set null');
         });
     }
 

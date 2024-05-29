@@ -28,10 +28,9 @@ class StockAdjustmentController extends Controller
     public function create(Request $request)
     {
         $item = new StockUpdate();
-        $item->date = date('Y-m-d');
         $item->type = StockUpdate::TYPE_MASS_ADJUSTMENT;
-        $item->status = StockUpdate::STATUS_OPEN;
         $item->id2 = StockUpdate::getNextId2($item->type);
+        $item->open();
 
         if ($request->method() == 'POST') {
             $action = $request->get('action');
@@ -55,7 +54,7 @@ class StockAdjustmentController extends Controller
             return redirect(url('admin/stock-adjustment/edit/' . $item->id))->with('info', 'Kartu stok telah dibuat');
         }
 
-        $items = Product::orderBy('code', 'asc')->get();
+        $items = Product::orderBy('code', 'asc')->where('active', 1)->get();
         return view('admin.stock-adjustment.create', compact('item', 'items'));
     }
 
@@ -63,23 +62,22 @@ class StockAdjustmentController extends Controller
     {
         $item = StockUpdate::find($id);
         $subitems = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->orderBy('id', 'asc')->get();
+        $productByIds = [];
+        $products = [];
+        foreach ($subitems as $subitem) {
+            $productByIds[$subitem->product_id] = $subitem->product;
+            $products[] = $subitem->product;
+        }
+
         if ($request->method() == 'POST') {
             $action = $request->action;
             if ($action == 'cancel') {
-                $item->status = StockUpdate::STATUS_CANCELED;
+                $item->close(StockUpdate::STATUS_CANCELED);
                 $item->save();
                 return redirect('admin/stock-adjustment/')->with('info', 'Stok opname telah dibatalkan.');
             }
 
             $stocks = $request->stocks;
-
-            if ($action == 'complete') {
-                $products = Product::whereIn('id', array_keys($stocks))->get();
-                $productByIds = [];
-                foreach ($products as $product) {
-                    $productByIds[$product->id] = $product;
-                }
-            }
 
             DB::beginTransaction();
             $new_item_id = 1;
@@ -111,7 +109,7 @@ class StockAdjustmentController extends Controller
             }
 
             if ($action == 'complete') {
-                $item->status = StockUpdate::STATUS_COMPLETED;
+                $item->close(StockUpdate::STATUS_COMPLETED);
             }
 
             $item->total_cost = $total_cost;

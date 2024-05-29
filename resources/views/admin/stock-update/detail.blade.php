@@ -6,7 +6,7 @@ $title = 'Rincian Pembaruan Stok';
     'title' => $title,
     'menu_active' => 'inventory',
     'nav_active' => 'stock-update',
-    'back_button_link' => url('/admin/stock-update-history/'),
+    'back_button_link' => url('/admin/stock-update/'),
 ])
 
 @section('content')
@@ -14,7 +14,7 @@ $title = 'Rincian Pembaruan Stok';
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-sm" style="width:100%">
+          <table class="table no-border table-sm" style="width:100%">
             <tr>
               <td style="width:10%">Kode Update</td>
               <td style="width:2%">:</td>
@@ -25,6 +25,20 @@ $title = 'Rincian Pembaruan Stok';
               <td>:</td>
               <td>{{ format_date($item->date) }}</td>
             </tr>
+            <tr>
+              <td>Dibuat</td>
+              <td>:</td>
+              <td>{{ format_datetime($item->creation_datetime) }} oleh
+                #{{ $item->creation_user->id . '-' . $item->creation_user->username }}</td>
+            </tr>
+            @if ($item->status != 0)
+              <tr>
+                <td>Ditutup</td>
+                <td>:</td>
+                <td>{{ format_datetime($item->closing_datetime) }} oleh
+                  #{{ $item->closing_user->id . '-' . $item->closing_user->username }}</td>
+              </tr>
+            @endif
             <tr>
               <td>Jenis</td>
               <td>:</td>
