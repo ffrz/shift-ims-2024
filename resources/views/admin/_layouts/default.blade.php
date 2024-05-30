@@ -16,14 +16,14 @@
   <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-select/css/select.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-select/css/select.bootstrap4.min.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
   @vite([])
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.css">
+  {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.css"> --}}
 </head>
 
 <body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed">
@@ -60,11 +60,7 @@
     <div class="content-wrapper">
       <section class="content-header">
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-12">
-              @yield('content')
-            </div>
-          </div>
+          @yield('content')
         </div>
       </section>
     </div>
@@ -85,7 +81,7 @@
   <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
   <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
   <script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-  <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+  {{-- <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
   <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
   <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
   <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -102,7 +98,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table-locale-all.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js"> --}}
   </script>
   <script src="{{ asset('assets/js/helper.js') }}"></script>
   @yield('footscripts')
@@ -117,21 +113,21 @@
 
     DATE_FORMAT = 'DD-MM-YYYY';
     DATETIME_FORMAT = 'DD-MM-YYYY HH:mm:ss';
-    DATATABLES_OPTIONS = {
-      responsive: {
-        details: {
-          type: 'none'
-        }
-      },
-      language: {
-        url: '{{ asset('plugins/datatables/id.json') }}'
-      },
-      paging: true,
-      length: 10,
-      "ordering": true,
-      "info": true,
-      "responsive": true,
-    };
+    // DATATABLES_OPTIONS = {
+    //   responsive: {
+    //     details: {
+    //       type: 'none'
+    //     }
+    //   },
+    //   language: {
+    //     url: '{{ asset('plugins/datatables/id.json') }}'
+    //   },
+    //   paging: true,
+    //   length: 10,
+    //   "ordering": true,
+    //   "info": true,
+    //   "responsive": true,
+    // };
 
     toastr.options = {
       "closeButton": true,

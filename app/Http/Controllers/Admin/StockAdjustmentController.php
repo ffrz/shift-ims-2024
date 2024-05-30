@@ -56,7 +56,11 @@ class StockAdjustmentController extends Controller
             return redirect(url('admin/stock-adjustment/edit/' . $item->id))->with('info', 'Kartu stok telah dibuat');
         }
 
-        $items = Product::orderBy('code', 'asc')->where('active', 1)->get();
+        $items = Product::orderBy('code', 'asc')
+            ->where('active', 1)
+            ->where('type', Product::STOCKED)
+            ->get();
+
         return view('admin.stock-adjustment.create', compact('item', 'items'));
     }
 

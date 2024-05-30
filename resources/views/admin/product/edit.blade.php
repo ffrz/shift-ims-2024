@@ -3,40 +3,46 @@
 use App\Models\Product;
 use App\Models\Setting;
 
-$title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
+$title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
 
 ?>
 @extends('admin._layouts.default', [
     'title' => $title,
     'menu_active' => 'inventory',
-    'nav_active' => 'produt',
-    'back_button_link' => url('/admin/prouct/'),
+    'nav_active' => 'product',
+    'form_action' => url('admin/product/edit/' . (int) $item->id),
 ])
 
+@section('right-menu')
+  <li class="nav-item">
+    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-save mr-1"></i> Simpan</button>
+    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/product/') }}"><i
+        class="fas fa-cancel mr-1"></i>Batal</a>
+  </li>
+@endSection
+
 @section('content')
-  <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/product/edit/' . (int) $item->id) }}">
-      @csrf
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-4">
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-1">Info Produk</h4>
+          <hr class="mb-3 mt-0">
+          <div class="form-group">
             <label for="id">Kode Produk</label>
-            <input type="text" class="form-control @error('code') is-invalid @enderror" id="id" readonly
+            <input type="text" class="form-control" id="id" readonly
               value="{{ $item->id ? $item->idFormatted() : '-otomatis-' }}">
+            <p class="text-muted mt-2 font-italic">Kode produk diisi otomatis oleh sistem dan tidak bisa diubah.</p>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label for="type">Jenis</label>
-            <select class="custom-select select2 form-control" id="type" name="order_status">
+          <div class="form-group">
+            <label for="type">Jenis Produk</label>
+            <select class="custom-select form-control" id="type" name="order_status">
               <option value="-1" <?= $item->type == Product::NON_STOCKED ? 'selected' : '' ?>>Barang Non Stok</option>
               <option value="-1" <?= $item->type == Product::STOCKED ? 'selected' : '' ?>>Barang Stok</option>
               <option value="-1" <?= $item->type == Product::SERVICE ? 'selected' : '' ?>>Servis</option>
             </select>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group">
             <label for="code">Nama Produk</label>
             <input type="text" class="form-control @error('code') is-invalid @enderror" autofocus id="code"
               placeholder="Masukkan nama produk" name="code" value="{{ old('code', $item->code) }}">
@@ -46,11 +52,9 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
               </span>
             @enderror
           </div>
-        </div>
-        {{-- buat setting show hide deskripsi --}}
-        @if (Setting::value('inv.show_description'))
-          <div class="form-row">
-            <div class="form-group col-md-4">
+          {{-- buat setting show hide deskripsi --}}
+          @if (Setting::value('inv.show_description'))
+            <div class="form-group">
               <label for="description">Deskripsi</label>
               <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
                 placeholder="Masukkan deskripsi produk" name="description"
@@ -61,12 +65,10 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
                 </span>
               @enderror
             </div>
-          </div>
-        @endif
-        {{-- buat setting show hide barcode --}}
-        @if (Setting::value('inv.show_barcode'))
-          <div class="form-row">
-            <div class="form-group col-md-4">
+          @endif
+          {{-- buat setting show hide barcode --}}
+          @if (Setting::value('inv.show_barcode'))
+            <div class="form-group">
               <label for="barcode">Barcode</label>
               <input type="text" class="form-control @error('barcode') is-invalid @enderror" id="barcode"
                 placeholder="Masukkan barcode produk" name="barcode" value="{{ old('barcode', $item->barcode) }}">
@@ -76,10 +78,8 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
                 </span>
               @enderror
             </div>
-          </div>
-        @endif
-        <div class="form-row">
-          <div class="form-group col-md-4">
+          @endif
+          <div class="form-group">
             <label for="category_id">Kategori</label>
             <select class="custom-select select2" id="category_id" name="category_id">
               <option value="-1" {{ !$item->category_id ? 'selected' : '' }}>-- Pilih Kategori --</option>
@@ -91,9 +91,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group">
             <label for="supplier_id">Supplier Tetap</label>
             <select class="custom-select select2" id="supplier_id" name="supplier_id">
               <option value="-1" {{ !$item->supplier_id ? 'selected' : '' }}>-- Pilih Supplier --</option>
@@ -105,23 +103,9 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-2">
-            <label for="stock">Stok</label>
-            <input type="text" class="form-control text-right @error('stock') is-invalid @enderror" id="stock"
-              placeholder="Masukkan stok produk" name="stock" value="{{ format_number(old('stock', $item->stock)) }}">
-            @error('stock')
-              <span class="text-danger">
-                {{ $message }}
-              </span>
-            @enderror
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-2">
+          <div class="form-group">
             <label for="uom">Satuan</label>
-            <input type="text" class="form-control @error('uom') is-invalid @enderror" id="uom"
+            <input type="text" class="form-control col-md-5 @error('uom') is-invalid @enderror" id="uom"
               placeholder="Masukkan satuan produk" name="uom" value="{{ old('uom', $item->uom) }}">
             @error('uom')
               <span class="text-danger">
@@ -129,40 +113,58 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
               </span>
             @enderror
           </div>
+          <div class="form-group">
+            <label for="stock">Stok</label>
+            <input type="text" class="form-control col-md-5 text-right @error('stock') is-invalid @enderror"
+              id="stock" placeholder="Masukkan stok produk" name="stock"
+              value="{{ format_number(old('stock', $item->stock)) }}">
+            @error('stock')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
         </div>
-        <div class="form-row">
-          <div class="form-group col-md-2">
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-1">Info Harga</h4>
+          <hr class="mb-3 mt-0">
+          <div class="form-group">
             <label for="cost">Modal / Harga Beli</label>
-            <input type="text" class="form-control text-right @error('cost') is-invalid @enderror" id="cost"
-              placeholder="Masukkan modal / harga beli produk" name="cost" value="{{ format_number(old('cost', $item->cost)) }}">
+            <input type="text" class="form-control col-md-5 text-right @error('cost') is-invalid @enderror"
+              id="cost" placeholder="Masukkan modal / harga beli produk" name="cost"
+              value="{{ format_number(old('cost', $item->cost)) }}">
             @error('cost')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-2">
+          <div class="form-group">
             <label for="price">Harga Jual</label>
-            <input type="text" class="form-control text-right @error('price') is-invalid @enderror" id="price"
-              placeholder="Masukkan harga jual produk" name="price" value="{{ format_number(old('price', $item->price)) }}">
+            <input type="text" class="form-control col-md-5 text-right @error('price') is-invalid @enderror"
+              id="price" placeholder="Masukkan harga jual produk" name="price"
+              value="{{ format_number(old('price', $item->price)) }}">
             @error('price')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-2">
-            <label for="#profit">Laba</label>
-            <input type="text" readonly class="form-control text-right" id="profit"
+          <div class="form-group">
+            <label for="profit">Laba</label>
+            <input type="text" readonly class="form-control col-md-5 text-right" id="profit"
               value="{{ format_number(old('price', $item->price) - old('cost', $item->cost)) }}">
+            <p class="text-muted">Margin Keuntungan: <span id="profit-percent">0%</span></p>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-1">Info Tambahan</h4>
+          <hr class="mb-3 mt-0">
+          <div class="form-group">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input " id="active" name="active" value="1"
                 {{ old('active', $item->active) ? 'checked="checked"' : '' }}>
@@ -170,9 +172,7 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
             </div>
             <div class="text-muted">Produk aktif dapat dijual.</div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-4">
+          <div class="form-group">
             <label for="notes">Catatan</label>
             <textarea class="form-control @error('notes') is-invalid @enderror" name="notes" id="notes" cols="30"
               rows="4">{{ old('notes', $item->notes) }}</textarea>
@@ -184,21 +184,19 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
-      </div>
-    </form>
+    </div>
   </div>
 @endSection
 @section('footscript')
   <script>
-    $(function() {
+    $(document).ready(function() {
       //js
       function updateProfitMargin() {
         let cost = localeNumberToNumber($('#cost').val());
         let price = localeNumberToNumber($('#price').val());
         let profit = price - cost;
         $('#profit').val(toLocaleNumber(profit));
+        $('#profit-percent').text(toLocaleNumber(profit / price * 100, 2) + '%');
       }
 
       Inputmask("decimal", INPUTMASK_OPTIONS).mask("#stock");
@@ -206,15 +204,15 @@ $title = ($item->id ? 'Edit' : 'Tambah') . ' Produk';
         allowMinus: false
       }, INPUTMASK_OPTIONS)).mask("#price,#cost");
 
-      $('.select2').select2({
-        minimumResultsForSearch: -1
-      });
+      $('.select2').select2();
       $('#cost').change(function() {
         updateProfitMargin();
       });
       $('#price').change(function() {
         updateProfitMargin();
       });
+
+      updateProfitMargin();
     });
   </script>
 @endsection
