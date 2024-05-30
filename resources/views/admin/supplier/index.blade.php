@@ -16,8 +16,30 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
+          <form action="?">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group form-inline">
+                  <label class="mr-2" for="active">Status:</label>
+                  <select class="form-control custom-select mr-4" name="active" id="active"
+                    onchange="this.form.submit();">
+                    <option value="-1">Semua</option>
+                    <option value="1" {{ $filter['active'] == 1 ? 'selected' : '' }}>Aktif</option>
+                    <option value="0" {{ $filter['active'] == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 d-flex justify-content-end">
+                <div class="form-group form-inline">
+                  <label class="mr-2" for="search">Cari:</label>
+                  <input type="text" class="form-control" name="search" id="search" value="{{ $filter['search'] }}"
+                    autofocus placeholder="Cari pemasok">
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="table-responsive">
-            <table class="table-bordered table-striped table-sm">
+            <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
                   <th style="width:5%">Kode</th>
@@ -29,7 +51,7 @@
               </thead>
               <tbody>
                 @forelse ($items as $i => $item)
-                  <tr>
+                  <tr class="{{ $filter['active'] == -1 && !$item->active ? 'table-danger' : '' }}">
                     <td>{{ $item->idFormatted() }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->phone }}</td>

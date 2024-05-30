@@ -4,12 +4,9 @@ namespace App\Models;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceOrder extends Model
 {
-    use SoftDeletes;
-
     const ORDER_STATUS_ACTIVE = 0;
     const ORDER_STATUS_COMPLETED = 1;
     const ORDER_STATUS_CANCELED = 2;

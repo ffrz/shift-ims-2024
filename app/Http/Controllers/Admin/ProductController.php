@@ -28,7 +28,6 @@ class ProductController extends Controller
             'active' => (int)$request->get('active', $request->session()->get('product.filter.active', -1)),
             'category_id' => (int)$request->get('category_id', $request->session()->get('product.filter.category_id', -1)),
             'supplier_id' => (int)$request->get('supplier_id', $request->session()->get('product.filter.supplier_id', -1)),
-            'record_status' => (int)$request->get('record_status', $request->session()->get('product.filter.record_status', 1)),
             'search' => $request->get('search'),
         ];
 
@@ -47,12 +46,9 @@ class ProductController extends Controller
             $q->where('supplier_id', '=', $filter['supplier_id']);
         }
         if (!empty($filter['search'])) {
-            $q->where('code', 'like', '%' . $filter['search'] . '.');
-            $q->orWhere('description', 'like', '%' . $filter['search'] . '.');
+            $q->where('code', 'like', '%' . $filter['search'] . '%');
+            $q->orWhere('description', 'like', '%' . $filter['search'] . '%');
         }
-
-        if ($filter['record_status'] == 0)
-            $q->onlyTrashed();
 
         $categories = ProductCategory::orderBy('name', 'asc')->get();
         $suppliers = Supplier::orderBy('name', 'asc')->get();

@@ -12,12 +12,31 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         ensure_user_can_access(AclResource::CUSTOMER_LIST);
 
-        $items = Customer::query()->orderBy('name', 'asc')->paginate(10);
-        return view('admin.customer.index', compact('items'));
+        $filter = [
+            'active' => (int)$request->get('active', 1),
+            'search' => $request->get('search', ''),
+        ];
+
+        $q = Customer::query();
+        $q->where('type', '=', Party::TYPE_CUSTOMER);
+
+        if ($filter['active'] != -1) {
+            $q->where('active', '=', $filter['active']);
+        }
+
+        if (!empty($filter['search'])) {
+            $q->where('id2', '=', $filter['search']);
+            $q->orWhere('name', 'like', '%' . $filter['search'] . '%');
+            $q->orWhere('phone', 'like', '%' . $filter['search'] . '%');
+            $q->orWhere('address', 'like', '%' . $filter['search'] . '%');
+        }
+
+        $items = $q->orderBy('name', 'asc')->paginate(10);
+        return view('admin.customer.index', compact('items', 'filter'));
     }
 
     public function edit(Request $request, $id = 0)

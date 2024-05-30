@@ -26,7 +26,6 @@ return new class extends Migration
             $table->decimal('price', 12, 0)->default(0.);
             $table->text('notes')->nullable(true)->default(null);
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
             $table->foreign('supplier_id')->references('id')->on('parties')->onDelete('set null');
         });

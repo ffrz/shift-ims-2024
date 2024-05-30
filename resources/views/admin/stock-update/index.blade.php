@@ -12,7 +12,7 @@
       <div class="row mt-3">
         <div class="col-md-12">
           <div class="table-responsive">
-          <table class="table-bordered table-striped table-sm">
+          <table class="table table-bordered table-striped table-sm">
             <thead>
               <tr>
                 <th>#</th>
