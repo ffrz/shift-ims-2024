@@ -93,49 +93,50 @@
     <div class="card-body">
       <div class="row mt-3">
         <div class="col-md-12">
-          <table class="display table table-bordered table-striped table-condensed center-th table-sm"
-            style="width:100%">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Tanggal</th>
-                <th>Pelanggan</th>
-                <th>Total</th>
-                <th>Piutang</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($items as $item) : ?>
-              <tr>
-                <td>{{ $item->idFormatted() }}</td>
-                <td>{{ $item->date }}</td>
-                <td>{{ $item->customer ? $item->customer->name : '' }}</td>
-                <td>{{ $item->total }}</td>
-                <td>{{ $item->total_receivable }}</td>
-                <td class="text-center">
-                  <div class="btn-group">
-                    @if (empty($item->deleted_at))
-                      <a href="<?= url("/admin/sales-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-eye" title="View"></i></a>
-                      <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-edit" title="Edit"></i></a>
-                      <a href="<?= url("/admin/sales-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-copy" title="Duplikat"></i></a>
-                      <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                        href="<?= url("/admin/sales-order/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
-                          class="fa fa-trash" title="Hapus"></i></a>
-                    @else
-                      <a onclick="return confirm('Anda yakin akan mengembalikan rekaman ini?')"
-                        href="<?= url("/admin/sales-order/restore/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-trash-arrow-up" title="Pulihkan"></i></a>
-                    @endif
-                  </div>
-                </td>
-              </tr>
-              <?php endforeach ?>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Tanggal</th>
+                  <th>Pelanggan</th>
+                  <th>Total</th>
+                  <th>Piutang</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($items as $item) : ?>
+                <tr>
+                  <td>{{ $item->idFormatted() }}</td>
+                  <td>{{ $item->date }}</td>
+                  <td>{{ $item->customer ? $item->customer->name : '' }}</td>
+                  <td>{{ $item->total }}</td>
+                  <td>{{ $item->total_receivable }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      @if (empty($item->deleted_at))
+                        <a href="<?= url("/admin/sales-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-eye" title="View"></i></a>
+                        <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-edit" title="Edit"></i></a>
+                        <a href="<?= url("/admin/sales-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-copy" title="Duplikat"></i></a>
+                        <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
+                          href="<?= url("/admin/sales-order/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                            class="fa fa-trash" title="Hapus"></i></a>
+                      @else
+                        <a onclick="return confirm('Anda yakin akan mengembalikan rekaman ini?')"
+                          href="<?= url("/admin/sales-order/restore/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-trash-arrow-up" title="Pulihkan"></i></a>
+                      @endif
+                    </div>
+                  </td>
+                </tr>
+                <?php endforeach ?>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

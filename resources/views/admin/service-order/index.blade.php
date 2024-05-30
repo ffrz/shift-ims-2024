@@ -101,8 +101,8 @@
       </div>
       <div class="row mt-3">
         <div class="col-md-12">
-          <table class="data-table display table table-bordered table-striped table-condensed center-th table-sm"
-            style="width:100%">
+          <div class="table-responsive">
+          <table class="table table-bordered table-striped table-sm">
             <thead>
               <tr>
                 <th>#</th>
@@ -152,6 +152,7 @@
               <?php endforeach ?>
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </div>

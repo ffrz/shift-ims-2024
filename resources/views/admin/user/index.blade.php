@@ -51,7 +51,8 @@
       </form>
       <div class="row">
         <div class="col-md-12">
-          <table class="data-table display table table-bordered table-striped table-condensed center-th"
+          <div class="table-responsive">
+          <table class="table table-bordered table-striped table-sm"
             style="width:100%">
             <thead>
               <tr>
@@ -90,6 +91,7 @@
               @endforelse
             </tbody>
           </table>
+        </div>
         </div>
       </div>
       @include('admin._components.paginator', ['items' => $items])

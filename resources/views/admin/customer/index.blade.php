@@ -16,7 +16,8 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <table class="display table table-bordered table-striped table-condensed" style="width:100%">
+          <div class="table-responsive">
+          <table class="table table-bordered table-striped table-sm">
             <thead>
               <tr>
                 <th style="width:5%">Kode</th>
@@ -50,6 +51,7 @@
               @endforelse
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       @include('admin._components.paginator', ['items' => $items])

@@ -19,37 +19,40 @@ $title = 'Buat Kartu Stok';
             <div>
               <div class="mb-3 mt-3 mr-2 btn-group">
                 <button type="submit" name="action" value="print" class="btn btn-primary"><i
-                  class="fa fa-print mr-1"></i>Cetak</button>
-                <button type="submit" name="action" value="save" class="btn btn-warning"><i class="fa fa-save mr-1"></i>
+                    class="fa fa-print mr-1"></i>Cetak</button>
+                <button type="submit" name="action" value="save" class="btn btn-warning"><i
+                    class="fa fa-save mr-1"></i>
                   Simpan</button>
               </div>
               <a href="./" class="btn btn-default"><i class="fa fa-cancel mr-1"></i>Batal</a>
             </div>
-            <table id="product-list" class="table table-sm table-bordered table-hover">
-              <thead>
-                <th><input id="check-all" type="checkbox" checked></th>
-                <th>Produk</th>
-                <th>Stok</th>
-                <th>Satuan</th>
-                <th>Modal (Rp.)</th>
-                <th>Harga (Rp.)</th>
-              </thead>
-              <tbody>
-                @foreach ($items as $item)
-                  <tr>
-                    <td class="text-center"><input class="check" type="checkbox" checked
-                        name="product_ids[{{ $item->id }}]">
-                    </td>
-                    <td>{{ $item->code }}</td>
-                    <td class="text-right">{{ $item->stock }}</td>
-                    <td>{{ $item->uom }}</td>
-                    <td class="text-right">{{ format_number($item->cost) }}</td>
-                    <td class="text-right">{{ format_number($item->price) }}</td>
-                    </td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table id="product-list" class="table table-sm table-bordered table-hover">
+                <thead>
+                  <th><input id="check-all" type="checkbox" checked></th>
+                  <th>Produk</th>
+                  <th>Stok</th>
+                  <th>Satuan</th>
+                  <th>Modal (Rp.)</th>
+                  <th>Harga (Rp.)</th>
+                </thead>
+                <tbody>
+                  @foreach ($items as $item)
+                    <tr>
+                      <td class="text-center"><input class="check" type="checkbox" checked
+                          name="product_ids[{{ $item->id }}]">
+                      </td>
+                      <td>{{ $item->code }}</td>
+                      <td class="text-right">{{ $item->stock }}</td>
+                      <td>{{ $item->uom }}</td>
+                      <td class="text-right">{{ format_number($item->cost) }}</td>
+                      <td class="text-right">{{ format_number($item->price) }}</td>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

@@ -43,44 +43,46 @@
           <form method="POST" action="{{ url('admin/user-activity/delete') }}"
             onsubmit="return confirm('Hapus rekaman?')">
             @csrf
-            <table class="data-table display table table-bordered table-striped table-condensed" style="width:100%">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Waktu</th>
-                  <th>Pengguna</th>
-                  <th>Tipe</th>
-                  <th>Aktivitas</th>
-                  <th>Deskripsi</th>
-                  <th class="text-center" style="max-width:10%">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @forelse ($items as $item)
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
                   <tr>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->datetime }}</td>
-                    <td>{{ $item->username }}</td>
-                    <td>{{ $item->typeFormatted() }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->description }}</td>
-                    <td class="text-center">
-                      <div class="btn-group">
-                        <input type="hidden" name="id" value="{{ $item->id }}">
-                        <a href="{{ url("/admin/user-activity/show/$item->id") }}" class="btn btn-default btn-sm"
-                          title="Lihat"><i class="fa fa-eye"></i></a>
-                        <button href="{{ url('/admin/user-activity/delete') }}" class="btn btn-danger btn-sm"
-                          type="submit" title="Hapus"><i class="fa fa-trash"></i></button>
-                      </div>
-                    </td>
+                    <th>#</th>
+                    <th>Waktu</th>
+                    <th>Pengguna</th>
+                    <th>Tipe</th>
+                    <th>Aktivitas</th>
+                    <th>Deskripsi</th>
+                    <th class="text-center" style="max-width:10%">Aksi</th>
                   </tr>
-                @empty
-                  <tr>
-                    <td colspan="7" class="empty">Belum ada rekaman</td>
-                  </tr>
-                @endforelse
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  @forelse ($items as $item)
+                    <tr>
+                      <td>{{ $item->id }}</td>
+                      <td>{{ $item->datetime }}</td>
+                      <td>{{ $item->username }}</td>
+                      <td>{{ $item->typeFormatted() }}</td>
+                      <td>{{ $item->name }}</td>
+                      <td>{{ $item->description }}</td>
+                      <td class="text-center">
+                        <div class="btn-group">
+                          <input type="hidden" name="id" value="{{ $item->id }}">
+                          <a href="{{ url("/admin/user-activity/show/$item->id") }}" class="btn btn-default btn-sm"
+                            title="Lihat"><i class="fa fa-eye"></i></a>
+                          <button href="{{ url('/admin/user-activity/delete') }}" class="btn btn-danger btn-sm"
+                            type="submit" title="Hapus"><i class="fa fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="7" class="empty">Belum ada rekaman</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
+            </div>
           </form>
         </div>
       </div>

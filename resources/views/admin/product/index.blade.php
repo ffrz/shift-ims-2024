@@ -112,7 +112,7 @@ use App\Models\Product;
       <div class="row mt-3">
         <div class="col-md-12">
           <div class="table-responsive">
-            <table class="table table-bordered table-striped table-condensed">
+            <table class="table table-bordered table-striped table-condensed table-sm">
               <thead>
                 <tr>
                   <th>Kode</th>

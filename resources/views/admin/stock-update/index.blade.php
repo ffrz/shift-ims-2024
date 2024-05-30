@@ -11,7 +11,8 @@
     <div class="card-body">
       <div class="row mt-3">
         <div class="col-md-12">
-          <table class="display table table-bordered table-striped table-condensed center-th table-sm" style="width:100%">
+          <div class="table-responsive">
+          <table class="table-bordered table-striped table-sm">
             <thead>
               <tr>
                 <th>#</th>
@@ -48,6 +49,7 @@
               @endforelse
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 

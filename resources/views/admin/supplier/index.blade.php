@@ -16,40 +16,42 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <table class="display table table-bordered table-striped table-condensed" style="width:100%">
-            <thead>
-              <tr>
-                <th style="width:5%">Kode</th>
-                <th style="width:30%">Nama</th>
-                <th>No Telepon</th>
-                <th>Alamat</th>
-                <th style="width:5%">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              @forelse ($items as $i => $item)
+          <div class="table-responsive">
+            <table class="table-bordered table-striped table-sm">
+              <thead>
                 <tr>
-                  <td>{{ $item->idFormatted() }}</td>
-                  <td>{{ $item->name }}</td>
-                  <td>{{ $item->phone }}</td>
-                  <td>{{ $item->address }}</td>
-                  <td class="text-center">
-                    <div class="btn-group">
-                      <a href="<?= url("/admin/supplier/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-edit"></i></a>
-                      <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                        href="<?= url("/admin/supplier/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
-                          class="fa fa-trash"></i></a>
-                    </div>
-                  </td>
+                  <th style="width:5%">Kode</th>
+                  <th style="width:30%">Nama</th>
+                  <th>No Telepon</th>
+                  <th>Alamat</th>
+                  <th style="width:5%">Aksi</th>
                 </tr>
-              @empty
-                <tr>
-                  <td class="text-center" colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
-                </tr>
-              @endforelse
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @forelse ($items as $i => $item)
+                  <tr>
+                    <td>{{ $item->idFormatted() }}</td>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->phone }}</td>
+                    <td>{{ $item->address }}</td>
+                    <td class="text-center">
+                      <div class="btn-group">
+                        <a href="<?= url("/admin/supplier/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                            class="fa fa-edit"></i></a>
+                        <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
+                          href="<?= url("/admin/supplier/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                            class="fa fa-trash"></i></a>
+                      </div>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td class="text-center" colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       @include('admin._components.paginator', ['items' => $items])

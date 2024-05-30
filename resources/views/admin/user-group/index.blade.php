@@ -16,8 +16,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
-          <table class="data-table display table table-bordered table-striped table-condensed center-th"
-            style="width:100%">
+          <table class="table table-bordered table-striped table-sm">
             <thead>
               <tr>
                 <th style="width:30%">Nama Grup</th>

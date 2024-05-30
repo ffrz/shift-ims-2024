@@ -32,51 +32,53 @@ $title = 'Stok Opname';
     <div class="card-body">
       <div class="row mt-3">
         <div class="col col-md-12">
-          <table id="product-list" class="table table-sm table-bordered table-hover">
-            <thead>
-              <th style="width:1%">No</th>
-              <th>Produk</th>
-              <th style="width:5%">Stok Tercatat</th>
-              <th style="width:5%">Stok Sebenarnya</th>
-              <th style="width:5%">Selisih</th>
-              <th style="width:5%">Selisih Modal</th>
-              <th style="width:5%">Selisih Harga</th>
-            </thead>
-            <tbody>
-              @php
-                $total_cost = 0;
-                $total_price = 0;
-              @endphp
-              @foreach ($subitems as $num => $subitem)
-                <tr id="item-{{ $item->id }}" data-id="{{ $item->id }}">
-                  <td class="text-right">{{ $num + 1 }}</td>
-                  <td>{{ $subitem->product->idFormatted() . ' - ' . $subitem->product->code }}</td>
-                  <td data-stock="{{ $subitem->product->stock }}" class="stock text-right">
-                    {{ format_number($subitem->product->stock) }}</td>
-                  <td class="text-center"><input type="number" class="text-right stock-edit" style="width:75px;"
-                      name="stocks[{{ $subitem->id }}]"
-                      value="{{ format_number($subitem->product->stock + $subitem->quantity) }}">
-                  <td data-diff="0" class="diff text-right">{{ format_number($subitem->quantity) }} </td>
-                  <td data-cost="{{ $subitem->product->cost }}" class="cost text-right" class="text-right">
-                    {{ format_number($subitem->product->cost * $subitem->quantity) }}</td>
-                  <td data-price="{{ $subitem->product->price }}" class="price text-right" class="text-right">
-                    {{ format_number($subitem->product->price * $subitem->quantity) }}</td>
-                  </td>
-                </tr>
+          <div class="table-responsive">
+            <table id="product-list" class="table table-sm table-bordered table-hover">
+              <thead>
+                <th style="width:1%">No</th>
+                <th>Produk</th>
+                <th style="width:5%">Stok Tercatat</th>
+                <th style="width:5%">Stok Sebenarnya</th>
+                <th style="width:5%">Selisih</th>
+                <th style="width:5%">Selisih Modal</th>
+                <th style="width:5%">Selisih Harga</th>
+              </thead>
+              <tbody>
                 @php
-                  $total_cost += $subitem->product->cost * $subitem->quantity;
-                  $total_price += $subitem->product->price * $subitem->quantity;
+                  $total_cost = 0;
+                  $total_price = 0;
                 @endphp
-              @endforeach
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colspan="5" class="text-right">Total</th>
-                <th id="total-cost" class="text-right">{{ format_number($total_cost) }}</th>
-                <th id="total-price" class="text-right">{{ format_number($total_price) }}</th>
-              </tr>
-            </tfoot>
-          </table>
+                @foreach ($subitems as $num => $subitem)
+                  <tr id="item-{{ $item->id }}" data-id="{{ $item->id }}">
+                    <td class="text-right">{{ $num + 1 }}</td>
+                    <td>{{ $subitem->product->idFormatted() . ' - ' . $subitem->product->code }}</td>
+                    <td data-stock="{{ $subitem->product->stock }}" class="stock text-right">
+                      {{ format_number($subitem->product->stock) }}</td>
+                    <td class="text-center"><input type="number" class="text-right stock-edit" style="width:75px;"
+                        name="stocks[{{ $subitem->id }}]"
+                        value="{{ format_number($subitem->product->stock + $subitem->quantity) }}">
+                    <td data-diff="0" class="diff text-right">{{ format_number($subitem->quantity) }} </td>
+                    <td data-cost="{{ $subitem->product->cost }}" class="cost text-right" class="text-right">
+                      {{ format_number($subitem->product->cost * $subitem->quantity) }}</td>
+                    <td data-price="{{ $subitem->product->price }}" class="price text-right" class="text-right">
+                      {{ format_number($subitem->product->price * $subitem->quantity) }}</td>
+                    </td>
+                  </tr>
+                  @php
+                    $total_cost += $subitem->product->cost * $subitem->quantity;
+                    $total_price += $subitem->product->price * $subitem->quantity;
+                  @endphp
+                @endforeach
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="5" class="text-right">Total</th>
+                  <th id="total-cost" class="text-right">{{ format_number($total_cost) }}</th>
+                  <th id="total-price" class="text-right">{{ format_number($total_price) }}</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       </div>
     </div>
