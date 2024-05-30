@@ -155,7 +155,7 @@ $title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
           <div class="form-group">
             <label for="profit">Laba</label>
             <input type="text" readonly class="form-control col-md-5 text-right" id="profit"
-              value="{{ format_number(old('price', $item->price) - old('cost', $item->cost)) }}">
+              value="{{ format_number(floatval(old('price', $item->price)) - floatval(old('cost', $item->cost))) }}">
             <p class="text-muted">Margin Keuntungan: <span id="profit-percent">0%</span></p>
           </div>
         </div>
@@ -195,8 +195,9 @@ $title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
         let cost = localeNumberToNumber($('#cost').val());
         let price = localeNumberToNumber($('#price').val());
         let profit = price - cost;
+        let text = toLocaleNumber(profit / price * 100, 2);
         $('#profit').val(toLocaleNumber(profit));
-        $('#profit-percent').text(toLocaleNumber(profit / price * 100, 2) + '%');
+        $('#profit-percent').text((text === 'NaN' || text === '-∞' ? '0' : text) + '%');
       }
 
       Inputmask("decimal", INPUTMASK_OPTIONS).mask("#stock");
@@ -211,8 +212,8 @@ $title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
       $('#price').change(function() {
         updateProfitMargin();
       });
-
       updateProfitMargin();
+      $('.is-invalid').focus();
     });
   </script>
 @endsection

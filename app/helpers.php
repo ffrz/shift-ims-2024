@@ -46,7 +46,7 @@ function extract_daterange($daterange)
 
 function format_number($number, int $prec = 0)
 {
-    return number_format($number, $prec, ',', '.');
+    return number_format(floatval($number), $prec, ',', '.');
 }
 
 function str_to_double($str)
