@@ -32,8 +32,6 @@
                   <td>{{ $item->products->count() }}</td>
                   <td class="text-center">
                     <div class="btn-group">
-                      <a href="<?= url("/admin/product?category_id=$item->id") ?>" class="btn btn-default btn-sm"><i
-                          class="fa fa-eye"></i></a>
                       <a href="<?= url("/admin/product-category/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                           class="fa fa-edit"></i></a>
                       <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"

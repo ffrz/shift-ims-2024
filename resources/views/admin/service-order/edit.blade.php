@@ -6,19 +6,29 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
     'title' => $title,
     'menu_active' => 'service',
     'nav_active' => 'service_order',
-    'back_button_link' => url('/admin/service-order/'),
+    'form_action' => url('admin/service-order/edit/' . (int) $item->id),
 ])
-
+@section('right-menu')
+  <li class="nav-item">
+    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-save mr-1"></i> Simpan</button>
+    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/customer/') }}"><i
+        class="fas fa-cancel mr-1"></i>Batal</a>
+  </li>
+@endSection
 @section('content')
-  <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST"
-      action="{{ url('admin/service-order/edit/' . (int) $item->id) }}">
-      @csrf
-      <input type="hidden" name="id" value="{{ $item->id }}">
-      <div class="card-body">
-        <h4>Info Order</h4>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+  <input type="hidden" name="id" value="{{ $item->id }}">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Order</h4>
+          <hr class="mt-0 mb-3">
+          <div class="form-group">
+            <div class="form-group">
+              <label for="id">#No Order:</label>
+              <input type="text" class="form-control" id="id" name=""
+                value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
+            </div>
             <label for="date_received">Tanggal Diterima:</label>
             <input type="date" class="form-control @error('date_received') is-invalid @enderror" autofocus
               id="date_received" name="date_received" value="{{ old('date_received', $item->date_received) }}">
@@ -28,7 +38,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="date_taken">Tanggal Diambil:</label>
             <input type="date" class="form-control @error('date_taken') is-invalid @enderror" autofocus id="date_taken"
               name="date_taken" value="{{ old('date_taken', $item->date_taken) }}">
@@ -38,7 +48,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="order_status">Status:</label>
             <select class="custom-select select2 form-control" id="order_status" name="order_status">
               <option value="{{ ServiceOrder::ORDER_STATUS_ACTIVE }}"
@@ -52,16 +62,14 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
                 {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
             </select>
           </div>
-          <div class="form-group col-md-3">
-            <label for="id">#No Order:</label>
-            <input type="text" class="form-control" id="id" name=""
-              value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
-          </div>
         </div>
-        <h4 class="mt-3">Info Pelanggan</h4>
-        <div class="form-row">
-          <div class="form-group col-md-4">
-            <label for="customer_name">Nama Pelanggan:</label>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Pelanggan</h4>
+          <hr class="mt-0">
+          <div class="form-group">
+            <label for="customer_name">Nama:</label>
             <input type="text" class="form-control @error('customer_name') is-invalid @enderror" id="customer_name"
               placeholder="Masukkan Nama Pelanggan" name="customer_name"
               value="{{ old('customer_name', $item->customer_name) }}">
@@ -71,7 +79,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-4">
+          <div class="form-group">
             <label for="customer_contact">Kontak:</label>
             <input type="text" class="form-control @error('customer_contact') is-invalid @enderror"
               id="customer_contact" placeholder="Masukkan Kontak Pelanggan" name="customer_contact"
@@ -82,8 +90,8 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-4">
-            <label for="customer_address">Alamat Pelanggan:</label>
+          <div class="form-group">
+            <label for="customer_address">Alamat:</label>
             <input type="text" class="form-control @error('customer_address') is-invalid @enderror"
               id="customer_address" placeholder="Masukkan Alamat Pelanggan" name="customer_address"
               value="{{ old('customer_address', $item->customer_address) }}">
@@ -94,9 +102,14 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             @enderror
           </div>
         </div>
-        <h4 class="mt-3">Info Perangkat</h4>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Perangkat</h4>
+          <hr class="mt-0">
+          <div class="form-group">
             <label for="device_type">Jenis Perangkat:</label>
             <input type="text" class="form-control @error('device_type') is-invalid @enderror" id="device_type"
               placeholder="Masukkan Jenis Perangkat" name="device_type" list="device_type_options"
@@ -112,7 +125,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="device">Perangkat:</label>
             <input type="text" class="form-control @error('device') is-invalid @enderror" id="device"
               placeholder="Masukkan Perangkat" name="device" list="device_options"
@@ -128,7 +141,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="equipments">Kelengkapan:</label>
             <input type="text" class="form-control @error('equipments') is-invalid @enderror" id="equipments"
               placeholder="Kelengkapan" name="equipments" value="{{ old('equipments', $item->equipments) }}">
@@ -138,7 +151,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="device_sn">SN / IMEI:</label>
             <input type="text" class="form-control @error('device_sn') is-invalid @enderror" id="device_sn"
               placeholder="SN" name="device_sn" value="{{ old('device_sn', $item->device_sn) }}">
@@ -149,9 +162,12 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             @enderror
           </div>
         </div>
-        <h4 class="mt-3">Info Service</h4>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Servis</h4>
+          <hr class="mt-0">
+          <div class="form-group">
             <label for="problems">Keluhan:</label>
             <input type="text" class="form-control @error('problems') is-invalid @enderror" id="problems"
               name="problems" value="{{ old('problems', $item->problems) }}">
@@ -161,7 +177,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="actions">Tindakan:</label>
             <input type="text" class="form-control @error('actions') is-invalid @enderror" id="actions"
               name="actions" value="{{ old('actions', $item->actions) }}">
@@ -171,7 +187,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="service_status">Status Servis:</label>
             <select class="custom-select select2 form-control" id="service_status" name="service_status">
               <option value="{{ ServiceOrder::SERVICE_STATUS_RECEIVED }}"
@@ -191,7 +207,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
                 {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_FAILED) }}</option>
             </select>
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="date_completed">Tanggal Selesai:</label>
             <input type="date" class="form-control @error('date_completed') is-invalid @enderror" autofocus
               id="date_completed" name="date_completed" value="{{ old('date_completed', $item->date_completed) }}">
@@ -201,9 +217,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="technician">Teknisi:</label>
             <input type="text" class="form-control @error('technician') is-invalid @enderror" id="technician"
               name="technician" value="{{ old('technician', $item->technician) }}">
@@ -214,29 +228,36 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             @enderror
           </div>
         </div>
-        <h4 class="mt-3">Info Biaya</h4>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Biaya</h4>
+          <hr class="mt-0 mb-3">
+          <div class="form-group">
             <label for="estimated_cost">Perkiraan Biaya:</label>
             <input type="text" class="form-control text-right @error('estimated_cost') is-invalid @enderror"
-              id="estimated_cost" name="estimated_cost" value="{{ format_number(old('estimated_cost', $item->estimated_cost)) }}">
+              id="estimated_cost" name="estimated_cost"
+              value="{{ format_number(old('estimated_cost', $item->estimated_cost)) }}">
             @error('estimated_cost')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="down_payment">Uang Muka:</label>
             <input type="text" class="form-control text-right @error('down_payment') is-invalid @enderror"
-              id="down_payment" name="down_payment" value="{{ format_number(old('down_payment', $item->down_payment)) }}">
+              id="down_payment" name="down_payment"
+              value="{{ format_number(old('down_payment', $item->down_payment)) }}">
             @error('down_payment')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="total_cost">Total Biaya:</label>
             <input type="text" class="form-control text-right @error('total_cost') is-invalid @enderror"
               id="total_cost" name="total_cost" value="{{ format_number(old('total_cost', $item->total_cost)) }}">
@@ -246,7 +267,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="payment_status">Status Pembayaran:</label>
             <select class="custom-select select2 form-control" id="payment_status" name="payment_status">
               <option value="{{ ServiceOrder::PAYMENT_STATUS_UNPAID }}"
@@ -261,9 +282,13 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             </select>
           </div>
         </div>
-        <h4 class="mt-3"><label for="notes">Catatan:</label></h4>
-        <div class="form-row">
-          <div class="form-group col-md-12">
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-0">Info Tambahan</h4>
+          <hr class="mt-0 mb-3">
+          <div class="form-group">
+            <label for="notes">Catatan:</label>
             <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes">{{ old('notes', $item->notes) }}</textarea>
             @error('notes')
               <span class="text-danger">
@@ -271,14 +296,9 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
               </span>
             @enderror
           </div>
-        </div>
-      </div> {{-- .card-body --}}
-  </div>
-
-  <div class="card-footer">
-    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
-  </div>
-  </form>
+        </div> {{-- .card-body --}}
+      </div>
+    </div>
   </div>
 @endSection
 

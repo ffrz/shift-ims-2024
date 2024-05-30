@@ -19,7 +19,6 @@ class ServiceOrderController extends Controller
             'order_status'   => (int)$request->get('order_status',   $request->session()->get('service_order.filter.order_status',    0)),
             'service_status' => (int)$request->get('service_status', $request->session()->get('service_order.filter.service_status', -1)),
             'payment_status' => (int)$request->get('payment_status', $request->session()->get('service_order.filter.payment_status', -1)),
-            'record_status' => (int)$request->get('record_status', $request->session()->get('service_order.filter.record_status', 1)),
         ];
 
         $q = ServiceOrder::query();
@@ -30,11 +29,6 @@ class ServiceOrderController extends Controller
             $q->where('service_status', '=', $filter['service_status']);
         if ($filter['payment_status'] != -1)
             $q->where('payment_status', '=', $filter['payment_status']);
-
-        if ($filter['record_status'] == -1)
-            $q->withTrashed();
-        else if ($filter['record_status'] == 0)
-            $q->onlyTrashed();
 
         $q->orderBy('id', 'asc');
 
@@ -87,12 +81,10 @@ class ServiceOrderController extends Controller
         $item = $item->replicate();
         $item->id = 0;
 
-        $device_types = ServiceOrder::withTrashed(true)
-            ->groupBy('device_type')->orderBy('device_type', 'asc')
+        $device_types = ServiceOrder::groupBy('device_type')->orderBy('device_type', 'asc')
             ->pluck('device_type')->toArray();
 
-        $devices = ServiceOrder::withTrashed(true)
-            ->groupBy('device')->orderBy('device', 'asc')
+        $devices = ServiceOrder::groupBy('device')->orderBy('device', 'asc')
             ->pluck('device')->toArray();
 
         return view('admin.service-order.edit', compact('item', 'device_types', 'devices'));
@@ -176,12 +168,10 @@ class ServiceOrderController extends Controller
             return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Order servis ' . ServiceOrder::formatOrderId($item->id) . ' telah disimpan.');
         }
 
-        $device_types = ServiceOrder::withTrashed(true)
-            ->groupBy('device_type')->orderBy('device_type', 'asc')
+        $device_types = ServiceOrder::groupBy('device_type')->orderBy('device_type', 'asc')
             ->pluck('device_type')->toArray();
 
-        $devices = ServiceOrder::withTrashed(true)
-            ->groupBy('device')->orderBy('device', 'asc')
+        $devices = ServiceOrder::groupBy('device')->orderBy('device', 'asc')
             ->pluck('device')->toArray();
 
         return view('admin.service-order.edit', compact('item', 'device_types', 'devices'));
@@ -198,26 +188,6 @@ class ServiceOrderController extends Controller
             UserActivity::log(
                 UserActivity::SERVICE_ORDER_MANAGEMENT,
                 'Hapus Order',
-                $message,
-                $item->toArray()
-            );
-        }
-
-        return redirect('admin/service-order')->with('info', $message);
-    }
-
-    public function restore($id)
-    {
-        ensure_user_can_access(AclResource::DELETE_SERVICE_ORDER);
-
-        if (!$item = ServiceOrder::withTrashed()->find($id))
-            $message = 'Order tidak ditemukan.';
-        else {
-            $item->restore();
-            $message = 'Order #' . e($item->orderId()) . ' telah dipulihkan.';
-            UserActivity::log(
-                UserActivity::SERVICE_ORDER_MANAGEMENT,
-                'Pulihkan Order Servis',
                 $message,
                 $item->toArray()
             );

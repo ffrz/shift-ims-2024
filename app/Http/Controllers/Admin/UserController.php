@@ -54,6 +54,10 @@ class UserController extends Controller
         if ($filter['group_id'] > 0) {
             $q->where('group_id', '=', $filter['group_id']);
         }
+        if (!empty($filter['search'])) {
+            $q->where('username', 'like', '%'. $filter['search'] . '%');
+            $q->orWhere('fullname', 'like', '%'. $filter['search'] . '%');
+        }
         $items = $q->orderBy('fullname', 'asc')->paginate(10);
         $groups = UserGroup::orderBy('name', 'asc')->get();
         return view('admin.user.index', compact('items', 'filter', 'groups'));

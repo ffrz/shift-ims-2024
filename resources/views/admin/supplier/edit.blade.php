@@ -3,17 +3,22 @@
     'title' => $title,
     'menu_active' => 'inventory',
     'nav_active' => 'supplier',
-    'back_button_link' => url('/admin/supplier/'),
+    'form_action' => url('admin/supplier/edit/' . (int) $item->id),
 ])
-
+@section('right-menu')
+  <li class="nav-item">
+    <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-save mr-1"></i> Simpan</button>
+    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/supplier/') }}"><i
+        class="fas fa-cancel mr-1"></i>Batal</a>
+  </li>
+@endSection
 @section('content')
-  <div class="card card-primary">
-    <form class="form-horizontal quick-form" method="POST" action="{{ url('admin/supplier/edit/' . (int) $item->id) }}">
-      @csrf
-      <input type="hidden" name="id" value="{{ $item->id }}">
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-md-3">
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="card">
+        <input type="hidden" name="id" value="{{ $item->id }}">
+        <div class="card-body">
+          <div class="form-group">
             <label for="id">Kode</label>
             <input type="text" readonly class="form-control" id="id" value="{{ $item->idFormatted() }}">
             @error('id')
@@ -22,9 +27,7 @@
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="name">Nama Pemasok</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" autofocus id="name"
               placeholder="Masukkan nama pemasok" name="name" value="{{ old('name', $item->name) }}">
@@ -34,9 +37,7 @@
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="phone">No. Telepon</label>
             <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone"
               placeholder="Masukkan no telepon pemasok" name="phone" value="{{ old('phone', $item->phone) }}">
@@ -46,9 +47,7 @@
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="address">Alamat</label>
             <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address" cols="30"
               rows="4">{{ old('address', $item->address) }}</textarea>
@@ -58,9 +57,7 @@
               </span>
             @enderror
           </div>
-        </div>
-        <div class="form-row">
-          <div class="col-sm-43">
+          <div class="form-group">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input " id="active" name="active" value="1"
                 {{ old('active', $item->active) ? 'checked="checked"' : '' }}>
@@ -68,9 +65,7 @@
             </div>
             <div class="text-muted">Pemasok aktif bisa digunakan di transaksi.</div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
+          <div class="form-group">
             <label for="notes">Catatan</label>
             <textarea class="form-control @error('notes') is-invalid @enderror" name="notes" id="notes" cols="30"
               rows="4">{{ old('notes', $item->notes) }}</textarea>
@@ -82,9 +77,6 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
-      </div>
-    </form>
+    </div>
   </div>
 @endSection
