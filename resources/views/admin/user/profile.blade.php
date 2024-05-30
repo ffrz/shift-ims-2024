@@ -33,7 +33,7 @@
 
           <div class="form-group">
             <label for="group_id">Grup Pengguna</label>
-            <input type="text" class="form-control" id="group" name="group"
+            <input type="text" class="form-control" id="group_id" name="group"
               value="{{ $user->group ? $user->group->name : '' }}" readonly>
           </div>
           <div class="form-group">
