@@ -46,7 +46,7 @@ class Product extends Model
 
     public function idFormatted()
     {
-        return 'P' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+        return 'P-' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
     }
 
     public function category(): BelongsTo
