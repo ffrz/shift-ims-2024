@@ -33,24 +33,30 @@ class StockUpdate extends Model
         'total_cost',
         'total_price',
         'notes',
-        'creation_datetime',
-        'closing_datetime',
-        'creation_uid',
-        'closing_uid',
+        'created_datetime',
+        'closed_datetime',
+        'created_uid',
+        'closed_uid',
+        'last_saved_datetime',
+        'last_saved_uid',
     ];
 
     public function open()
     {
         $this->status = StockUpdate::STATUS_OPEN;
-        $this->creation_datetime = date('Y-m-d H:m:s');
-        $this->creation_uid = Auth::user()->id;
+        $this->created_datetime = current_datetime();
+        $this->created_uid = Auth::user()->id;
+        $this->last_saved_datetime = $this->created_datetime;
+        $this->last_saved_uid = $this->created_uid;
     }
 
     public function close($status)
     {
         $this->status = $status;
-        $this->closing_datetime = date('Y-m-d H:m:s');
-        $this->closing_uid = Auth::user()->id;
+        $this->closed_datetime = current_datetime();
+        $this->closed_uid = Auth::user()->id;
+        $this->last_saved_datetime = $this->closed_datetime;
+        $this->last_saved_uid = $this->closed_uid;
     }
 
     public static function getNextId2($type)
@@ -63,13 +69,7 @@ class StockUpdate extends Model
 
     public function idFormatted()
     {
-        return 'SU-' . $this->date() . '-' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
-    }
-
-    public function date()
-    {
-        $dt = explode(' ', $this->creation_datetime);
-        return $dt[0];
+        return 'SU-' . date_from_datetime($this->created_datetime) . '-' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
     }
 
     public function id2Formatted()
@@ -95,7 +95,7 @@ class StockUpdate extends Model
                 $prefix = 'POR';
                 break;
         }
-        return $prefix . '-' . $this->date() . '-' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
+        return $prefix . '-' . date_from_datetime($this->created_datetime) . '-' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
     }
 
     public function statusFormatted()
@@ -137,13 +137,18 @@ class StockUpdate extends Model
         return $this->hasMany(StockUpdateDetail::class, 'update_id');
     }
 
-    public function creation_user()
+    public function created_by()
     {
-        return $this->belongsTo(User::class, 'creation_uid');
+        return $this->belongsTo(User::class, 'created_uid');
     }
 
-    public function closing_user()
+    public function closed_by()
     {
-        return $this->belongsTo(User::class, 'closing_uid');
+        return $this->belongsTo(User::class, 'closed_uid');
+    }
+
+    public function last_saved_by()
+    {
+        return $this->belongsTo(User::class, 'last_saved_uid');
     }
 }

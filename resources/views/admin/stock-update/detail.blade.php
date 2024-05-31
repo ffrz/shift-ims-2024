@@ -6,44 +6,24 @@ $title = 'Rincian Pembaruan Stok';
     'title' => $title,
     'menu_active' => 'inventory',
     'nav_active' => 'stock-update',
-    'back_button_link' => url('/admin/stock-update/'),
 ])
-
+@section('right-menu')
+<li class="nav-item">
+  <a href="?print=1" class="btn btn-default"><i class="fa fa-print mr-1"></i>Cetak</a>
+</li>
+@endSection
 @section('content')
   <div class="card card-primary">
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
+          <h4>Rincian {{ $item->typeFormatted() . ' #' . $item->id2Formatted() }}</h4>
           <table class="table no-border table-sm" style="width:100%">
-            <tr>
-              <td style="width:5%">#ID</td>
-              <td style="width:1%">:</td>
-              <td>{{ $item->id2Formatted() }}</td>
-            </tr>
-            <tr>
-              <td>Dibuat</td>
-              <td>:</td>
-              <td>{{ format_datetime($item->creation_datetime) }} oleh
-                {{ $item->creation_user->username }}</td>
-            </tr>
+            <p class="mt-0 mb-0">Dibuat oleh {{ $item->created_by->username }} pada {{ format_datetime($item->created_datetime) }}</p>
             @if ($item->status != 0)
-              <tr>
-                <td>Ditutup</td>
-                <td>:</td>
-                <td>{{ format_datetime($item->closing_datetime) }} oleh
-                  {{ $item->closing_user->username }}</td>
-              </tr>
+              <p class="mt-0 mb-0">Ditutup oleh {{ $item->closed_by->username }} pada {{ format_datetime($item->closed_datetime) }}</p>
             @endif
-            <tr>
-              <td>Jenis</td>
-              <td>:</td>
-              <td>{{ $item->typeFormatted() }}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>:</td>
-              <td>{{ $item->statusFormatted() }}</td>
-            </tr>
+            <p class="mt-0 mb-0">Status: {{ $item->statusFormatted() }}</p>
           </table>
         </div>
       </div>

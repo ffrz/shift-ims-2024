@@ -27,7 +27,7 @@ class StockUpdateController extends Controller
 
     public function detail(Request $request, $id)
     {
-        $item = StockUpdate::with(['creation_user', 'closing_user'])->find($id);
+        $item = StockUpdate::with(['created_by', 'closed_by'])->find($id);
         $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
         return view('admin.stock-update.detail', compact('item', 'details'));
     }

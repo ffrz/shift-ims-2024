@@ -28,10 +28,10 @@
               @forelse ($items as $item)
                 <tr>
                   <td>{{ $item->id2Formatted() }}</td>
-                  <td class="text-center">{{ format_datetime($item->creation_datetime) }} -
-                    {{ $item->creation_user->username }}</td>
-                  <td class="text-center">{{ format_datetime($item->closing_datetime) }} -
-                    {{ $item->closing_user->username }}</td>
+                  <td class="text-center">{{ format_datetime($item->created_datetime) }} -
+                    {{ $item->created_by->username }}</td>
+                  <td class="text-center">{{ format_datetime($item->closed_datetime) }} -
+                    {{ $item->closed_by->username }}</td>
                   <td class="text-center">{{ $item->typeFormatted() }}</td>
                   <td class="text-right">{{ format_number($item->total_cost) }}</td>
                   <td class="text-right">{{ format_number($item->total_price) }}</td>
