@@ -17,7 +17,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
 @endSection
 @section('content')
   <input type="hidden" name="id" value="{{ $item->id }}">
-  <div class="row">
+  <div class="row justify-content-start">
     <div class="col-lg-4">
       <div class="card">
         <div class="card-body">

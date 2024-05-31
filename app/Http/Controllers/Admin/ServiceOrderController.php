@@ -19,25 +19,38 @@ class ServiceOrderController extends Controller
             'order_status'   => (int)$request->get('order_status',   $request->session()->get('service_order.filter.order_status',    0)),
             'service_status' => (int)$request->get('service_status', $request->session()->get('service_order.filter.service_status', -1)),
             'payment_status' => (int)$request->get('payment_status', $request->session()->get('service_order.filter.payment_status', -1)),
+            'search' => $request->get('search', ''),
         ];
 
         $q = ServiceOrder::query();
 
-        if ($filter['order_status'] != -1)
+        if ($filter['order_status'] != -1) {
             $q->where('order_status', '=', $filter['order_status']);
-        if ($filter['service_status'] != -1)
+        }
+
+        if ($filter['service_status'] != -1) {
             $q->where('service_status', '=', $filter['service_status']);
-        if ($filter['payment_status'] != -1)
+        }
+
+        if ($filter['payment_status'] != -1) {
             $q->where('payment_status', '=', $filter['payment_status']);
+        }
+
+        if (!empty($filter['search'])) {
+            $q->where('customer_name', 'like', '%' . $filter['search'] . '%')
+              ->orWhere('customer_contact', 'like', '%' . $filter['search'] . '%')
+              ->orWhere('customer_address', 'like', '%' . $filter['search'] . '%')
+              ->orWhere('device', 'like', '%' . $filter['search'] . '%')
+              ->orWhere('device_sn', 'like', '%' . $filter['search'] . '%');
+        }
 
         $q->orderBy('id', 'asc');
 
-        $items = $q->get();
+        $items = $q->paginate(10);
 
         $request->session()->put('service_order.filter.order_status', $filter['order_status']);
         $request->session()->put('service_order.filter.service_status', $filter['service_status']);
         $request->session()->put('service_order.filter.payment_status', $filter['payment_status']);
-        $request->session()->put('service_order.filter.record_status', $filter['record_status']);
 
         return view('admin.service-order.index', compact('items', 'filter'));
     }
@@ -153,7 +166,7 @@ class ServiceOrderController extends Controller
             $requestData['down_payment'] = numberFromInput($requestData['down_payment']);
             $requestData['estimated_cost'] = numberFromInput($requestData['estimated_cost']);
             $requestData['total_cost'] = numberFromInput($requestData['total_cost']);
-            
+
             $item->fill($requestData);
             $item->save();
             $data['New Data'] = $item->toArray();

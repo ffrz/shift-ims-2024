@@ -150,37 +150,40 @@ $title = 'Rincian Order Servis';
           </div>
         </div>
       </div> {{-- .card-body --}}
-    </div>
-
-    <div class="card-footer">
-      @if ($item->service_status < ServiceOrder::SERVICE_STATUS_SUCCESS)
-        <div class="btn-group mr-2 mb-3">
-          <button type="submit" class="btn btn-success" name="action" value="service_success"><i
-              class="fas fa-check"></i> Sukses</button>
-          <button type="submit" class="btn btn-warning" name="action" value="service_failed"><i
-              class="fas fa-xmark"></i> Gagal</button>
+      <div class="card-footer">
+        @if ($item->service_status < ServiceOrder::SERVICE_STATUS_SUCCESS)
+          <div class="btn-group mr-2 mt-1 mb-1">
+            <button type="submit" class="btn btn-default" name="action" value="service_success"><i
+                class="fas fa-check"></i> Sukses</button>
+            <button type="submit" class="btn btn-default" name="action" value="service_failed"><i
+                class="fas fa-xmark"></i> Gagal</button>
+          </div>
+        @endif
+        @if ($item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
+          <button type="submit" class="btn btn-default mr-2 mt-1 mb-1" name="action" value="fully_paid"><i
+              class="fas fa-check"></i> Lunas</button>
+        @endif
+        @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
+          <div class="btn-group mr-2 mt-1 mb-1">
+            <button type="submit" class="btn btn-primary" name="action" value="complete_order"><i
+                class="fas fa-check"></i> Selesai</button>
+            <button type="submit" class="btn btn-default" name="action" value="cancel_order"><i
+                class="fas fa-xmark"></i>
+              Batalkan</button>
+          </div>
+        @endif
+        <div class="btn-group mt-1 mb-1">
+          <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-default"><i class="fas fa-print"></i>
+            Cetak</a>
+          <a href="/admin/service-order/edit/{{ $item->id }}" class="btn btn-default"><i class="fas fa-edit"></i>
+            Edit</a>
+          <a href="/admin/service-order/delete/{{ $item->id }}"
+            onclick="return confirm('Anda yakin akan menghapus rekaman order servis ini?')" class="btn btn-danger"><i
+              class="fas fa-edit"></i> Hapus</a>
         </div>
-      @endif
-      @if ($item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
-        <button type="submit" class="btn btn-success mr-2 mb-3" name="action" value="fully_paid"><i
-            class="fas fa-check"></i> Lunas</button>
-      @endif
-      @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
-        <div class="btn-group mr-2 mb-3">
-          <button type="submit" class="btn btn-success" name="action" value="complete_order"><i
-              class="fas fa-check"></i> Selesai</button>
-          <button type="submit" class="btn btn-warning" name="action" value="cancel_order"><i class="fas fa-xmark"></i>
-            Batalkan</button>
-        </div>
-      @endif
-      <div class="btn-group mb-3">
-        <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-default"><i class="fas fa-print"></i>
-          Cetak</a>
-        <a href="/admin/service-order/edit/{{ $item->id }}" class="btn btn-default"><i class="fas fa-edit"></i>
-          Edit</a>
-        <a href="/admin/service-order/delete/{{ $item->id }}" onclick="return confirm('Hapus?')"
-          class="btn btn-danger"><i class="fas fa-edit"></i> Hapus</a>
       </div>
     </div>
+
+
   </form>
 @endSection
