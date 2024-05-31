@@ -2,6 +2,31 @@
 
 use Illuminate\Support\Facades\Auth;
 
+function current_date()
+{
+    return date('Y-m-d');
+}
+
+function current_time()
+{
+    return date('H:i:s');
+}
+
+function current_datetime()
+{
+    return date('Y-m-d H:i:s');
+}
+
+function time_from_datetime($datetime) {
+    $a = explode(' ', $datetime);
+    return $a[1];
+}
+
+function date_from_datetime($datetime) {
+    $a = explode(' ', $datetime);
+    return $a[0];
+}
+
 function fill_with_default_value(&$array, $keys, $default)
 {
     foreach ($keys as $key) {
