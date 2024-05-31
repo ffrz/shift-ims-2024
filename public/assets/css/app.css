@@ -32,3 +32,9 @@
 body { 
     overflow-x: hidden;
  }
+
+ .table.info td {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 1px 3px;
+ }

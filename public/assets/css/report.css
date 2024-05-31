@@ -22,3 +22,14 @@ h6 {
 .report-table th {
     text-align: center;
 }
+
+body {
+    margin: 0 auto;
+    max-width: 21cm;
+    font-size: 10pt;
+}
+
+.page {
+    padding: 0.5cm;
+    background: #fff;
+}
