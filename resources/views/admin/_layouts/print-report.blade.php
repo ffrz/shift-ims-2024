@@ -9,16 +9,17 @@
   <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="/dist/css/adminlte.min.css?v=3.2.0">
   <link rel="stylesheet" href="/assets/css/report.css">
+  @vite([])
 </head>
 
-<body style="width:18cm;">
+<body>
   <div class="wrapper">
-    <section class="report" style="width:100%;margin:2mm;">
+    <section class="report">
       @yield('content')
     </section>
   </div>
   <script>
-    //window.addEventListener("load", window.print());
+    window.addEventListener("load", window.print());
   </script>
 </body>
 
