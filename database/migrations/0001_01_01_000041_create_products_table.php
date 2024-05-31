@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description')->default('');
             $table->string('barcode')->default('');
             $table->integer('stock')->default(0);
+            $table->integer('minimum_stock')->default(0);
             $table->string('uom')->default('');
             $table->decimal('cost', 12, 0)->default(0.);
             $table->decimal('price', 12, 0)->default(0.);

@@ -28,6 +28,7 @@ class ProductController extends Controller
             'active' => (int)$request->get('active', $request->session()->get('product.filter.active', -1)),
             'category_id' => (int)$request->get('category_id', $request->session()->get('product.filter.category_id', -1)),
             'supplier_id' => (int)$request->get('supplier_id', $request->session()->get('product.filter.supplier_id', -1)),
+            'stock_status' => (int)$request->get('stock_status', $request->session()->get('product.filter.stock_status', -1)),
             'search' => $request->get('search'),
         ];
 
@@ -45,6 +46,14 @@ class ProductController extends Controller
         if ($filter['supplier_id'] != -1) {
             $q->where('supplier_id', '=', $filter['supplier_id']);
         }
+
+        if ($filter['stock_status'] == 0) {
+            $q->where('stock', '=', 0);
+        }
+        else if ($filter['stock_status'] == 1) {
+            $q->whereRaw('stock < minimum_stock');
+        }
+
         if (!empty($filter['search'])) {
             $q->where('code', 'like', '%' . $filter['search'] . '%');
             $q->orWhere('description', 'like', '%' . $filter['search'] . '%');

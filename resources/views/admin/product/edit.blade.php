@@ -91,6 +91,12 @@ $title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
               @endforeach
             </select>
           </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="mb-1">Info Inventori</h4>
+          <hr class="mb-3 mt-0">
           <div class="form-group">
             <label for="supplier_id">Supplier Tetap</label>
             <select class="custom-select select2" id="supplier_id" name="supplier_id">
@@ -119,6 +125,17 @@ $title = $item->id ? 'Edit ' . $item->idFormatted() : 'Tambah Produk';
               id="stock" placeholder="Masukkan stok produk" name="stock"
               value="{{ format_number(old('stock', $item->stock)) }}">
             @error('stock')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="minimum_stock">Stok Minimum</label>
+            <input type="text" class="form-control col-md-5 text-right @error('minimum_stock') is-invalid @enderror"
+              id="minimum_stock" placeholder="Masukkan stok produk minimum" name="minimum_stock"
+              value="{{ format_number(old('minimum_stock', $item->minimum_stock)) }}">
+            @error('minimum_stock')
               <span class="text-danger">
                 {{ $message }}
               </span>

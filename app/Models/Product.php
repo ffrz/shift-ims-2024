@@ -27,6 +27,7 @@ class Product extends Model
         'description',
         'barcode',
         'stock',
+        'minimum_stock',
         'uom',
         'cost',
         'price',

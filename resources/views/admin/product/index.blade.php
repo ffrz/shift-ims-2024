@@ -68,6 +68,14 @@ use App\Models\Product;
                   @endforeach
                 </select>
               </div>
+              <div class="form-group col-md-2">
+                <label for="stock_status">Status Stok:</label>
+                <select class="custom-select select2 form-control" id="stock_status" name="stock_status">
+                  <option value="-1" {{ $filter['stock_status'] == -1 ? 'selected' : '' }}>Semua</option>
+                  <option value="0" {{ $filter['stock_status'] == 0 ? 'selected' : '' }}>Kosong</option>
+                  <option value="1" {{ $filter['stock_status'] == 1 ? 'selected' : '' }}>Stok Minimum</option>
+                </select>
+              </div>
             </div>
 
           </div>
@@ -111,11 +119,14 @@ use App\Models\Product;
               </thead>
               <tbody>
                 @forelse ($items as $item)
+                  @php $is_at_low_stock = $item->stock < $item->minimum_stock @endphp
                   <tr class="{{ $filter['active'] == -1 && !$item->active ? 'table-danger' : '' }}">
                     <td>{{ $item->idFormatted() }}</td>
                     <td>{{ $item->code }}</td>
                     <td>{!! $item->category ? e($item->category->name) : '<i>Tanpa Kategori</i>' !!}</td>
-                    <td class="text-right">{{ format_number($item->stock) }}</td>
+                    <td class="text-right {{ $is_at_low_stock ? 'text-danger' : '' }}">
+                      {{ format_number($item->stock) }}
+                    </td>
                     <td>{{ $item->uom }}</td>
                     <td class="text-right">{{ format_number($item->cost) }}</td>
                     <td class="text-right">{{ format_number($item->price) }}</td>
