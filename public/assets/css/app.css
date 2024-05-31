@@ -22,3 +22,13 @@
     padding-left: .5rem;
     padding-riht: .5rem;
 }
+
+.table tr.empty td {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+body { 
+    overflow-x: hidden;
+ }
