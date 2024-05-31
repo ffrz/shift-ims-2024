@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\ServiceOrder;
 use App\Models\UserActivity;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\ServerBag;
 
 class ServiceOrderController extends Controller
 {
@@ -38,10 +41,10 @@ class ServiceOrderController extends Controller
 
         if (!empty($filter['search'])) {
             $q->where('customer_name', 'like', '%' . $filter['search'] . '%')
-              ->orWhere('customer_contact', 'like', '%' . $filter['search'] . '%')
-              ->orWhere('customer_address', 'like', '%' . $filter['search'] . '%')
-              ->orWhere('device', 'like', '%' . $filter['search'] . '%')
-              ->orWhere('device_sn', 'like', '%' . $filter['search'] . '%');
+                ->orWhere('customer_contact', 'like', '%' . $filter['search'] . '%')
+                ->orWhere('customer_address', 'like', '%' . $filter['search'] . '%')
+                ->orWhere('device', 'like', '%' . $filter['search'] . '%')
+                ->orWhere('device_sn', 'like', '%' . $filter['search'] . '%');
         }
 
         $q->orderBy('id', 'asc');
@@ -71,8 +74,11 @@ class ServiceOrderController extends Controller
             $item->payment_status = ServiceOrder::PAYMENT_STATUS_FULLY_PAID;
         } else if ($action == 'complete_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_COMPLETED;
+            $item->closed_datetime = date('Y-m-d H:i:s');
         } else if ($action == 'cancel_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_CANCELED;
+        } else if ($action == 'complete_all') {
+            $item->close(ServiceOrder::ORDER_STATUS_COMPLETED, ServiceOrder::SERVICE_STATUS_SUCCESS, ServiceOrder::PAYMENT_STATUS_FULLY_PAID);
         }
 
         $item->save();
@@ -105,13 +111,13 @@ class ServiceOrderController extends Controller
 
     public function detail($id)
     {
-        $item = ServiceOrder::find($id);
+        $item = ServiceOrder::with(['created_by', 'closed_by'])->findOrFail($id);
         return view('admin.service-order.detail', compact('item'));
     }
 
     public function print($id)
     {
-        $item = ServiceOrder::find($id);
+        $item = ServiceOrder::findOrFail($id);
         return view('admin.service-order.print', compact('item'));
     }
 
@@ -120,11 +126,7 @@ class ServiceOrderController extends Controller
         if (!$id) {
             ensure_user_can_access(AclResource::ADD_SERVICE_ORDER);
             $item = new ServiceOrder();
-            $item->date_received = date('Y-m-d');
-            $item->order_status = ServiceOrder::ORDER_STATUS_ACTIVE;
-            $item->down_payment = 0;
-            $item->total_cost = 0;
-            $item->estimated_cost = 0;
+            $item->open();
         } else {
             ensure_user_can_access(AclResource::EDIT_SERVICE_ORDER);
             $item = ServiceOrder::find($id);
@@ -167,7 +169,21 @@ class ServiceOrderController extends Controller
             $requestData['estimated_cost'] = numberFromInput($requestData['estimated_cost']);
             $requestData['total_cost'] = numberFromInput($requestData['total_cost']);
 
+            $prevStatus = $item->order_status;
             $item->fill($requestData);
+
+            if ($item->order_status == ServiceOrder::ORDER_STATUS_ACTIVE) {
+                $item->closed_datetime = null;
+            }
+
+            if (
+                $prevStatus == ServiceOrder::ORDER_STATUS_ACTIVE
+                && $item->order_status != ServiceOrder::ORDER_STATUS_ACTIVE
+            ) {
+                $item->closed_datetime = date('Y-m-d H:i:s');
+                $item->closed_uid = Auth::user()->id;
+            }
+
             $item->save();
             $data['New Data'] = $item->toArray();
 
@@ -193,10 +209,9 @@ class ServiceOrderController extends Controller
     public function delete($id)
     {
         ensure_user_can_access(AclResource::DELETE_SERVICE_ORDER);
+        $item = ServiceOrder::findOrFail($id);
 
-        if (!$item = ServiceOrder::find($id))
-            $message = 'Order tidak ditemukan.';
-        else if ($item->delete($id)) {
+        if ($item->delete($id)) {
             $message = 'Order #' . e($item->orderId()) . ' telah dihapus.';
             UserActivity::log(
                 UserActivity::SERVICE_ORDER_MANAGEMENT,

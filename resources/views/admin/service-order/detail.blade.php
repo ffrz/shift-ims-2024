@@ -19,12 +19,29 @@ $title = 'Rincian Order Servis';
         <div class="row">
           <div class="col-md-4">
             <h4>Info Order</h4>
-            <table class="table table-sm" style="width:100%">
+            <table class="table table-sm info" style="width:100%">
               <tr>
                 <td style="width:30%"># Order</td>
                 <td style="width:2%">:</td>
                 <td>{{ $item->orderId() }}</td>
               </tr>
+              <tr>
+                <td>Status</td>
+                <td>:</td>
+                <td>{{ ServiceOrder::formatOrderStatus($item->order_status) }}</td>
+              </tr>
+              <tr>
+                <td>Dibuat</td>
+                <td>:</td>
+                <td>{{ $item->created_by->username . ' - ' . format_datetime($item->created_datetime) }}</td>
+              </tr>
+              @if ($item->closed_datetime)
+              <tr>
+                <td>Ditutup</td>
+                <td>:</td>
+                <td>{{ $item->closed_by->username . ' - ' . format_datetime($item->closed_datetime) }}</td>
+              </tr>
+              @endif
               <tr>
                 <td>Tanggal diterima</td>
                 <td>:</td>
@@ -35,16 +52,11 @@ $title = 'Rincian Order Servis';
                 <td>:</td>
                 <td>{{ $item->date_taken ? format_date($item->date_taken) : '-' }}</td>
               </tr>
-              <tr>
-                <td>Status</td>
-                <td>:</td>
-                <td>{{ ServiceOrder::formatOrderStatus($item->order_status) }}</td>
-              </tr>
             </table>
           </div>
           <div class="col-md-4">
             <h4>Info Pelanggan</h4>
-            <table class="table table-sm" style="width:100%">
+            <table class="table table-sm info" style="width:100%">
               <tr>
                 <td style="width:30%">Nama Pelanggan</td>
                 <td style="width:2%">:</td>
@@ -64,7 +76,7 @@ $title = 'Rincian Order Servis';
           </div>
           <div class="col-md-4">
             <h4>Info Perangkat</h4>
-            <table class="table table-sm" style="width:100%">
+            <table class="table table-sm info" style="width:100%">
               <tr>
                 <td style="width:30%">Jenis</td>
                 <td style="width:2%">:</td>
@@ -91,7 +103,7 @@ $title = 'Rincian Order Servis';
         <div class="row mt-3">
           <div class="col-md-4">
             <h4>Info Servis</h4>
-            <table class="table table-sm" style="width:100%">
+            <table class="table table-sm info" style="width:100%">
               <tr>
                 <td style="width:30%">Keluhan</td>
                 <td style="width:2%">:</td>
@@ -121,21 +133,21 @@ $title = 'Rincian Order Servis';
           </div>
           <div class="col-md-4">
             <h4>Info Biaya</h4>
-            <table class="table table-sm" style="width:100%">
+            <table class="table table-sm info" style="width:100%">
               <tr>
                 <td style="width:30%">Biaya Perkiraan</td>
                 <td style="width:2%">:</td>
-                <td class="text-right">Rp. {{ format_number($item->estimated_cost) }}</td>
+                <td>Rp. {{ format_number($item->estimated_cost) }}</td>
               </tr>
               <tr>
                 <td>Uang Muka</td>
                 <td>:</td>
-                <td class="text-right">Rp. {{ format_number($item->down_payment) }}</td>
+                <td>Rp. {{ format_number($item->down_payment) }}</td>
               </tr>
               <tr>
                 <td>Total Biaya</td>
                 <td>:</td>
-                <td class="text-right">Rp. {{ format_number($item->total_cost) }}</td>
+                <td>Rp. {{ format_number($item->total_cost) }}</td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -151,35 +163,41 @@ $title = 'Rincian Order Servis';
         </div>
       </div> {{-- .card-body --}}
       <div class="card-footer">
+        @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
+          <button type="submit" class="btn btn-sm btn-primary mr-2" name="action" value="complete_all"><i
+              class="fas fa-check mr-1"></i> Sukses → Lunas → Selesai</button>
+        @endif
         @if ($item->service_status < ServiceOrder::SERVICE_STATUS_SUCCESS)
           <div class="btn-group mr-2 mt-1 mb-1">
-            <button type="submit" class="btn btn-default" name="action" value="service_success"><i
-                class="fas fa-check"></i> Sukses</button>
-            <button type="submit" class="btn btn-default" name="action" value="service_failed"><i
-                class="fas fa-xmark"></i> Gagal</button>
+            <button type="submit" class="btn btn-sm btn-default" name="action" value="service_success"><i
+                class="fas fa-check mr-1"></i> Sukses</button>
+            <button type="submit" class="btn btn-sm btn-default" name="action" value="service_failed"><i
+                class="fas fa-xmark mr-1"></i> Gagal</button>
           </div>
         @endif
         @if ($item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
-          <button type="submit" class="btn btn-default mr-2 mt-1 mb-1" name="action" value="fully_paid"><i
-              class="fas fa-check"></i> Lunas</button>
+          <button type="submit" class="btn btn-sm btn-default mr-2 mt-1 mb-1" name="action" value="fully_paid"><i
+              class="fas fa-check mr-1"></i> Lunas</button>
         @endif
         @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
           <div class="btn-group mr-2 mt-1 mb-1">
-            <button type="submit" class="btn btn-primary" name="action" value="complete_order"><i
-                class="fas fa-check"></i> Selesai</button>
-            <button type="submit" class="btn btn-default" name="action" value="cancel_order"><i
-                class="fas fa-xmark"></i>
+            <button type="submit" class="btn btn-sm btn-default" name="action" value="complete_order"><i
+                class="fas fa-check mr-1"></i> Selesai</button>
+            <button type="submit" class="btn btn-sm btn-default" name="action" value="cancel_order"><i
+                class="fas fa-xmark mr-1"></i>
               Batalkan</button>
           </div>
         @endif
         <div class="btn-group mt-1 mb-1">
-          <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-default"><i class="fas fa-print"></i>
+          <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-sm btn-default"><i
+              class="fas fa-print mr-1"></i>
             Cetak</a>
-          <a href="/admin/service-order/edit/{{ $item->id }}" class="btn btn-default"><i class="fas fa-edit"></i>
+          <a href="/admin/service-order/edit/{{ $item->id }}" class="btn btn-sm btn-default"><i
+              class="fas fa-edit mr-1"></i>
             Edit</a>
           <a href="/admin/service-order/delete/{{ $item->id }}"
-            onclick="return confirm('Anda yakin akan menghapus rekaman order servis ini?')" class="btn btn-danger"><i
-              class="fas fa-edit"></i> Hapus</a>
+            onclick="return confirm('Anda yakin akan menghapus rekaman order servis ini?')"
+            class="btn btn-sm btn-danger"><i class="fas fa-edit mr-1"></i> Hapus</a>
         </div>
       </div>
     </div>

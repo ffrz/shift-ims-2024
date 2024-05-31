@@ -11,7 +11,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
 @section('right-menu')
   <li class="nav-item">
     <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-save mr-1"></i> Simpan</button>
-    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/customer/') }}"><i
+    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/service-order/') }}"><i
         class="fas fa-cancel mr-1"></i>Batal</a>
   </li>
 @endSection
