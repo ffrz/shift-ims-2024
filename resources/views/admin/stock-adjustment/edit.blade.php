@@ -8,19 +8,28 @@ $title = 'Stok Opname';
     'menu_active' => 'inventory',
     'form_action' => url('admin/stock-adjustment/edit/' . $item->id),
     'nav_active' => 'stock-adjustment',
-    'back_button_link' => url('/admin/stock-adjustment/'),
 ])
 
 @section('right-menu')
   <li class="nav-item">
     <div class="btn-group">
-      <button type="submit" name="action" value="save" class="btn btn-primary"><i class="fa fa-save mr-1"></i>
-        Simpan</button>
       <button onclick="return confirm('Anda yakin akan menyelesaikan stok opname?')" type="submit" name="action"
-        value="complete" class="btn btn-warning"><i class="fa fa-check mr-1"></i>
+        value="complete" class="btn btn-primary"><i class="fa fa-check mr-1"></i>
         Selesai</button>
+      <button type="submit" name="action" value="save" class="btn btn-default"><i class="fa fa-save mr-1"></i>
+        Simpan</button>
+    </div>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true" title="Menu lainnya">
+      <i class="fa fa-ellipsis-vertical"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-md dropdown-menu-right"  style="left: inherit; right: 0px;">
+      <a href="{{ url('admin/stock-adjustment/print/' . $item->id) }}" class="dropdown-item" target="_blank">
+        <i class="fa fa-print mr-2"></i> Cetak Kartu
+      </a>
       <button onclick="return confirm('Anda yakin akan membatalkan stok opname?')" type="submit" name="action"
-        value="cancel" class="btn btn-default"><i class="fa fa-cancel mr-1"></i>
+        value="cancel" class="dropdown-item"><i class="fa fa-cancel mr-2"></i>
         Batal</button>
     </div>
   </li>
@@ -30,9 +39,12 @@ $title = 'Stok Opname';
   <input type="hidden" name="id" value="{{ $item->id }}">
   <div class="card card-primary">
     <div class="card-body">
-      <div class="row mt-3">
+      <div class="row">
         <div class="col col-md-12">
-          <div class="table-responsive">
+          <h3 class="mt-0">#{{ $item->id2Formatted() }}</h3>
+          <p class="mt-0 mb-0">Dibuat oleh <b>{{ $item->created_by->username }}</b> pada {{ format_datetime($item->created_datetime) }}</p>
+          <p class="mt-0 mb-0">Terakhir kali disimpan oleh <b>{{ $item->last_saved_by->username }}</b> pada {{ format_datetime($item->last_saved_datetime) }}</p>
+          <div class="table-responsive mt-4">
             <table id="product-list" class="table table-sm table-bordered table-hover">
               <thead>
                 <th style="width:1%">No</th>

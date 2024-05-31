@@ -130,7 +130,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
     Route::controller(StockAdjustmentController::class)->prefix('stock-adjustment')->group(function () {
         Route::get('', 'index');
         Route::match(['get', 'post'], 'create', 'create');
-        Route::get('detail/{id}', 'detail');
+        Route::get('print/{id}', 'print');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::get('delete/{id}', 'delete');
     });

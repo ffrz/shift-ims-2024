@@ -35,11 +35,11 @@
                 @forelse ($items as $item)
                   <tr class="{{ $item->status == 0 ? 'table-warning' : '' }}">
                     <td>{{ $item->id2Formatted() }}</td>
-                    <td class="text-center">{{ format_datetime($item->creation_datetime) }} -
-                      {{ $item->creation_user->username }}</td>
+                    <td class="text-center">{{ format_datetime($item->created_datetime) }} -
+                      {{ $item->created_by->username }}</td>
                     <td class="text-center">
                       @if ($item->status != 0)
-                        {{ format_datetime($item->closing_datetime) }} - {{ $item->closing_user->username }}
+                        {{ format_datetime($item->closed_datetime) }} - {{ $item->closed_by->username }}
                       @endif
                     </td>
                     <td class="text-center">{{ $item->statusFormatted() }}</td>

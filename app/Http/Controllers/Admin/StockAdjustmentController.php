@@ -10,6 +10,7 @@ use App\Models\StockUpdate;
 use App\Models\StockUpdateDetail;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -120,6 +121,10 @@ class StockAdjustmentController extends Controller
 
             $item->total_cost = $total_cost;
             $item->total_price = $total_price;
+
+            $item->last_saved_datetime = current_datetime();
+            $item->last_saved_uid = Auth::user()->id;
+
             $item->save();
             DB::commit();
 
@@ -171,5 +176,12 @@ class StockAdjustmentController extends Controller
         }
 
         return redirect('admin/stock-adjustment')->with('info', $message);
+    }
+
+    public function print($id)
+    {
+        $item = StockUpdate::with(['created_by'])->findOrFail($id);
+        $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
+        return view('admin.stock-adjustment.print', compact('item', 'details'));
     }
 }
