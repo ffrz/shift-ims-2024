@@ -17,7 +17,7 @@ return new class extends Migration
             // customer info
             $table->unsignedBigInteger('customer_id')->nullable(true)->default(null);
             $table->string('customer_name', 100);
-            $table->string('customer_contact', 100);
+            $table->string('customer_phone', 100);
             $table->string('customer_address', 200);
 
             // device info
@@ -30,18 +30,18 @@ return new class extends Migration
             $table->string('problems', 200);
             $table->string('actions', 200);
             $table->date('date_checked')->nullable()->default(null);
-            $table->date('date_work_begin')->nullable()->default(null);
+            $table->date('date_worked')->nullable()->default(null);
             $table->date('date_completed')->nullable()->default(null);
             $table->unsignedTinyInteger('service_status');
 
             // order
             $table->unsignedTinyInteger('order_status');
             $table->datetime('created_datetime')->nullable()->default(null);
-            $table->unsignedBigInteger('created_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('created_by_uid')->nullable()->default(null);
             $table->datetime('closed_datetime')->nullable()->default(null);
-            $table->unsignedBigInteger('closed_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('closed_by_uid')->nullable()->default(null);
             $table->date('date_received')->nullable()->default(null);
-            $table->date('date_taken')->nullable()->default(null);
+            $table->date('date_picked')->nullable()->default(null);
 
             // cost and payment
             $table->decimal('down_payment', 8, 0)->default(0.);
@@ -54,8 +54,8 @@ return new class extends Migration
             $table->text('notes');
 
             $table->foreign('customer_id')->references('id')->on('parties')->onDelete('set null');
-            $table->foreign('created_uid')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('closed_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('created_by_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('closed_by_uid')->references('id')->on('users')->onDelete('set null');
         });
     }
 

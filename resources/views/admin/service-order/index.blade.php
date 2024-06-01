@@ -2,7 +2,7 @@
 
 @extends('admin._layouts.default', [
     'title' => 'Order Servis',
-    'menu_active' => 'service',
+    'menu_active' => 'sales',
     'nav_active' => 'service-order',
 ])
 
@@ -46,9 +46,9 @@
                 <label for="service_status">Status Servis:</label>
                 <select class="custom-select select2 form-control" id="service_status" name="service_status">
                   <option value="-1" <?= $filter['service_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
-                  <option value="{{ ServiceOrder::SERVICE_STATUS_RECEIVED }}"
-                    {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_RECEIVED ? 'selected' : '' }}>
-                    {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_RECEIVED) }}</option>
+                  <option value="{{ ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED }}"
+                    {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED ? 'selected' : '' }}>
+                    {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED) }}</option>
                   <option value="{{ ServiceOrder::SERVICE_STATUS_CHECKED }}"
                     {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_CHECKED ? 'selected' : '' }}>
                     {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_CHECKED) }}</option>
@@ -124,7 +124,7 @@
                       <td>{{ $item->formatOrderId($item->id) }}</td>
                       <td>{{ $item->date_received }}</td>
                       <td>{{ $item->customer_name }}</td>
-                      <td>{{ $item->customer_contact }}</td>
+                      <td>{{ $item->customer_phone }}</td>
                       <td>{{ $item->customer_address }}</td>
                       <td>{{ $item->device }}</td>
                       <td>{{ $item->formatOrderStatus($item->order_status) }}</td>

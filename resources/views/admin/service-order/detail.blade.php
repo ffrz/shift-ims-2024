@@ -4,8 +4,8 @@ $title = 'Rincian Order Servis';
 ?>
 @extends('admin._layouts.default', [
     'title' => $title,
-    'menu_active' => 'service',
-    'nav_active' => 'service_order',
+    'menu_active' => 'sales',
+    'nav_active' => 'service-order',
     'back_button_link' => url('/admin/service-order/'),
 ])
 
@@ -14,7 +14,7 @@ $title = 'Rincian Order Servis';
     action="{{ url('admin/service-order/action/' . (int) $item->id) }}">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
-    <div class="card card-primary">
+    <div class="card">
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
@@ -30,28 +30,20 @@ $title = 'Rincian Order Servis';
                 <td>:</td>
                 <td>{{ ServiceOrder::formatOrderStatus($item->order_status) }}</td>
               </tr>
-              <tr>
-                <td>Dibuat</td>
-                <td>:</td>
-                <td>{{ $item->created_by->username . ' - ' . format_datetime($item->created_datetime) }}</td>
-              </tr>
-              @if ($item->closed_datetime)
-              <tr>
-                <td>Ditutup</td>
-                <td>:</td>
-                <td>{{ $item->closed_by->username . ' - ' . format_datetime($item->closed_datetime) }}</td>
-              </tr>
+              @if ($item->created_by)
+                <tr>
+                  <td>Dibuat</td>
+                  <td>:</td>
+                  <td>oleh <b>{{ $item->created_by->username }}</b>  pada {{ format_datetime($item->created_datetime) }}</td>
+                </tr>
               @endif
-              <tr>
-                <td>Tanggal diterima</td>
-                <td>:</td>
-                <td>{{ format_date($item->date_received) }}</td>
-              </tr>
-              <tr>
-                <td>Tanggal diambil</td>
-                <td>:</td>
-                <td>{{ $item->date_taken ? format_date($item->date_taken) : '-' }}</td>
-              </tr>
+              @if ($item->closed_by)
+                <tr>
+                  <td>Ditutup</td>
+                  <td>:</td>
+                  <td>oleh <b>{{ $item->closed_by->username }}</b>  pada {{ format_datetime($item->closed_datetime) }}</td>
+                </tr>
+              @endif
             </table>
           </div>
           <div class="col-md-4">
@@ -65,7 +57,7 @@ $title = 'Rincian Order Servis';
               <tr>
                 <td>Kontak</td>
                 <td>:</td>
-                <td>{{ $item->customer_contact }}</td>
+                <td>{{ $item->customer_phone }}</td>
               </tr>
               <tr>
                 <td>Alamat</td>
@@ -115,15 +107,50 @@ $title = 'Rincian Order Servis';
                 <td>{{ $item->actions }}</td>
               </tr>
               <tr>
-                <td>Status</td>
+                <td>Status Barang</td>
+                <td>:</td>
+                <td>{{ $item->date_picked ? 'Diambil' : ($item->date_received ? 'Diterima' : '-') }}</td>
+              </tr>
+              <tr>
+                <td>Status Servis</td>
                 <td>:</td>
                 <td>{{ ServiceOrder::formatServiceStatus($item->service_status) }}</td>
               </tr>
+              @if ($item->date_received)
+                <tr>
+                  <td>Tanggal Diterima</td>
+                  <td>:</td>
+                  <td>{{ format_date($item->date_received) }}</td>
+                </tr>
+              @endif
+              @if ($item->date_checked)
+                <tr>
+                  <td>Tanggal Diperiksa</td>
+                  <td>:</td>
+                  <td>{{ format_date($item->date_checked) }}</td>
+                </tr>
+              @endif
+              @if ($item->date_worked)
+                <tr>
+                  <td>Tanggal Dikerjakan</td>
+                  <td>:</td>
+                  <td>{{ format_date($item->date_worked) }}</td>
+                </tr>
+              @endif
+              @if ($item->date_completed)
               <tr>
                 <td>Tanggal Selesai</td>
                 <td>:</td>
                 <td>{{ $item->date_completed ? format_date($item->date_completed) : '-' }}</td>
               </tr>
+              @endif
+              @if ($item->date_picked)
+              <tr>
+                <td>Tanggal Diambil</td>
+                <td>:</td>
+                <td>{{ $item->date_picked ? format_date($item->date_picked) : '-' }}</td>
+              </tr>
+              @endif
               <tr>
                 <td>Teknisi</td>
                 <td>:</td>
@@ -161,32 +188,104 @@ $title = 'Rincian Order Servis';
             <p>{{ empty($item->notes) ? '- tidak ada catatan -' : $item->notes }}</p>
           </div>
         </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <h4>Perbarui Status</h4>
+            <div class="form-horizontal row mb-2">
+              <label class="form-label col-md-2">Status Barang: </label>
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm {{ !$item->date_received ? 'btn-default' : (!$item->date_picked ? 'btn-warning' : 'btn-default') }}"
+                  type="submit" name="action" value="service_receive">
+                  Diterima
+                </button>
+                <button class="btn btn-sm {{ !$item->date_picked ? 'btn-default' : 'btn-warning' }}" type="submit"
+                  name="action" value="taken">
+                  Diambil
+                </button>
+              </div>
+            </div>
+            <div class="form-horizontal row mb-2">
+              <label class="form-label col-md-2">Status Servis: </label>
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="service_receive">
+                  Belum Diperiksa
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_CHECKED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="service_check">
+                  Periksa
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_WORKED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="service_do">
+                  Kerjakan
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_SUCCESS ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="service_success">
+                  Sukses
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_FAILED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="service_failed">
+                  Gagal
+                </button>
+              </div>
+            </div>
+            <div class="form-horizontal row mb-2">
+              <label class="form-label col-md-2">Status Pembayaran: </label>
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_UNPAID ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="unpaid">
+                  Belum Dibayar
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="partially_paid">
+                  Dibayar Sebagian
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_FULLY_PAID ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="fully_paid">
+                  Lunas
+                </button>
+              </div>
+            </div>
+            <div class="form-horizontal row">
+              <label class="form-label col-md-2">Status Order: </label>
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm {{ $item->order_status == ServiceOrder::ORDER_STATUS_ACTIVE ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="activate_order">
+                  Aktif
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->order_status == ServiceOrder::ORDER_STATUS_COMPLETED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="complete_order">
+                  Selesai
+                </button>
+                <button
+                  class="btn btn-sm {{ $item->order_status == ServiceOrder::ORDER_STATUS_CANCELED ? 'btn-warning' : 'btn-default' }}"
+                  type="submit" name="action" value="cancel_order">
+                  Dibatalkan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div> {{-- .card-body --}}
       <div class="card-footer">
-        @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
+        @if (
+            $item->order_status == ServiceOrder::ORDER_STATUS_ACTIVE &&
+                ($item->service_status != ServiceOrder::SERVICE_STATUS_FAILED ||
+                    $item->service_status != ServiceOrder::SERVICE_STATUS_SUCCESS) &&
+                $item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
           <button type="submit" class="btn btn-sm btn-primary mr-2" name="action" value="complete_all"><i
               class="fas fa-check mr-1"></i> Sukses → Lunas → Selesai</button>
-        @endif
-        @if ($item->service_status < ServiceOrder::SERVICE_STATUS_SUCCESS)
-          <div class="btn-group mr-2 mt-1 mb-1">
-            <button type="submit" class="btn btn-sm btn-default" name="action" value="service_success"><i
-                class="fas fa-check mr-1"></i> Sukses</button>
-            <button type="submit" class="btn btn-sm btn-default" name="action" value="service_failed"><i
-                class="fas fa-xmark mr-1"></i> Gagal</button>
-          </div>
-        @endif
-        @if ($item->payment_status != ServiceOrder::PAYMENT_STATUS_FULLY_PAID)
-          <button type="submit" class="btn btn-sm btn-default mr-2 mt-1 mb-1" name="action" value="fully_paid"><i
-              class="fas fa-check mr-1"></i> Lunas</button>
-        @endif
-        @if ($item->order_status < ServiceOrder::ORDER_STATUS_COMPLETED)
-          <div class="btn-group mr-2 mt-1 mb-1">
-            <button type="submit" class="btn btn-sm btn-default" name="action" value="complete_order"><i
-                class="fas fa-check mr-1"></i> Selesai</button>
-            <button type="submit" class="btn btn-sm btn-default" name="action" value="cancel_order"><i
-                class="fas fa-xmark mr-1"></i>
-              Batalkan</button>
-          </div>
         @endif
         <div class="btn-group mt-1 mb-1">
           <a href="/admin/service-order/print/{{ $item->id }}" class="btn btn-sm btn-default"><i
@@ -201,7 +300,5 @@ $title = 'Rincian Order Servis';
         </div>
       </div>
     </div>
-
-
   </form>
 @endSection

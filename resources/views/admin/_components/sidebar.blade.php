@@ -7,7 +7,7 @@ if (!isset($menu_active)) {
 
 ?>
 <aside class="main-sidebar sidebar-light-primary elevation-4">
-  <a href="{{ url('/admin/') }}" class="brand-link">
+  <a href="{{ url('admin/') }}" class="brand-link">
     <img src="{{ url('dist/img/logo.png') }}" alt="App Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">{{ env('APP_NAME') }}</span>
   </a>
@@ -16,7 +16,7 @@ if (!isset($menu_active)) {
       <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-flat nav-collapse-hide-child" data-widget="treeview"
         role="menu" data-accordion="false">
         <li class="nav-item">
-          <a href="{{ url('/admin/') }}" class="nav-link {{ $nav_active == 'dashboard' ? 'active' : '' }}">
+          <a href="{{ url('admin/') }}" class="nav-link {{ $nav_active == 'dashboard' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>Dashboard</p>
           </a>
@@ -42,6 +42,15 @@ if (!isset($menu_active)) {
                   </a>
                 </li>
               @endif
+              @if (Auth::user()->canAccess(AclResource::SERVICE_ORDER_LIST))
+                <li class="nav-item">
+                  <a href="{{ url('/admin/service-order') }}"
+                    class="nav-link {{ $nav_active == 'service-order' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-hand-holding-medical"></i>
+                    <p>Order Servis</p>
+                  </a>
+                </li>
+              @endif
               @if (Auth::user()->canAccess(AclResource::CUSTOMER_LIST))
                 <li class="nav-item">
                   <a href="{{ url('/admin/customer') }}"
@@ -55,30 +64,6 @@ if (!isset($menu_active)) {
           </li>
         @endif
         {{-- Sales Menu End --}}
-        {{-- Service Menu Begin --}}
-        @if (Auth::user()->canAccess(AclResource::SERVICE_MENU))
-          <li class="nav-item {{ $menu_active == 'service' ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ $menu_active == 'service' ? 'active' : '' }}">
-              <i class="nav-icon fas fa-screwdriver-wrench"></i>
-              <p>
-                Servis
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              @if (Auth::user()->canAccess(AclResource::SERVICE_ORDER_LIST))
-                <li class="nav-item">
-                  <a href="{{ url('/admin/service-order') }}"
-                    class="nav-link {{ $nav_active == 'service' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-hand-holding-medical"></i>
-                    <p>Order Servis</p>
-                  </a>
-                </li>
-              @endif
-            </ul>
-          </li>
-        @endif
-        {{-- Service Menu End --}}
         {{-- Inventory Menu Begin --}}
         @if (Auth::user()->canAccess(AclResource::INVENTORY_MENU))
           <li class="nav-item {{ $menu_active == 'inventory' ? 'menu-open' : '' }}">

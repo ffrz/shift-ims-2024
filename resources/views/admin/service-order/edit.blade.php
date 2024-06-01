@@ -4,8 +4,8 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
 ?>
 @extends('admin._layouts.default', [
     'title' => $title,
-    'menu_active' => 'service',
-    'nav_active' => 'service_order',
+    'menu_active' => 'sales',
+    'nav_active' => 'service-order',
     'form_action' => url('admin/service-order/edit/' . (int) $item->id),
 ])
 @section('right-menu')
@@ -21,53 +21,23 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
     <div class="col-lg-4">
       <div class="card">
         <div class="card-body">
-          <h4 class="mb-0">Order</h4>
-          <hr class="mt-0 mb-3">
-          <div class="form-group">
-            <div class="form-group">
-              <label for="id">#No Order:</label>
-              <input type="text" class="form-control" id="id" name=""
-                value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
-            </div>
-            <label for="date_received">Tanggal Diterima:</label>
-            <input type="date" class="form-control @error('date_received') is-invalid @enderror" autofocus
-              id="date_received" name="date_received" value="{{ old('date_received', $item->date_received) }}">
-            @error('date_received')
-              <span class="text-danger">
-                {{ $message }}
-              </span>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label for="date_taken">Tanggal Diambil:</label>
-            <input type="date" class="form-control @error('date_taken') is-invalid @enderror" autofocus id="date_taken"
-              name="date_taken" value="{{ old('date_taken', $item->date_taken) }}">
-            @error('date_taken')
-              <span class="text-danger">
-                {{ $message }}
-              </span>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label for="order_status">Status:</label>
-            <select class="custom-select select2 form-control" id="order_status" name="order_status">
-              <option value="{{ ServiceOrder::ORDER_STATUS_ACTIVE }}"
-                {{ $item->order_status == ServiceOrder::ORDER_STATUS_ACTIVE ? 'selected' : '' }}>
-                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_ACTIVE) }}</option>
-              <option value="{{ ServiceOrder::ORDER_STATUS_COMPLETED }}"
-                {{ $item->order_status == ServiceOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
-                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
-              <option value="{{ ServiceOrder::ORDER_STATUS_CANCELED }}"
-                {{ $item->order_status == ServiceOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
-                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
           <h4 class="mb-0">Pelanggan</h4>
           <hr class="mt-0">
+          <div class="form-group">
+            <label for="customer_id">Kode Pelanggan:</label>
+            <select class="form-control select2 custom-select" name="customer_id" id="customer_id">
+              <option value="">PELANGGAN BARU</option>
+              @foreach ($customers as $customer)
+                <option value="{{ $customer->id }}" {{ $customer->id == $item->customer_id ? 'selected' : '' }}>
+                  {{ $customer->idFormatted() . ' - ' . $customer->name }}</option>
+              @endforeach
+            </select>
+            @error('customer_id')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
           <div class="form-group">
             <label for="customer_name">Nama:</label>
             <input type="text" class="form-control @error('customer_name') is-invalid @enderror" id="customer_name"
@@ -80,11 +50,11 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             @enderror
           </div>
           <div class="form-group">
-            <label for="customer_contact">Kontak:</label>
-            <input type="text" class="form-control @error('customer_contact') is-invalid @enderror"
-              id="customer_contact" placeholder="Masukkan Kontak Pelanggan" name="customer_contact"
-              value="{{ old('customer_contact', $item->customer_contact) }}">
-            @error('customer_contact')
+            <label for="customer_phone">Kontak:</label>
+            <input type="text" class="form-control @error('customer_phone') is-invalid @enderror" id="customer_phone"
+              placeholder="Masukkan Kontak Pelanggan" name="customer_phone"
+              value="{{ old('customer_phone', $item->customer_phone) }}">
+            @error('customer_phone')
               <span class="text-danger">
                 {{ $message }}
               </span>
@@ -103,8 +73,6 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-4">
       <div class="card">
         <div class="card-body">
           <h4 class="mb-0">Perangkat</h4>
@@ -163,6 +131,8 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-lg-4">
       <div class="card">
         <div class="card-body">
           <h4 class="mb-0">Servis</h4>
@@ -190,9 +160,9 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           <div class="form-group">
             <label for="service_status">Status Servis:</label>
             <select class="custom-select select2 form-control" id="service_status" name="service_status">
-              <option value="{{ ServiceOrder::SERVICE_STATUS_RECEIVED }}"
-                {{ $item->service_status == ServiceOrder::SERVICE_STATUS_RECEIVED ? 'selected' : '' }}>
-                {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_RECEIVED) }}</option>
+              <option value="{{ ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED }}"
+                {{ $item->service_status == ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED ? 'selected' : '' }}>
+                {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED) }}</option>
               <option value="{{ ServiceOrder::SERVICE_STATUS_CHECKED }}"
                 {{ $item->service_status == ServiceOrder::SERVICE_STATUS_CHECKED ? 'selected' : '' }}>
                 {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_CHECKED) }}</option>
@@ -208,10 +178,50 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
             </select>
           </div>
           <div class="form-group">
+            <label for="date_received">Tanggal Diterima:</label>
+            <input type="date" class="form-control @error('date_received') is-invalid @enderror" id="date_received"
+              name="date_received" value="{{ old('date_received', $item->date_received) }}">
+            @error('date_received')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="date_checked">Tanggal Diperiksa:</label>
+            <input type="date" class="form-control @error('date_checked') is-invalid @enderror" id="date_checked"
+              name="date_checked" value="{{ old('date_checked', $item->date_checked) }}">
+            @error('date_checked')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="date_worked">Tanggal Dikerjakan:</label>
+            <input type="date" class="form-control @error('date_worked') is-invalid @enderror" id="date_worked"
+              name="date_worked" value="{{ old('date_worked', $item->date_worked) }}">
+            @error('date_worked')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
             <label for="date_completed">Tanggal Selesai:</label>
-            <input type="date" class="form-control @error('date_completed') is-invalid @enderror" autofocus
+            <input type="date" class="form-control @error('date_completed') is-invalid @enderror"
               id="date_completed" name="date_completed" value="{{ old('date_completed', $item->date_completed) }}">
             @error('date_completed')
+              <span class="text-danger">
+                {{ $message }}
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="date_picked">Tanggal Diambil:</label>
+            <input type="date" class="form-control @error('date_picked') is-invalid @enderror" id="date_picked"
+              name="date_picked" value="{{ old('date_picked', $item->date_picked) }}">
+            @error('date_picked')
               <span class="text-danger">
                 {{ $message }}
               </span>
@@ -285,6 +295,31 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
       </div>
       <div class="card">
         <div class="card-body">
+          <h4 class="mb-0">Order</h4>
+          <hr class="mt-0 mb-3">
+          <div class="form-group">
+            <label for="id">#No Order:</label>
+            <input type="text" class="form-control" id="id" name=""
+              value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="order_status">Status:</label>
+            <select class="custom-select select2 form-control" id="order_status" name="order_status">
+              <option value="{{ ServiceOrder::ORDER_STATUS_ACTIVE }}"
+                {{ $item->order_status == ServiceOrder::ORDER_STATUS_ACTIVE ? 'selected' : '' }}>
+                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_ACTIVE) }}</option>
+              <option value="{{ ServiceOrder::ORDER_STATUS_COMPLETED }}"
+                {{ $item->order_status == ServiceOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
+                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
+              <option value="{{ ServiceOrder::ORDER_STATUS_CANCELED }}"
+                {{ $item->order_status == ServiceOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
+                {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
           <h4 class="mb-0">Info Tambahan</h4>
           <hr class="mt-0 mb-3">
           <div class="form-group">
@@ -304,13 +339,38 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
 
 @section('footscript')
   <script>
-    $(function() {
-      $('.select2').select2({
-        minimumResultsForSearch: -1
+    $(document).ready(function() {
+      let customers = {!! json_encode($customers) !!};
+      let customer_by_ids = {};
+      customers.forEach(element => {
+        customer_by_ids[element.id] = element;
+      });
+
+      $('.select2').select2();
+
+      Inputmask("decimal", Object.assign({
+        allowMinus: false
+      }, INPUTMASK_OPTIONS)).mask("#down_payment,#estimated_cost,#total_cost");
+
+      function on_customer_change() {
+        const id = $('#customer_id').val();
+
+        if (!id) {
+          $('#customer_name').val('');
+          $('#customer_phone').val('');
+          $('#customer_address').val('');
+          return;
+        }
+
+        let cust = customer_by_ids[id];
+        $('#customer_name').val(cust.name);
+        $('#customer_phone').val(cust.phone);
+        $('#customer_address').val(cust.address);
+      }
+
+      $('#customer_id').change(function() {
+        on_customer_change()
       });
     });
-    Inputmask("decimal", Object.assign({
-      allowMinus: false
-    }, INPUTMASK_OPTIONS)).mask("#down_payment,#estimated_cost,#total_cost");
   </script>
 @endsection

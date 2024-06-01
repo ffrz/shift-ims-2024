@@ -23,7 +23,7 @@
       <div>
         #{{ $item->orderId() }} | {{ format_date($item->date_received) }}<br>
         Atas Nama: {{ $item->customer_name }} - {{ $item->customer_address }}<br>
-        HP/WA: {{ $item->customer_contact }}
+        HP/WA: {{ $item->customer_phone }}
       </div>
       <div>
         Perangkat: {{ $item->device }} <br>

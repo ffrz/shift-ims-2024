@@ -14,7 +14,7 @@ class ServiceOrder extends Model
     const ORDER_STATUS_COMPLETED = 1;
     const ORDER_STATUS_CANCELED = 2;
 
-    const SERVICE_STATUS_RECEIVED = 0;
+    const SERVICE_STATUS_NOT_YET_CHECKED = 0;
     const SERVICE_STATUS_CHECKED = 1;
     const SERVICE_STATUS_WORKED = 2;
     const SERVICE_STATUS_SUCCESS = 3;
@@ -30,10 +30,10 @@ class ServiceOrder extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'customer_id', 'customer_name', 'customer_contact', 'customer_address',
+        'customer_id', 'customer_name', 'customer_phone', 'customer_address',
         'device_type', 'device', 'equipments', 'device_sn', 'problems', 'actions',
-        'date_checked', 'date_work_begin', 'date_completed', 'service_status',
-        'order_status', 'created_datetime', 'closed_datetime', ' date_received', 'date_taken',
+        'date_checked', 'date_worked', 'date_completed', 'service_status',
+        'order_status', 'created_datetime', 'closed_datetime', ' date_received', 'date_picked',
         'down_payment', 'estimated_cost', 'total_cost', 'payment_status',
         'technician', 'notes'
     ];
@@ -42,7 +42,7 @@ class ServiceOrder extends Model
     {
         $this->date_received = current_date();
         $this->created_datetime = current_datetime();
-        $this->created_uid = Auth::user()->id;
+        $this->created_by_uid = Auth::user()->id;
         $this->order_status = ServiceOrder::ORDER_STATUS_ACTIVE;
         $this->down_payment = 0;
         $this->total_cost = 0;
@@ -56,7 +56,7 @@ class ServiceOrder extends Model
         $this->payment_status = $payment_status;
         $this->date_completed = current_date();
         $this->closed_datetime = current_datetime();
-        $this->closed_uid = Auth::user()->id;
+        $this->closed_by_uid = Auth::user()->id;
     }
 
     public function orderId()
@@ -85,12 +85,12 @@ class ServiceOrder extends Model
     static function formatServiceStatus($status)
     {
         switch ($status) {
-            case self::SERVICE_STATUS_RECEIVED:
-                return 'Diterima';
+            case self::SERVICE_STATUS_NOT_YET_CHECKED:
+                return 'Belum Diperiksa';
             case self::SERVICE_STATUS_CHECKED:
-                return 'Sedang Diperiksa';
+                return 'Diperiksa';
             case self::SERVICE_STATUS_WORKED:
-                return 'Sedang Dikerjakan';
+                return 'Dikerjakan';
             case self::SERVICE_STATUS_SUCCESS:
                 return 'Selesai: Sukses';
             case self::SERVICE_STATUS_FAILED:
@@ -116,11 +116,11 @@ class ServiceOrder extends Model
 
     public function created_by()
     {
-        return $this->belongsTo(User::class, 'created_uid');
+        return $this->belongsTo(User::class, 'created_by_uid');
     }
 
     public function closed_by()
     {
-        return $this->belongsTo(User::class, 'closed_uid');
+        return $this->belongsTo(User::class, 'closed_by_uid');
     }
 }

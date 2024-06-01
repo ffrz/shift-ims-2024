@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
+use App\Models\Customer;
+use App\Models\Party;
 use App\Models\ServiceOrder;
 use App\Models\UserActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\ServerBag;
 
@@ -41,7 +44,7 @@ class ServiceOrderController extends Controller
 
         if (!empty($filter['search'])) {
             $q->where('customer_name', 'like', '%' . $filter['search'] . '%')
-                ->orWhere('customer_contact', 'like', '%' . $filter['search'] . '%')
+                ->orWhere('customer_phone', 'like', '%' . $filter['search'] . '%')
                 ->orWhere('customer_address', 'like', '%' . $filter['search'] . '%')
                 ->orWhere('device', 'like', '%' . $filter['search'] . '%')
                 ->orWhere('device_sn', 'like', '%' . $filter['search'] . '%');
@@ -64,19 +67,48 @@ class ServiceOrderController extends Controller
 
         $item = ServiceOrder::findOrFail($id);
         $action = $request->get('action');
-        if ($action == 'service_success') {
+        if ($action == 'taken') {
+            $item->date_picked = current_date();
+        } 
+        else if ($action == 'service_receive') {
+            $item->service_status = ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED;
+            $item->date_received = current_date();
+            $item->date_checked = null;
+            $item->date_worked = null;
+            $item->date_completed = null;
+        } else if ($action == 'service_check') {
+            $item->service_status = ServiceOrder::SERVICE_STATUS_CHECKED;
+            $item->date_checked = current_date();
+            $item->date_worked = null;
+            $item->date_completed = null;
+        } else if ($action == 'service_do') {
+            $item->service_status = ServiceOrder::SERVICE_STATUS_WORKED;
+            $item->date_worked = current_date();
+            $item->date_completed = null;
+        } else if ($action == 'service_success') {
             $item->service_status = ServiceOrder::SERVICE_STATUS_SUCCESS;
-            $item->date_completed = date('Y-m-d');
+            $item->date_completed = current_date();
         } else if ($action == 'service_failed') {
             $item->service_status = ServiceOrder::SERVICE_STATUS_FAILED;
-            $item->date_completed = date('Y-m-d');
+            $item->date_completed = current_date();
+        } else if ($action == 'unpaid') {
+            $item->payment_status = ServiceOrder::PAYMENT_STATUS_UNPAID;
+        } else if ($action == 'partially_paid') {
+            $item->payment_status = ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID;
         } else if ($action == 'fully_paid') {
             $item->payment_status = ServiceOrder::PAYMENT_STATUS_FULLY_PAID;
+        } else if ($action == 'activate_order') {
+            $item->order_status = ServiceOrder::ORDER_STATUS_ACTIVE;
+            $item->closed_datetime = null;
+            $item->closed_by_uid = null;            
         } else if ($action == 'complete_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_COMPLETED;
-            $item->closed_datetime = date('Y-m-d H:i:s');
+            $item->closed_datetime = current_datetime();
+            $item->closed_by_uid = Auth::user()->id;
         } else if ($action == 'cancel_order') {
             $item->order_status = ServiceOrder::ORDER_STATUS_CANCELED;
+            $item->closed_datetime = current_datetime();
+            $item->closed_by_uid = Auth::user()->id;
         } else if ($action == 'complete_all') {
             $item->close(ServiceOrder::ORDER_STATUS_COMPLETED, ServiceOrder::SERVICE_STATUS_SUCCESS, ServiceOrder::PAYMENT_STATUS_FULLY_PAID);
         }
@@ -138,7 +170,7 @@ class ServiceOrderController extends Controller
         if ($request->method() == 'POST') {
             $validator = Validator::make($request->all(), [
                 'customer_name' => 'required',
-                'customer_contact' => 'required',
+                'customer_phone' => 'required',
                 'customer_address' => 'required',
                 'device_type' => 'required',
                 'device' => 'required',
@@ -146,7 +178,7 @@ class ServiceOrderController extends Controller
                 'problems' => 'required',
             ], [
                 'customer_name.required' => 'Nama pelanggan harus diisi.',
-                'customer_contact.required' => 'Kontak pelanggan harus diisi.',
+                'customer_phone.required' => 'Kontak pelanggan harus diisi.',
                 'customer_address.required' => 'Alamat pelanggan harus diisi.',
                 'device_type.required' => 'Jenis perangkat harus diisi.',
                 'device.required' => 'Perangkat harus diisi.',
@@ -160,14 +192,16 @@ class ServiceOrderController extends Controller
             $data = ['Old Data' => $item->toArray()];
             $requestData = $request->all();
 
-            if (empty($requestData['date_taken']))
-                $requestData['date_taken'] = null;
+            if (empty($requestData['date_picked']))
+                $requestData['date_picked'] = null;
             if (empty($requestData['date_completed']))
                 $requestData['date_completed'] = null;
 
             $requestData['down_payment'] = numberFromInput($requestData['down_payment']);
             $requestData['estimated_cost'] = numberFromInput($requestData['estimated_cost']);
             $requestData['total_cost'] = numberFromInput($requestData['total_cost']);
+
+            empty_string_to_null($requestData, ['date_received', 'date_checked', 'date_worked', 'date_completed', 'date_picked']);
 
             $prevStatus = $item->order_status;
             $item->fill($requestData);
@@ -180,8 +214,21 @@ class ServiceOrderController extends Controller
                 $prevStatus == ServiceOrder::ORDER_STATUS_ACTIVE
                 && $item->order_status != ServiceOrder::ORDER_STATUS_ACTIVE
             ) {
-                $item->closed_datetime = date('Y-m-d H:i:s');
-                $item->closed_uid = Auth::user()->id;
+                $item->closed_datetime = current_datetime();
+                $item->closed_by_uid = Auth::user()->id;
+            }
+
+            DB::beginTransaction();
+            if (empty($request->customer_id)) {
+                $customer = new Customer();
+                $customer->id2 = Customer::getNextId2($customer->type);
+                $customer->name = (string)$item->customer_name;
+                $customer->phone = (string)$item->customer_phone;
+                $customer->address = (string)$item->customer_address;
+                $customer->active = true;
+                $customer->notes = '';
+                $customer->save();
+                $item->customer_id = $customer->id;
             }
 
             $item->save();
@@ -193,6 +240,7 @@ class ServiceOrderController extends Controller
                 'Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
+            DB::commit();
 
             return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Order servis ' . ServiceOrder::formatOrderId($item->id) . ' telah disimpan.');
         }
@@ -203,7 +251,12 @@ class ServiceOrderController extends Controller
         $devices = ServiceOrder::groupBy('device')->orderBy('device', 'asc')
             ->pluck('device')->toArray();
 
-        return view('admin.service-order.edit', compact('item', 'device_types', 'devices'));
+        $customers = Customer::where('type', '=', Party::TYPE_CUSTOMER)
+            ->where('active', '=', 1)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('admin.service-order.edit', compact('item', 'device_types', 'devices', 'customers'));
     }
 
     public function delete($id)
