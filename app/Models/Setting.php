@@ -31,6 +31,7 @@ class Setting extends BaseModel
             foreach ($items as $item) {
                 static::$settings[$item->key] = $item->value;
             }
+            static::$is_initialized = true;
         }
     }
 
