@@ -2,6 +2,19 @@
 
 use Illuminate\Support\Facades\Auth;
 
+function empty_string_to_null(&$arr, $key)
+{
+    if (is_array($key)) {
+        foreach ($key as $k) {
+            empty_string_to_null($arr, $k);
+        }
+    }
+    
+    if (is_string($key) && empty($arr[$key])) {
+        $arr[$key] = null;
+    }
+}
+
 function current_date()
 {
     return date('Y-m-d');
@@ -17,12 +30,14 @@ function current_datetime()
     return date('Y-m-d H:i:s');
 }
 
-function time_from_datetime($datetime) {
+function time_from_datetime($datetime)
+{
     $a = explode(' ', $datetime);
     return $a[1];
 }
 
-function date_from_datetime($datetime) {
+function date_from_datetime($datetime)
+{
     $a = explode(' ', $datetime);
     return $a[0];
 }
