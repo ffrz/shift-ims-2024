@@ -19,16 +19,16 @@ return new class extends Migration
             $table->unsignedBigInteger('ref_id')->nullable()->default(null);
             $table->datetime('created_datetime');
             $table->datetime('closed_datetime')->nullable(true)->default(null);
-            $table->datetime('last_saved_datetime');
-            $table->unsignedBigInteger('created_uid')->nullable(true)->default(null);
-            $table->unsignedBigInteger('closed_uid')->nullable(true)->default(null);
-            $table->unsignedBigInteger('last_saved_uid')->nullable(true)->default(null);
+            $table->datetime('updated_datetime');
+            $table->unsignedBigInteger('created_by_uid')->nullable(true)->default(null);
+            $table->unsignedBigInteger('closed_by_uid')->nullable(true)->default(null);
+            $table->unsignedBigInteger('updated_by_uid')->nullable(true)->default(null);
             $table->decimal('total_cost', 12, 0)->default(0.);
             $table->decimal('total_price', 12, 0)->default(0.);
             $table->text('notes')->nullable()->default(null);
-            $table->foreign('created_uid')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('closed_uid')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('last_saved_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('created_by_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('closed_by_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by_uid')->references('id')->on('users')->onDelete('set null');
         });
     }
 

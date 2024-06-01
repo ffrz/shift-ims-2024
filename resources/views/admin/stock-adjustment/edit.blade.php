@@ -43,7 +43,7 @@ $title = 'Stok Opname';
         <div class="col col-md-12">
           <h3 class="mt-0">#{{ $item->id2Formatted() }}</h3>
           <p class="mt-0 mb-0">Dibuat oleh <b>{{ $item->created_by->username }}</b> pada {{ format_datetime($item->created_datetime) }}</p>
-          <p class="mt-0 mb-0">Terakhir kali disimpan oleh <b>{{ $item->last_saved_by->username }}</b> pada {{ format_datetime($item->last_saved_datetime) }}</p>
+          <p class="mt-0 mb-0">Terakhir kali disimpan oleh <b>{{ $item->updated_by_by->username }}</b> pada {{ format_datetime($item->updated_datetime) }}</p>
           <div class="table-responsive mt-4">
             <table id="product-list" class="table table-sm table-bordered table-hover">
               <thead>

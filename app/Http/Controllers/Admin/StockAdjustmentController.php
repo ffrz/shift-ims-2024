@@ -47,6 +47,7 @@ class StockAdjustmentController extends Controller
                 $subitem->id = $num + 1;
                 $subitem->update_id = $item->id;
                 $subitem->product_id = $product->id;
+                $subitem->stock_before = $product->stock;
                 $subitem->quantity = 0;
                 $subitem->cost = $product->cost;
                 $subitem->price = $product->price;
@@ -94,22 +95,18 @@ class StockAdjustmentController extends Controller
                 $subitem = $subitems[$id - 1];
 
                 $diff = $real_stock - $subitem->product->stock;
+                $subitem->stock_before = $subitem->product->stock;
                 $subitem->quantity = $diff;
 
                 if ($action == 'complete') {
                     $product = $productByIds[$subitem->product_id];
-                    $skip_item = $product->stock == $real_stock;
                     $product->stock = $real_stock;
                     $product->save();
                 }
 
-                if (!empty($skip_item)) {
-                    $subitem->delete();
-                } else {
-                    $subitem->id = $new_item_id;
-                    $subitem->save();
-                    $new_item_id++;
-                }
+                $subitem->id = $new_item_id;
+                $subitem->save();
+                $new_item_id++;
 
                 $total_cost += $diff * $subitem->product->cost;
                 $total_price += $diff * $subitem->product->price;
@@ -122,26 +119,19 @@ class StockAdjustmentController extends Controller
             $item->total_cost = $total_cost;
             $item->total_price = $total_price;
 
-            $item->last_saved_datetime = current_datetime();
-            $item->last_saved_uid = Auth::user()->id;
+            $item->updated_datetime = current_datetime();
+            $item->updated_by_uid = Auth::user()->id;
 
             $item->save();
             DB::commit();
 
             if ($action == 'complete') {
-                return redirect('admin/stock-adjustment/')->with('info', 'Stok opname telah selesai dan berhasil disimpan.');
+                return redirect('admin/stock-update/detail/' . $item->id)->with('info', 'Stok opname telah selesai dan berhasil disimpan.');
             }
 
             return redirect('admin/stock-adjustment/edit/' . $item->id)->with('info', 'Perubahan telah disimpan.');
         }
         return view('admin.stock-adjustment.edit', compact('subitems', 'item'));
-    }
-
-    public function detail(Request $request, $id)
-    {
-        $item = StockUpdate::find($id);
-        $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
-        return view('admin.stock-adjustment.detail', compact('item', 'details'));
     }
 
     public function delete($id)

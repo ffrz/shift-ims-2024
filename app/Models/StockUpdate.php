@@ -35,28 +35,28 @@ class StockUpdate extends Model
         'notes',
         'created_datetime',
         'closed_datetime',
-        'created_uid',
-        'closed_uid',
-        'last_saved_datetime',
-        'last_saved_uid',
+        'created_by_uid',
+        'closed_by_uid',
+        'updated_datetime',
+        'updated_by_uid',
     ];
 
     public function open()
     {
         $this->status = StockUpdate::STATUS_OPEN;
         $this->created_datetime = current_datetime();
-        $this->created_uid = Auth::user()->id;
-        $this->last_saved_datetime = $this->created_datetime;
-        $this->last_saved_uid = $this->created_uid;
+        $this->created_by_uid = Auth::user()->id;
+        $this->updated_datetime = $this->created_datetime;
+        $this->updated_by_uid = $this->created_by_uid;
     }
 
     public function close($status)
     {
         $this->status = $status;
         $this->closed_datetime = current_datetime();
-        $this->closed_uid = Auth::user()->id;
-        $this->last_saved_datetime = $this->closed_datetime;
-        $this->last_saved_uid = $this->closed_uid;
+        $this->closed_by_uid = Auth::user()->id;
+        $this->updated_datetime = $this->closed_datetime;
+        $this->updated_by_uid = $this->closed_by_uid;
     }
 
     public static function getNextId2($type)
@@ -134,21 +134,21 @@ class StockUpdate extends Model
 
     public function details()
     {
-        return $this->hasMany(StockUpdateDetail::class, 'update_id');
+        return $this->hasMany(StockUpdateDetail::class, 'update_id', 'id');
     }
 
     public function created_by()
     {
-        return $this->belongsTo(User::class, 'created_uid');
+        return $this->belongsTo(User::class, 'created_by_uid');
     }
 
     public function closed_by()
     {
-        return $this->belongsTo(User::class, 'closed_uid');
+        return $this->belongsTo(User::class, 'closed_by_uid');
     }
 
-    public function last_saved_by()
+    public function updated_by_by()
     {
-        return $this->belongsTo(User::class, 'last_saved_uid');
+        return $this->belongsTo(User::class, 'updated_by_uid');
     }
 }

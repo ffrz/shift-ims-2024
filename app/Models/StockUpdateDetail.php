@@ -17,6 +17,7 @@ class StockUpdateDetail extends Model
         'id',
         'update_id',
         'product_id',
+        'stock_before',
         'quantity',
         'cost',
         'price',

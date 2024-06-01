@@ -33,7 +33,7 @@ $title = 'Rincian Order Servis';
               <tr>
                 <td>Tanggal diambil</td>
                 <td>:</td>
-                <td>{{ $item->date_taken ? format_date($item->date_taken) : '-' }}</td>
+                <td>{{ $item->date_picked ? format_date($item->date_picked) : '-' }}</td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -53,7 +53,7 @@ $title = 'Rincian Order Servis';
               <tr>
                 <td>Kontak</td>
                 <td>:</td>
-                <td>{{ $item->customer_contact }}</td>
+                <td>{{ $item->customer_phone }}</td>
               </tr>
               <tr>
                 <td>Alamat</td>

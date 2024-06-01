@@ -29,6 +29,9 @@ class StockUpdateController extends Controller
     {
         $item = StockUpdate::with(['created_by', 'closed_by'])->find($id);
         $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
+        if ($request->get('print') == 1) {
+            return view('admin.stock-update.print', compact('item', 'details'));
+        }
         return view('admin.stock-update.detail', compact('item', 'details'));
     }
 }
