@@ -67,8 +67,8 @@
                     </td>
                   </tr>
                 @empty
-                  <tr>
-                    <td class="text-center" colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
+                  <tr class="empty">
+                    <td colspan="5">Tidak ada rekaman untuk ditampilkan.</td>
                   </tr>
                 @endforelse
               </tbody>

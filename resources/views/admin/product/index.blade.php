@@ -154,8 +154,8 @@ use App\Models\Product;
                     </td>
                   </tr>
                 @empty
-                  <tr>
-                    <td colspan="8" class="text-center text-muted font-italic">Tidak ada rekaman yang dapat
+                  <tr class="empty">
+                    <td colspan="8">Tidak ada rekaman yang dapat
                       ditampilkan.</td>
                   </tr>
                 @endforelse

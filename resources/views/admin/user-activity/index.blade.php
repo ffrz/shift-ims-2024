@@ -76,8 +76,8 @@
                       </td>
                     </tr>
                   @empty
-                    <tr>
-                      <td colspan="7" class="empty">Belum ada rekaman</td>
+                  <tr class="empty">
+                      <td colspan="7">Belum ada rekaman</td>
                     </tr>
                   @endforelse
                 </tbody>

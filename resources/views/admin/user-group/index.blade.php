@@ -40,8 +40,8 @@
                   </td>
                 </tr>
               @empty
-                <tr>
-                  <td colspan="3" class="empty">Belum ada rekaman</td>
+              <tr class="empty">
+                  <td colspan="3">Belum ada rekaman</td>
                 </tr>
               @endforelse
             </tbody>
