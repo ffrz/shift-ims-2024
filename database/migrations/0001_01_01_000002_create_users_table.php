@@ -19,8 +19,10 @@ return new class extends Migration
             $table->string('password')->default('');
             $table->boolean('is_active')->default(false);
             $table->boolean('is_admin')->default(false);
-            $table->rememberToken();
-            $table->timestamps();
+            $table->datetime('created_datetime')->nullable()->default(null);
+            $table->datetime('updated_datetime')->nullable()->default(null);
+            $table->unsignedBigInteger('created_by_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('updated_by_uid')->nullable()->default(null);
             $table->foreign('group_id')->references('id')->on('user_groups');
         });
     }

@@ -26,9 +26,14 @@ return new class extends Migration
             $table->decimal('cost', 12, 0)->default(0.);
             $table->decimal('price', 12, 0)->default(0.);
             $table->text('notes')->nullable(true)->default(null);
-            $table->timestamps();
+            $table->datetime('created_datetime')->nullable()->default(null);
+            $table->datetime('updated_datetime')->nullable()->default(null);
+            $table->unsignedBigInteger('created_by_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('updated_by_uid')->nullable()->default(null);
             $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
             $table->foreign('supplier_id')->references('id')->on('parties')->onDelete('set null');
+            $table->foreign('created_by_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by_uid')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('description', 255)->default('');
-            $table->timestamps();
+            $table->datetime('created_datetime')->nullable()->default(null);
+            $table->datetime('updated_datetime')->nullable()->default(null);
+            $table->unsignedBigInteger('created_by_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('updated_by_uid')->nullable()->default(null);
         });
     }
 

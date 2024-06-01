@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name')->default('');
             $table->text('description');
             $table->json('data')->nullable()->default(null);
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->index('datetime');
             $table->index('type');

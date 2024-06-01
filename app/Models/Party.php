@@ -2,21 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Party extends Model
+class Party extends BaseModel
 {
     const TYPE_SUPPLIER = 1;
     const TYPE_CUSTOMER = 2;
 
-    public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'type', 'id2', 'active', 'name', 'phone', 'address', 'notes'
     ];

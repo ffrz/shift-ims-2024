@@ -3,13 +3,10 @@
 namespace App\Models;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class ServiceOrder extends Model
+class ServiceOrder extends BaseModel
 {
-    public $timestamps = false;
-
     const ORDER_STATUS_ACTIVE = 0;
     const ORDER_STATUS_COMPLETED = 1;
     const ORDER_STATUS_CANCELED = 2;
@@ -32,17 +29,16 @@ class ServiceOrder extends Model
     protected $fillable = [
         'customer_id', 'customer_name', 'customer_phone', 'customer_address',
         'device_type', 'device', 'equipments', 'device_sn', 'problems', 'actions',
-        'date_checked', 'date_worked', 'date_completed', 'service_status',
-        'order_status', 'created_datetime', 'closed_datetime', ' date_received', 'date_picked',
-        'down_payment', 'estimated_cost', 'total_cost', 'payment_status',
+        'date_received', 'date_checked', 'date_worked', 'date_completed', 'date_picked',
+        'order_status', 'service_status', 'payment_status',
+        'closed_datetime', 'closed_by_uid',
+        'down_payment', 'estimated_cost', 'total_cost',
         'technician', 'notes'
     ];
 
     public function open()
     {
         $this->date_received = current_date();
-        $this->created_datetime = current_datetime();
-        $this->created_by_uid = Auth::user()->id;
         $this->order_status = ServiceOrder::ORDER_STATUS_ACTIVE;
         $this->down_payment = 0;
         $this->total_cost = 0;

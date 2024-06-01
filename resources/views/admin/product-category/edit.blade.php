@@ -22,12 +22,17 @@
           <div class="form-group">
             <label for="name">Nama Kategori</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" autofocus id="name"
-              placeholder="Masukkan Nama Kategori" name="name" value="{{ old('name', $item->name) }}">
+              placeholder="Masukkan nama kategori" name="name" value="{{ old('name', $item->name) }}">
             @error('name')
               <span class="text-danger">
                 {{ $message }}
               </span>
             @enderror
+          </div>
+          <div class="form-group">
+            <label for="description">Deskripsi</label>
+            <input type="text" class="form-control @error('description') is-invalid @enderror" autofocus id="description"
+              placeholder="Uraikan dengan deskripsi" name="description" value="{{ old('description', $item->description) }}">
           </div>
         </div>
       </div>

@@ -70,7 +70,7 @@ class UserGroupController extends Controller
 
             DB::commit();
 
-            return redirect('admin/user-group/edit/' . $item->id)->with('info', 'Grup pengguna telah disimpan.');
+            return redirect('admin/user-group/')->with('info', 'Grup pengguna telah disimpan.');
         }
 
         $resources = AclResource::all();

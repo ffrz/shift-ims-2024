@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class StockUpdate extends Model
+class StockUpdate extends BaseModel
 {
-    public $timestamps = false;
-
     const STATUS_OPEN = 0;
     const STATUS_COMPLETED = 1;
     const STATUS_CANCELED = 2;
@@ -134,7 +131,7 @@ class StockUpdate extends Model
 
     public function details()
     {
-        return $this->hasMany(StockUpdateDetail::class, 'update_id', 'id');
+        return $this->hasMany(StockUpdateDetail::class, 'update_id');
     }
 
     public function created_by()

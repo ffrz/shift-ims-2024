@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -52,5 +52,22 @@ class User extends Authenticatable
         if ($this->is_admin) return true;
         $acl = $this->group->acl();
         return isset($acl[$resource]) && $acl[$resource] == true;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_datetime = current_datetime();
+            $model->created_by_uid = Auth::user()->id;
+            return true;
+        });
+
+        static::updating(function ($model) {
+            $model->updated_datetime = current_datetime();
+            $model->updated_by_uid = Auth::user()->id;
+            return true;
+        });
     }
 }

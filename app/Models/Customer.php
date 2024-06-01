@@ -8,12 +8,13 @@ class Customer extends Party
 
     public function __construct()
     {
+        parent::__construct();
         $this->type = Party::TYPE_CUSTOMER;
     }
 
     public function idFormatted()
     {
-        return 'CS' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
+        return 'CST-' . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
     }
 
     public static function query()

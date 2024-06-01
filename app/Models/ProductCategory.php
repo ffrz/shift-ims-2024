@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class ProductCategory extends Model
+class ProductCategory extends BaseModel
 {
     /**
      * The attributes that are mass assignable.
@@ -13,10 +10,10 @@ class ProductCategory extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'name', 'description'
     ];
 
-    public function products(): HasMany
+    public function products()
     {
         return $this->hasMany(Product::class, 'category_id');
     }

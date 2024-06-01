@@ -3,21 +3,14 @@
 namespace App\Models;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Product extends Model
+class Product extends BaseModel
 {
-    
     const STOCKED = 0;
     const NON_STOCKED = 1;
     const SERVICE = 2;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'category_id',
         'supplier_id',
@@ -37,12 +30,20 @@ class Product extends Model
     public static function formatType($type)
     {
         switch ($type) {
-            case self::STOCKED: return 'Barang Stok';
-            case self::NON_STOCKED: return 'Barang Non Stok';
-            case self::SERVICE: return 'Servis';
+            case self::STOCKED:
+                return 'Barang Stok';
+            case self::NON_STOCKED:
+                return 'Barang Non Stok';
+            case self::SERVICE:
+                return 'Servis';
         }
 
         return throw new Exception('Unknown product type: ' . $type);
+    }
+
+    public function typeFormatted()
+    {
+        return static::formatType($this->type);
     }
 
     public function idFormatted()

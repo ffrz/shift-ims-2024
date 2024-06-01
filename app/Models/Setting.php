@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-
-class Setting extends Model
+class Setting extends BaseModel
 {
-    public $timestamps = false;
     protected $primaryKey = 'key';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -52,15 +48,7 @@ class Setting extends Model
 
     public static function setValue($key, $value)
     {
-        Setting::updateOrCreate([
-            'key' => $key
-        ], [
-            'value' => $value,
-            'lastmod_datetime' => now(),
-            'lastmod_user_id' => Auth::user()->id,
-            'lastmod_username' => Auth::user()->username,
-        ]);
-
+        Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         static::$settings[$key] = $value;
     }
 }

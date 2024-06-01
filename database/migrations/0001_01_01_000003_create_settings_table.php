@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->string('key')->primary();
             $table->text('value');
-            $table->dateTime('lastmod_datetime')->nullable()->default(null);
-            $table->unsignedBigInteger('lastmod_user_id')->nullable()->default(null);
-            $table->string('lastmod_username')->default('');
-            $table->foreign('lastmod_user_id')->references('id')->on('users')->onDelete('set null');
+            $table->datetime('created_datetime')->nullable()->default(null);
+            $table->datetime('updated_datetime')->nullable()->default(null);
+            $table->unsignedBigInteger('created_by_uid')->nullable()->default(null);
+            $table->unsignedBigInteger('updated_by_uid')->nullable()->default(null);
+            $table->foreign('created_by_uid')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by_uid')->references('id')->on('users')->onDelete('set null');
         });
     }
 

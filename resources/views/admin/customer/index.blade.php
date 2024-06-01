@@ -42,7 +42,7 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th style="width:5%">Kode</th>
+                  <th style="width:10%">Kode</th>
                   <th style="width:30%">Nama</th>
                   <th>No Telepon</th>
                   <th>Alamat</th>
