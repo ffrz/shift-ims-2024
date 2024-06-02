@@ -27,7 +27,7 @@ class StockUpdate extends BaseModel
         'id2',
         'type',
         'status',
-        'ref_id',
+        'datetime',
 
         'party_id',
         'party_name',

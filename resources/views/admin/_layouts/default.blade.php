@@ -99,7 +99,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table-locale-all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js"> --}}
-  </script>
   <script src="{{ asset('assets/js/helper.js') }}"></script>
   @yield('footscripts')
   <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>

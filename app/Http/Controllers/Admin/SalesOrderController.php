@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Customer;
 use App\Models\Product;
-use App\Models\SalesOrder;
-use App\Models\SalesOrderDetail;
+use App\Models\StockUpdate;
+use App\Models\StockUpdateDetail;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,77 +18,108 @@ class SalesOrderController extends Controller
 
     public function index()
     {
-        $items = SalesOrder::orderBy('id', 'desc')->get();
+        $items = StockUpdate::whereRaw('type = ' . StockUpdate::TYPE_SALES_ORDER)->orderBy('id', 'desc')->get();
         $filter = [];
         return view('admin.sales-order.index', compact('items', 'filter'));
     }
 
     public function create()
     {
-        $item = new SalesOrder();
-        $item->date = date('Y-m-d');
+        $item = new StockUpdate();
+        $item->datetime = current_datetime();
+        $item->type = StockUpdate::TYPE_SALES_ORDER;
+        $item->status = StockUpdate::STATUS_OPEN;
+        $item->id2 = StockUpdate::getNextId2($item->type);
         $item->save();
         return redirect('admin/sales-order/edit/' . $item->id)->with('info', 'Order penjualan telah dibuat.');
     }
 
     public function edit(Request $request, $id = 0)
     {
-        $item = SalesOrder::findOrFail($id);
-        if (!$item)
+        $item = StockUpdate::findOrFail($id);
+        if (!$item) {
             return redirect('admin/sales-order')->with('warning', 'Order penjualan tidak ditemukan.');
+        }
 
         if ($request->method() == 'POST') {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:product_categories,name,' . $request->id . '|max:100',
-            ], [
-                'name.required' => 'Nama kategori harus diisi.',
-                'name.unique' => 'Nama kategori sudah digunakan.',
-                'name.max' => 'Nama kategori terlalu panjang, maksimal 100 karakter.',
-            ]);
-
-            if ($validator->fails())
-                return redirect()->back()->withInput()->withErrors($validator);
-
             $data = ['Old Data' => $item->toArray()];
             $item->fill($request->all());
+
+            if (empty($item->party_id)) {
+                $item->party_id = null;
+            }
+
+            dd($request->all());
+
+            if ($request->action == 'complete') {
+                $item->status = StockUpdate::STATUS_COMPLETED;
+            }
+            else if ($request->action == 'cancel') {
+                $item->status = StockUpdate::STATUS_CANCELED;
+            }
+            else {
+                return redirect('admin/sales-order')->with('warning', 'Unknown action!');
+            }
+
+            $item->closed_datetime = current_datetime();
+            $item->closed_by_uid = current_user_id();
+
+            DB::beginTransaction();
+            if ($item->status == StockUpdate::STATUS_COMPLETED) {
+                $details = StockUpdateDetail::with('product')->whereRaw('update_id='.$item->id)->get();
+                foreach ($details as $detail) {
+                    $product = $detail->product;
+                    $detail->cost = $product->cost;
+                    $detail->stock_before = $product->stock;
+                    $product->stock -= $detail->quantity;
+                    $product->save();
+                    $detail->save();
+                }
+            }
+
             $item->save();
+            
             $data['New Data'] = $item->toArray();
 
-            UserActivity::log(
-                UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
-                ($id == 0 ? 'Tambah' : 'Perbarui') . ' Kategori Produk',
-                'Kategori Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
-                $data
-            );
+            // UserActivity::log(
+            //     UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
+            //     ($id == 0 ? 'Tambah' : 'Perbarui') . ' Kategori Produk',
+            //     'Kategori Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
+            //     $data
+            // );
+            DB::commit();
 
-            return redirect('admin/purchase-order')->with('info', 'Kategori produk telah disimpan.');
+            return redirect('admin/sales-order/detail/' . $item->id)->with('info', 'Order penjualan telah disimpan.');
         }
 
         $tmp_products = Product::select(['id', 'code', 'description', 'stock', 'uom', 'price', 'barcode'])
             ->orderBy('code', 'asc')->get();
         $products = [];
+        $product_code_by_ids = [];
         $barcodes = [];
         foreach ($tmp_products as $product) {
             $p = $product->toArray();
             $p['pid'] = $product->idFormatted();
+            $product_code_by_ids[$product->id] = $p['pid'];
             $products[$product->idFormatted()] = $p;
             if (!empty($product->barcode)) {
                 $barcodes[$product->barcode] = $product->idFormatted();
             }
         }
         $customers = Customer::orderBy('name', 'asc')->get();
-        return view('admin.sales-order.edit', compact('item', 'customers', 'products', 'barcodes'));
+        $details = $item->details;
+        return view('admin.sales-order.edit', compact('item', 'customers', 'products', 'barcodes', 'details', 'product_code_by_ids'));
     }
 
     public function saveDetail(Request $request)
     {
-        $order = SalesOrder::findOrFail($request->order_id);
+        $order = StockUpdate::findOrFail($request->order_id);
         DB::beginTransaction();
-        DB::delete('delete from sales_order_details where order_id = ?', [$order->id]);
+        DB::delete('delete from stock_update_details where update_id = ?', [$order->id]);
         foreach ($request->items as $k => $item) {
-            $d = new SalesOrderDetail();
+            $d = new StockUpdateDetail();
             $d->id = $k + 1;
-            $d->order_id = $order->id;
+            $d->update_id = $order->id;
             $d->product_id = $item['id'];
             $d->quantity = $item['qty'];
             $d->price = $item['price'];
@@ -104,11 +135,12 @@ class SalesOrderController extends Controller
 
     public function delete($id)
     {
-        // fix me, notif kalo kategori ga bisa dihapus
-        if (!$item = ProductCategory::find($id))
-            $message = 'Kategori tidak ditemukan.';
-        else if ($item->delete($id)) {
-            $message = 'Kategori ' . e($item->name) . ' telah dihapus.';
+        $item = StockUpdate::findOrFail($id);
+        if ($item->status == StockUpdate::STATUS_COMPLETED) {
+            // rollback;
+        }
+        if ($item->delete($id)) {
+            $message = 'Telah dihapus ' . e($item->name) . ' telah dihapus.';
             UserActivity::log(
                 UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
                 'Hapus Kategori',
@@ -117,6 +149,6 @@ class SalesOrderController extends Controller
             );
         }
 
-        return redirect('admin/purchase-order')->with('info', $message);
+        return redirect('admin/sales-order')->with('info', $message);
     }
 }

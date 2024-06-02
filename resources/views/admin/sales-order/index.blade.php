@@ -120,15 +120,9 @@
                             class="fa fa-eye" title="View"></i></a>
                         <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
                             class="fa fa-edit" title="Edit"></i></a>
-                        <a href="<?= url("/admin/sales-order/duplicate/$item->id") ?>" class="btn btn-default btn-sm"><i
-                            class="fa fa-copy" title="Duplikat"></i></a>
                         <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                          href="<?= url("/admin/sales-order/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                          href="<?= url("/admin/stock-update/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
                             class="fa fa-trash" title="Hapus"></i></a>
-                      @else
-                        <a onclick="return confirm('Anda yakin akan mengembalikan rekaman ini?')"
-                          href="<?= url("/admin/sales-order/restore/$item->id") ?>" class="btn btn-default btn-sm"><i
-                            class="fa fa-trash-arrow-up" title="Pulihkan"></i></a>
                       @endif
                     </div>
                   </td>

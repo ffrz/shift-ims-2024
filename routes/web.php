@@ -125,6 +125,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
     Route::controller(StockUpdateController::class)->prefix('stock-update')->group(function () {
         Route::get('', 'index');
         Route::get('detail/{id}', 'detail');
+        Route::get('delete/{id}', 'delete');
     });
 
     Route::controller(StockAdjustmentController::class)->prefix('stock-adjustment')->group(function () {
@@ -132,7 +133,6 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::match(['get', 'post'], 'create', 'create');
         Route::get('print/{id}', 'print');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
-        Route::get('delete/{id}', 'delete');
     });
 
     Route::get('refresh-csrf', function () {

@@ -134,39 +134,7 @@ class StockAdjustmentController extends Controller
         return view('admin.stock-adjustment.edit', compact('subitems', 'item'));
     }
 
-    public function delete($id)
-    {
-        if (!$item = StockUpdate::find($id))
-            $message = 'Penyesuaian stok tidak ditemukan.';
-        else {
-            $details = StockUpdateDetail::where('update_id', '=', $item->id)->get();
-            $quantities = [];
-            foreach ($details as $detail) {
-                $quantities[$detail->product_id] = $detail->quantity;
-            }
-            $products = Product::whereIn('id', array_keys($quantities))->get();
-
-            DB::beginTransaction();
-            if ($item->status == StockUpdate::STATUS_COMPLETED) { // restore stok hanya jika sudah diselesaikan
-                foreach ($products as $product) {
-                    $product->stock += -$quantities[$product->id];
-                    $product->save();
-                }
-            }
-            $item->delete($id);
-            DB::commit();
-
-            $message = 'Penyesuaian stok ' . e($item->id2Formatted()) . ' telah dihapus.';
-            // UserActivity::log(
-            //     UserActivity::STOCK_ADJUSTMENT_MANAGEMENT,
-            //     'Hapus Stok Opname',
-            //     $message,
-            //     $item->toArray()
-            // );
-        }
-
-        return redirect('admin/stock-adjustment')->with('info', $message);
-    }
+    
 
     public function print($id)
     {

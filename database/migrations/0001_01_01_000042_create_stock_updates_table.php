@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedInteger('id2')->nullable()->default(null);
             $table->unsignedTinyInteger('type')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
-            $table->unsignedBigInteger('ref_id')->nullable()->default(null);
             $table->unsignedBigInteger('party_id')->nullable()->default(null);
             $table->string('party_name')->default('');
             $table->string('party_phone')->default('');
             $table->string('party_address')->default('');
+            $table->datetime('datetime')->nullable()->default(null);
             $table->datetime('created_datetime')->nullable()->default(null);
             $table->datetime('closed_datetime')->nullable()->default(null);
             $table->datetime('updated_datetime')->nullable()->default(null);

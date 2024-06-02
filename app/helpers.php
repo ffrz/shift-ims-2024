@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 
+function current_user_id() {
+    return Auth::user()->id;
+}
+
 function empty_string_to_null(&$arr, $key)
 {
     if (is_array($key)) {
