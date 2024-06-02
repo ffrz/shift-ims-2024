@@ -27,15 +27,30 @@ class StockUpdate extends BaseModel
         'id2',
         'type',
         'status',
+        'ref_id',
+
+        'party_id',
+        'party_name',
+        'party_phone',
+        'party_address',
+
         'total_cost',
         'total_price',
+        'total_discount',
+        'total_shipment',
+        'total_tax',
+        'grand_total',
+        'total_receivable',
+
         'notes',
+        
         'created_datetime',
-        'closed_datetime',
-        'created_by_uid',
-        'closed_by_uid',
         'updated_datetime',
+        'closed_datetime',
+        
+        'created_by_uid',
         'updated_by_uid',
+        'closed_by_uid',
     ];
 
     public function open()
@@ -147,5 +162,10 @@ class StockUpdate extends BaseModel
     public function updated_by_by()
     {
         return $this->belongsTo(User::class, 'updated_by_uid');
+    }
+
+    public function party()
+    {
+        return $this->belongsTo(Party::class, 'party_id');
     }
 }
