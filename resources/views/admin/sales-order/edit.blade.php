@@ -10,20 +10,87 @@ use App\Models\StockUpdate;
   <form method="POST" id="editor" action="{{ url('admin/sales-order/edit/' . (int) $item->id) }}">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
+
     <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            <div class="text-right" id="total">0</div>
-          </div>
-        </div>
+      <div class="card-footer">
+        @if ($item->status == StockUpdate::STATUS_OPEN)
+          <button type="submit" id="complete" onclick="return confirm('Selesaikan Transaksi?')" name="action"
+            value="complete" class="btn btn-primary mr-1"><i class="fas fa-check mr-1"></i> Selesai</button>
+          <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
+              class="fa fa-save mr-1"></i> Simpan</button>
+          <button type="submit" id="cancel" onclick="return confirm('Batalkan Transaksi?')" name="action"
+            value="cancel" class="btn btn-default"><i class="fas fa-cancel mr-1"></i> Batalkan</button>
+        @else
+          <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
+            Reopen</button>
+        @endif
       </div>
     </div>
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col">
-            <div class="input-group">
+          <div class="col-md-4">
+            <div class="form-group row">
+              <label for="party_id" class="col-sm-2 col-form-label">Pelanggan</label>
+              <div class="col-sm-10">
+                <select class="custom-select select2" id="party_id" name="party_id">
+                  <option value="" {{ !$item->party_id ? 'selected' : '' }}>-- Pilih Pelanggan --</option>
+                  @foreach ($customers as $customer)
+                    <option value="{{ $customer->id }}"
+                      {{ old('party_id', $item->party_id) == $customer->id ? 'selected' : '' }}>
+                      {{ $customer->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="phone" class="col-sm-2 col-form-label">Kontak</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="customer_phone" value="">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="address" class="col-sm-2 col-form-label">Alamat</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="customer_address" value="">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group row">
+              <label for="datetime" class="col-sm-4 col-form-label">Tanggal:</label>
+              <div class="col">
+                <input type="datetime-local" class="form-control @error('datetime') is-invalid @enderror" id="datetime"
+                  name="datetime" value="{{ old('datetime', $item->datetime) }}">
+                @error('datetime')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="id" class="col-sm-4 col-form-label">#No Invoice:</label>
+              <div class="col">
+                <input type="text" class="form-control" id="id" name=""
+                  value="{{ $item->idFormatted() }}" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="ml-5" style="font-weight:bold;font-size:70px;"><span>Rp.
+              </span><span id="total">0</span>,-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="row mt">
+          <div class="col col-md-12">
+            <div class="input-group mb-2">
               <input type="text" list="products" id="product_code_textedit" autofocus class="form-control"
                 placeholder="Masukkan barcode atau kode produk">
               <datalist id="products">
@@ -32,18 +99,11 @@ use App\Models\StockUpdate;
                 @endforeach
               </datalist>
               <div class="input-group-append">
-                <button type="submit" id="add-item" class="btn btn-default" title="OK"> <i class="fa fa-check"></i>
+                <button type="submit" id="add-item" class="btn btn-default" title="OK"> <i
+                    class="fa fa-check"></i>
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <div class="row mt-3">
-          <div class="col col-md-12">
             <table id="product-list" class="table table-sm table-bordered table-hover">
               <thead>
                 <th>No</th>
@@ -68,54 +128,11 @@ use App\Models\StockUpdate;
         <div class="card-header" id="filterHeading">
           <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
             data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
-            <b>Info Order</b>
+            <b>Info Tambahan</b>
           </button>
         </div>
         <div id="filterCollapse" class="collapse" aria-labelledby="filterHeading" data-parent="#filterBox">
           <div class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-3">
-                <label for="party_id">Pelanggan</label>
-                <select class="custom-select select2" id="party_id" name="party_id">
-                  <option value="" {{ !$item->party_id ? 'selected' : '' }}>-- Pilih Pelanggan --</option>
-                  @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}"
-                      {{ old('party_id', $item->party_id) == $customer->id ? 'selected' : '' }}>
-                      {{ $customer->name }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="form-group col-md-3">
-                <label for="datetime">Tanggal:</label>
-                <input type="datetime-local" class="form-control @error('datetime') is-invalid @enderror" id="datetime"
-                  name="datetime" value="{{ old('datetime', $item->datetime) }}">
-                @error('datetime')
-                  <span class="text-danger">
-                    {{ $message }}
-                  </span>
-                @enderror
-              </div>
-              <div class="form-group col-md-3">
-                <label for="order_status">Status:</label>
-                <select class="custom-select select2 form-control" id="order_status" name="order_status" disabled>
-                  <option value="{{ StockUpdate::STATUS_OPEN }}"
-                    {{ $item->status == StockUpdate::STATUS_OPEN ? 'selected' : '' }}>
-                    {{ $item->statusFormatted() }}</option>
-                  <option value="{{ StockUpdate::STATUS_COMPLETED }}"
-                    {{ $item->status == StockUpdate::STATUS_COMPLETED ? 'selected' : '' }}>
-                    {{ $item->statusFormatted() }}</option>
-                  <option value="{{ StockUpdate::STATUS_CANCELED }}"
-                    {{ $item->status == StockUpdate::STATUS_CANCELED ? 'selected' : '' }}>
-                    {{ $item->statusFormatted() }}</option>
-                </select>
-              </div>
-              <div class="form-group col-md-3">
-                <label for="id">#No Invoice:</label>
-                <input type="text" class="form-control" id="id" name=""
-                  value="{{ $item->idFormatted() }}" readonly>
-              </div>
-            </div>
             <div class="form-row">
               <div class="form-group col-md-12">
                 <label for="notes">Catatan:</label>
@@ -129,21 +146,6 @@ use App\Models\StockUpdate;
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-footer">
-        @if ($item->status == StockUpdate::STATUS_OPEN)
-          <button type="submit" id="complete" onclick="return confirm('Selesaikan Transaksi?')" name="action" value="complete" class="btn btn-primary mr-1"><i
-              class="fas fa-check mr-1"></i> Selesai</button>
-          <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
-              class="fa fa-save mr-1"></i> Simpan</button>
-          <button type="submit" id="cancel" onclick="return confirm('Batalkan Transaksi?')" name="action" value="cancel" class="btn btn-default"><i
-              class="fas fa-cancel mr-1"></i> Batalkan</button>
-        @else
-          <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
-            Reopen</button>
-        @endif
       </div>
     </div>
   </form>
@@ -242,7 +244,8 @@ use App\Models\StockUpdate;
           '<td>' + product.uom + '</td>' +
           '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
           ']" value="' + toLocaleNumber(item.price) + '"></td>' +
-          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * Math.abs(qty)) + '</td>' +
+          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * Math.abs(
+            qty)) + '</td>' +
           '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
           '</tr>');
       }
