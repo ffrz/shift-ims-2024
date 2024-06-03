@@ -10,22 +10,6 @@ use App\Models\StockUpdate;
   <form method="POST" id="editor" action="{{ url('admin/sales-order/edit/' . (int) $item->id) }}">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
-
-    <div class="card">
-      <div class="card-footer">
-        @if ($item->status == StockUpdate::STATUS_OPEN)
-          <button type="submit" id="complete" onclick="return confirm('Selesaikan Transaksi?')" name="action"
-            value="complete" class="btn btn-primary mr-1"><i class="fas fa-check mr-1"></i> Selesai</button>
-          <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
-              class="fa fa-save mr-1"></i> Simpan</button>
-          <button type="submit" id="cancel" onclick="return confirm('Batalkan Transaksi?')" name="action"
-            value="cancel" class="btn btn-default"><i class="fas fa-cancel mr-1"></i> Batalkan</button>
-        @else
-          <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
-            Reopen</button>
-        @endif
-      </div>
-    </div>
     <div class="card">
       <div class="card-body">
         <div class="row">
@@ -99,8 +83,7 @@ use App\Models\StockUpdate;
                 @endforeach
               </datalist>
               <div class="input-group-append">
-                <button type="submit" id="add-item" class="btn btn-default" title="OK"> <i
-                    class="fa fa-check"></i>
+                <button type="submit" id="add-item" class="btn btn-default" title="OK"> <i class="fa fa-check"></i>
                 </button>
               </div>
             </div>
@@ -146,6 +129,21 @@ use App\Models\StockUpdate;
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-footer">
+        @if ($item->status == StockUpdate::STATUS_OPEN)
+          <button type="submit" id="complete" onclick="return confirm('Selesaikan Transaksi?')" name="action"
+            value="complete" class="btn btn-primary mr-1"><i class="fas fa-check mr-1"></i> Selesai</button>
+          <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
+              class="fa fa-save mr-1"></i> Simpan</button>
+          <button type="submit" id="cancel" onclick="return confirm('Batalkan Transaksi?')" name="action"
+            value="cancel" class="btn btn-default"><i class="fas fa-cancel mr-1"></i> Batalkan</button>
+        @else
+          <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
+            Reopen</button>
+        @endif
       </div>
     </div>
   </form>
@@ -249,7 +247,7 @@ use App\Models\StockUpdate;
           '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
           '</tr>');
       }
-      total += product.price * qty;
+      total += product.price * Math.abs(qty);
     }
 
     $('#add-item').click(function(e) {
