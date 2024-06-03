@@ -33,6 +33,7 @@ class StockAdjustmentController extends Controller
         $item = new StockUpdate();
         $item->type = StockUpdate::TYPE_MASS_ADJUSTMENT;
         $item->id2 = StockUpdate::getNextId2($item->type);
+        $item->datetime = current_datetime();
         $item->open();
 
         if ($request->method() == 'POST') {

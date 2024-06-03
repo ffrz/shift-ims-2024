@@ -10,28 +10,38 @@ use App\Models\StockUpdate;
   <form method="POST" id="editor" action="{{ url('admin/sales-order/edit/' . (int) $item->id) }}">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
-    <div class="card card-primary">
+    <div class="card">
       <div class="card-body">
-        <div style="font-weight:bold;font-size:60px;" class="row">
-          <div class="text-right" id="total">0</div>
-        </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col">
+            <div class="text-right" id="total">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
             <div class="input-group">
               <input type="text" list="products" id="product_code_textedit" autofocus class="form-control"
-                placeholder="Input Kode/Barcode">
+                placeholder="Masukkan barcode atau kode produk">
               <datalist id="products">
                 @foreach ($products as $product)
                   <option value="{{ $product['pid'] . ' | ' . $product['code'] }}">
                 @endforeach
               </datalist>
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default" title="OK"> <i class="fa fa-check"></i> </button>
-                <a href="#" class="btn btn-default"> <i class="fa fa-search" title="Cari Produk"></i> </a>
+                <button type="submit" id="add-item" class="btn btn-default" title="OK"> <i class="fa fa-check"></i>
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
         <div class="row mt-3">
           <div class="col col-md-12">
             <table id="product-list" class="table table-sm table-bordered table-hover">
@@ -124,11 +134,11 @@ use App\Models\StockUpdate;
     <div class="card">
       <div class="card-footer">
         @if ($item->status == StockUpdate::STATUS_OPEN)
-          <button type="submit" id="complete" name="act" value="complete" class="btn btn-primary mr-1"><i
+          <button type="submit" id="complete" name="action" value="complete" class="btn btn-primary mr-1"><i
               class="fas fa-check mr-1"></i> Selesai</button>
-          <button type="button" id="save" class="btn btn-default mr-1"><i class="fa fa-save mr-1"></i>
-            Simpan</button>
-          <button type="submit" id="cancel" name="act" value="cancel" class="btn btn-default"><i
+          <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
+              class="fa fa-save mr-1"></i> Simpan</button>
+          <button type="submit" id="cancel" name="action" value="cancel" class="btn btn-default"><i
               class="fas fa-cancel mr-1"></i> Batalkan</button>
         @else
           <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
@@ -141,163 +151,143 @@ use App\Models\StockUpdate;
 
 @section('footscript')
   <script>
+    let cart_item_by_ids = {};
+    let products = {!! json_encode($products) !!};
+    let barcodes = {!! json_encode($barcodes) !!};
+    let details = {!! json_encode($details) !!};
+    let product_code_by_ids = {!! json_encode($product_code_by_ids) !!};
+    let total = 0;
+    let submit = false;
+
+    function updateSubtotal() {
+      let $tbody = $('#product-list tbody');
+      console.log($tbody.children());
+      $tbody.children().each(function(i, el) {
+        let qty = $(el).find('.qty').val();
+        let price = $(el).find('.price').val();
+        let subtotal = localeNumberToNumber(qty) * localeNumberToNumber(price);
+        console.log(subtotal);
+      });
+      updateTotal();
+    }
+
+    function updateTotal() {
+      $('#total').text(toLocaleNumber(total));
+    }
+
+    function addProduct() {
+      let code_text_edit = $('#product_code_textedit');
+      let text = code_text_edit.val();
+      text = text.replace(/\s/g, "");
+      let texts = text.split('*');
+      if (texts.length == 0) {
+        return;
+      }
+
+      let qty = 1;
+      let code = texts[0];
+      code = code.split('|')[0];
+
+      if (texts.length == 2) {
+        code = texts[1];
+        qty = Number(texts[0]);
+      }
+      let product = products[code];
+      if (!product && barcodes[code]) {
+        product = products[barcodes[code]];
+      }
+
+      if (!product) {
+        code_text_edit.select();
+        code_text_edit.focus();
+        return;
+      }
+
+      addToCart(product, qty);
+      updateTotal();
+      code_text_edit.val('');
+      code_text_edit.focus();
+    }
+
+    function addToCart(product, qty) {
+      let item = cart_item_by_ids[product.id];
+      if (cart_item_by_ids[product.id]) {
+        item.qty += qty;
+        $('#qty-' + product.id + ' input').val(toLocaleNumber(item.qty));
+        $('#subtotal-' + product.id).text(toLocaleNumber(item.qty * product.price));
+      } else {
+        item = {
+          product: product,
+          qty: qty,
+          price: Number(product.price),
+        };
+        $('#empty-item-row').hide();
+        cart_item_by_ids[product.id] = item;
+        let $tbody = $('#product-list tbody');
+        let row = $tbody.children().length;
+        $tbody.append(
+          '<tr id="' + product.id + '" data-id="' + product.id + '">' +
+          '<td class="text-right num">' + row + '</td>' +
+          '<td>' + product.code + '<input type="hidden" class="product_id" name="product_id[' + row + ']" value="' +
+          product.id + '"></td>' +
+          '<td id="qty-' + product.id +
+          '" class="text-right"><input class="text-right qty" onchange="updateSubtotal()" name="qty[' + row +
+          ']" value="' + toLocaleNumber(item.qty) + '"></td> ' +
+          '<td>' + product.uom + '</td>' +
+          '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
+          ']" value="' + toLocaleNumber(item.price) + '"></td>' +
+          '<td id="subtotal-' + product.id + '">' + toLocaleNumber(product.price * qty) + '</td>' +
+          '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
+          '</tr>');
+      }
+      total += product.price * qty;
+    }
+
+    $('#add-item').click(function(e) {
+      e.preventDefault();
+      addProduct();
+    });
+
+    $(document).on("keydown", "#product_code_textedit", function(e) {
+      if (e.key == "Enter") {
+        addProduct();
+      }
+    });
+
+    function removeCartItem(self) {
+      let $tr = $(self).parent().parent();
+      let $tbody = $tr.parent();
+
+      delete cart_item_by_ids[$tr.data('id')];
+      $tr.remove();
+
+      // tampilkan item kosong
+      let children = $tbody.children();
+      if (children.length == 1) {
+        $('#empty-item-row').show();
+      }
+
+      // reset nomor urut dan field row 
+      total = 0;
+      children.each(function(i, el) {
+        let $qty = $(el).find('.qty');
+        let $price = $(el).find('.price');
+        let subtotal = localeNumberToNumber($qty.find('input').val()) * localeNumberToNumber($price.find('input').val());
+
+        $(el).find('.num').text(i);
+        $(el).find('.product_id').attr('name', 'product_id[' + i + ']');
+        $qty.attr('name', 'qty[' + i + ']');
+        $price.attr('name', 'price[' + i + ']');
+
+        total += subtotal;
+      });
+
+      updateTotal();
+    }
+
     $(document).ready(function() {
-      let products = {!! json_encode($products) !!};
-      let barcodes = {!! json_encode($barcodes) !!};
-      let details = {!! json_encode($details) !!};
-      let product_code_by_ids = {!! json_encode($product_code_by_ids) !!};
-      let total = 0;
-      let cart_item_by_ids = {};
-      let cart_items = [];
-      let submit = false;
-
-      let $saveButton = $('#save');
-
       $(function() {
         $('.select2').select2({});
-      });
-
-      function addToCart(product, qty) {
-        let item = cart_item_by_ids[product.id];
-        if (cart_item_by_ids[product.id]) {
-          item.qty += qty;
-          $('#qty-' + product.id).text(toLocaleNumber(item.qty));
-          $('#subtotal-' + product.id).text(toLocaleNumber(item.qty * product.price));
-        } else {
-          item = {
-            product: product,
-            qty: qty,
-            price: Number(product.price),
-          };
-          $('#empty-item-row').hide();
-          cart_item_by_ids[product.id] = item;
-          cart_items.push(item);
-          $('#product-list tbody').append(
-            '<tr id=' + product.id + '>' +
-            '<td class="text-right">' + cart_items.length + '</td>' +
-            '<td>' + product.code + '</td>' +
-            '<td id="qty-' + product.id + '" class="text-right"><input type="number" class="text-right" value="' + item.qty + '"></td> ' +
-            '<td>' + product.uom + '</td>' +
-            '<td class="text-right"><input type="number" class="text-right" value="' + item.price + '"></td>' +
-            '<td id="subtotal-' + product.id + '">' + toLocaleNumber(product.price * qty) + '</td>' +
-            '<td><button type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
-            '</tr>');
-        }
-        total += product.price * qty;
-      }
-
-      function updateTotal() {
-        $('#total').text(toLocaleNumber(total));
-      }
-
-      function addProduct() {
-        let code_text_edit = $('#product_code_textedit');
-        let text = code_text_edit.val();
-        text = text.replace(/\s/g, "");
-        let texts = text.split('*');
-        if (texts.length == 0) {
-          return;
-        }
-
-        let qty = 1;
-        let code = texts[0];
-        code = code.split('|')[0];
-
-        if (texts.length == 2) {
-          code = texts[1];
-          qty = Number(texts[0]);
-        }
-        let product = products[code];
-        if (!product && barcodes[code]) {
-          product = products[barcodes[code]];
-        }
-
-        if (!product) {
-          code_text_edit.select();
-          code_text_edit.focus();
-          return;
-        }
-
-        addToCart(product, qty);
-        updateTotal();
-        code_text_edit.val('');
-      }
-
-      function saveAll(onSuccess) {
-        if (cart_items.length == 0) {
-          $('#product_code_textedit').focus();
-          alert('Item masih kosong');
-          return;
-        }
-
-        let data = {
-          _token: $('[name="csrf-token"]').attr('content'),
-          order_id: {{ $item->id }},
-          datetime: $('#datetime').val(),
-          party_id: $('#party_id').val(),
-          notes: $('#notes').val(),
-          items: [],
-        };
-
-        for (let i = 0; i < cart_items.length; i++) {
-          let item = cart_items[i];
-          let tmpItems = {
-            id: item.product.id,
-            qty: item.qty,
-            price: item.price,
-          };
-          data.items.push(tmpItems);
-        }
-
-        $saveButton.prop('disabled', true);
-        $saveButton.addClass('disabled');
-
-        $.ajax({
-          type: "POST",
-          url: '{{ url('admin/sales-order/save-detail/' . $item->id) }}',
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          success: function(response) {
-            $saveButton.prop('disabled', false);
-            $saveButton.removeClass('disabled');
-            toastr["info"]('Perubahan telah disimpan.');
-            if (onSuccess) {
-              onSuccess();
-            }
-          }
-        });
-      }
-
-      $saveButton.click(function() {
-        saveAll()
-      });
-
-      $('#complete').click(function() {
-        if (!confirm('Selesaikan transaksi?')) {
-          return;
-        }
-        saveAll(function() {
-          submit = true;
-          $('#editor').submit();
-        });
-      });
-
-      $('#cancel').click(function() {
-        if (!confirm('Batalkan transaksi?')) {
-          return;
-        }
-        saveAll(function() {
-          submit = true;
-          $('#editor').submit();
-        });
-      });
-
-      $('#editor').submit(function(event) {
-        if (!submit) {
-          event.preventDefault();
-          addProduct();
-          return;
-        }
       });
 
       details.forEach(detail => {

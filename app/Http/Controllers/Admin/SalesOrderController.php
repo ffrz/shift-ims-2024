@@ -18,7 +18,9 @@ class SalesOrderController extends Controller
 
     public function index()
     {
-        $items = StockUpdate::whereRaw('type = ' . StockUpdate::TYPE_SALES_ORDER)->orderBy('id', 'desc')->get();
+        $items = StockUpdate::with('party')->whereRaw('type = ' . StockUpdate::TYPE_SALES_ORDER)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         $filter = [];
         return view('admin.sales-order.index', compact('items', 'filter'));
     }
@@ -49,24 +51,29 @@ class SalesOrderController extends Controller
                 $item->party_id = null;
             }
 
-            dd($request->all());
-
-            if ($request->action == 'complete') {
-                $item->status = StockUpdate::STATUS_COMPLETED;
-            }
-            else if ($request->action == 'cancel') {
-                $item->status = StockUpdate::STATUS_CANCELED;
-            }
-            else {
-                return redirect('admin/sales-order')->with('warning', 'Unknown action!');
-            }
-
-            $item->closed_datetime = current_datetime();
-            $item->closed_by_uid = current_user_id();
-
             DB::beginTransaction();
+            if ($request->action == 'complete' || $request->action == 'cancel') {
+                $item->status = $request->action == 'complete' ? StockUpdate::STATUS_COMPLETED : StockUpdate::STATUS_CANCELED;
+                $item->closed_datetime = current_datetime();
+                $item->closed_by_uid = current_user_id();
+            } else {
+                $item->updated_datetime = current_datetime();
+                $item->updated_by_uid = current_user_id();
+            }
+
+            DB::delete('delete from stock_update_details where update_id = ?', [$item->id]);
+            foreach ($request->product_id as $row_id => $product_id) {
+                $d = new StockUpdateDetail();
+                $d->id = $row_id;
+                $d->update_id = $item->id;
+                $d->product_id = $product_id;
+                $d->quantity = numberFromInput($request->qty[$row_id]);
+                $d->price = numberFromInput($request->price[$row_id]);
+                $d->save();
+            }
+
             if ($item->status == StockUpdate::STATUS_COMPLETED) {
-                $details = StockUpdateDetail::with('product')->whereRaw('update_id='.$item->id)->get();
+                $details = StockUpdateDetail::with('product')->whereRaw('update_id=' . $item->id)->get();
                 foreach ($details as $detail) {
                     $product = $detail->product;
                     $detail->cost = $product->cost;
@@ -78,7 +85,7 @@ class SalesOrderController extends Controller
             }
 
             $item->save();
-            
+
             $data['New Data'] = $item->toArray();
 
             // UserActivity::log(
@@ -89,7 +96,11 @@ class SalesOrderController extends Controller
             // );
             DB::commit();
 
-            return redirect('admin/sales-order/detail/' . $item->id)->with('info', 'Order penjualan telah disimpan.');
+            if ($item->status == StockUpdate::STATUS_OPEN) {
+                return redirect('admin/sales-order/edit/' . $item->id)->with('info', 'Order penjualan telah disimpan.');
+            }
+
+            return redirect('admin/sales-order/')->with('info', 'Order penjualan telah selesai.');
         }
 
         $tmp_products = Product::select(['id', 'code', 'description', 'stock', 'uom', 'price', 'barcode'])
@@ -127,8 +138,8 @@ class SalesOrderController extends Controller
         }
         DB::commit();
         return response()->json([
-            'status' => 'success', 
-            'data' =>[], 
+            'status' => 'success',
+            'data' => [],
             'message' => 'Information saved successfully!'
         ], 200);
     }

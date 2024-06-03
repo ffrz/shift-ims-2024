@@ -1,4 +1,4 @@
-<?php use App\Models\SalesOrder; ?>
+<?php use App\Models\StockUpdate; ?>
 
 @extends('admin._layouts.default', [
     'title' => 'Order Penjualan',
@@ -99,6 +99,7 @@
                 <tr>
                   <th>#</th>
                   <th>Tanggal</th>
+                  <th>Status</th>
                   <th>Pelanggan</th>
                   <th>Total</th>
                   <th>Piutang</th>
@@ -106,33 +107,41 @@
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($items as $item) : ?>
-                <tr>
-                  <td>{{ $item->idFormatted() }}</td>
-                  <td>{{ $item->date }}</td>
-                  <td>{{ $item->customer ? $item->customer->name : '' }}</td>
-                  <td>{{ $item->total }}</td>
-                  <td>{{ $item->total_receivable }}</td>
-                  <td class="text-center">
-                    <div class="btn-group">
-                      @if (empty($item->deleted_at))
-                        <a href="<?= url("/admin/sales-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
-                            class="fa fa-eye" title="View"></i></a>
-                        <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
-                            class="fa fa-edit" title="Edit"></i></a>
+                @forelse ($items as $item)
+                  <tr>
+                    <td>{{ $item->idFormatted() }}</td>
+                    <td>{{ format_datetime($item->datetime) }}</td>
+                    <td>{{ $item->statusFormatted() }}</td>
+                    <td>{{ $item->customer ? $item->customer->name : '' }}</td>
+                    <td>{{ $item->total }}</td>
+                    <td>{{ $item->total_receivable }}</td>
+                    <td class="text-center">
+                      <div class="btn-group">
+                        @if ($item->status != StockUpdate::STATUS_OPEN)
+                          <a href="<?= url("/admin/sales-order/detail/$item->id") ?>" class="btn btn-default btn-sm"><i
+                              class="fa fa-eye" title="View"></i></a>
+                        @else
+                          <a href="<?= url("/admin/sales-order/edit/$item->id") ?>" class="btn btn-default btn-sm"><i
+                              class="fa fa-edit" title="Edit"></i></a>
+                        @endif
                         <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                          href="<?= url("/admin/stock-update/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                          href="<?= url("/admin/stock-update/delete/$item->id?goto=sales-order") ?>" class="btn btn-danger btn-sm"><i
                             class="fa fa-trash" title="Hapus"></i></a>
-                      @endif
-                    </div>
-                  </td>
-                </tr>
-                <?php endforeach ?>
+                      </div>
+                    </td>
+                  </tr>
+                @empty
+                  <tr class="empty">
+                    <td colspan="7">Tidak ada rekaman untuk ditampilkan.
+                    </td>
+                  </tr>
+                @endforelse
               </tbody>
             </table>
           </div>
         </div>
       </div>
+      @include('admin._components.paginator', ['items' => $items])
     </div>
   </div>
 @endSection
