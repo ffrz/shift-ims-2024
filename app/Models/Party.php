@@ -13,6 +13,11 @@ class Party extends BaseModel
         'type', 'id2', 'active', 'name', 'phone', 'address', 'notes'
     ];
 
+    public function idFormatted()
+    {
+        return ($this->type == self::TYPE_CUSTOMER ? 'CST-' : 'SUP-') . str_pad($this->id2, 5, '0', STR_PAD_LEFT);
+    }
+
     public static function getNextId2($type)
     {
         return DB::table('parties')
