@@ -108,13 +108,13 @@
               </thead>
               <tbody>
                 @forelse ($items as $item)
-                  <tr>
+                  <tr class="{{ $item->status == StockUpdate::STATUS_CANCELED ? 'table-danger' : ($item->status == StockUpdate::STATUS_OPEN ? 'table-warning' : '') }}">
                     <td>{{ $item->idFormatted() }}</td>
                     <td>{{ format_datetime($item->datetime) }}</td>
                     <td>{{ $item->statusFormatted() }}</td>
-                    <td>{{ $item->customer ? $item->customer->name : '' }}</td>
-                    <td>{{ $item->total }}</td>
-                    <td>{{ $item->total_receivable }}</td>
+                    <td>{{ $item->party ? $item->party->idFormatted() . ' - ' . $item->party->name : '' }}</td>
+                    <td class="text-right">{{ format_number(abs($item->total)) }}</td>
+                    <td class="text-right">{{ format_number($item->total_receivable) }}</td>
                     <td class="text-center">
                       <div class="btn-group">
                         @if ($item->status != StockUpdate::STATUS_OPEN)

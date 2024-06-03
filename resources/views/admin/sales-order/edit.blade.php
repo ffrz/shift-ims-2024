@@ -134,11 +134,11 @@ use App\Models\StockUpdate;
     <div class="card">
       <div class="card-footer">
         @if ($item->status == StockUpdate::STATUS_OPEN)
-          <button type="submit" id="complete" name="action" value="complete" class="btn btn-primary mr-1"><i
+          <button type="submit" id="complete" onclick="return confirm('Selesaikan Transaksi?')" name="action" value="complete" class="btn btn-primary mr-1"><i
               class="fas fa-check mr-1"></i> Selesai</button>
           <button type="submit" id="save" name="action" value="save" class="btn btn-default mr-1"><i
               class="fa fa-save mr-1"></i> Simpan</button>
-          <button type="submit" id="cancel" name="action" value="cancel" class="btn btn-default"><i
+          <button type="submit" id="cancel" onclick="return confirm('Batalkan Transaksi?')" name="action" value="cancel" class="btn btn-default"><i
               class="fas fa-cancel mr-1"></i> Batalkan</button>
         @else
           <button type="submit" name="reopen" class="btn btn-default"><i class="fas fa-folder-open mr-1"></i>
@@ -238,11 +238,11 @@ use App\Models\StockUpdate;
           product.id + '"></td>' +
           '<td id="qty-' + product.id +
           '" class="text-right"><input class="text-right qty" onchange="updateSubtotal()" name="qty[' + row +
-          ']" value="' + toLocaleNumber(item.qty) + '"></td> ' +
+          ']" value="' + toLocaleNumber(Math.abs(item.qty)) + '"></td> ' +
           '<td>' + product.uom + '</td>' +
           '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
           ']" value="' + toLocaleNumber(item.price) + '"></td>' +
-          '<td id="subtotal-' + product.id + '" class="subtotal">' + toLocaleNumber(product.price * qty) + '</td>' +
+          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * Math.abs(qty)) + '</td>' +
           '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
           '</tr>');
       }

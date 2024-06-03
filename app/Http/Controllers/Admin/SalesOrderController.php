@@ -51,6 +51,14 @@ class SalesOrderController extends Controller
                 $item->party_id = null;
             }
 
+            $product_by_ids = [];
+            if (!empty($request->product_id)) {
+                $products = Product::whereIn('id', $request->product_id)->get();
+                foreach ($products as $product) {
+                    $product_by_ids[$product->id] = $product;
+                }
+            }
+
             DB::beginTransaction();
             if ($request->action == 'complete' || $request->action == 'cancel') {
                 $item->status = $request->action == 'complete' ? StockUpdate::STATUS_COMPLETED : StockUpdate::STATUS_CANCELED;
@@ -61,26 +69,37 @@ class SalesOrderController extends Controller
                 $item->updated_by_uid = current_user_id();
             }
 
+            $item->total_cost = 0;
+            $item->total_price = 0;
+            
             DB::delete('delete from stock_update_details where update_id = ?', [$item->id]);
-            foreach ($request->product_id as $row_id => $product_id) {
-                $d = new StockUpdateDetail();
-                $d->id = $row_id;
-                $d->update_id = $item->id;
-                $d->product_id = $product_id;
-                $d->quantity = numberFromInput($request->qty[$row_id]);
-                $d->price = numberFromInput($request->price[$row_id]);
-                $d->save();
+            if (!empty($request->product_id)) {
+                foreach ($request->product_id as $row_id => $product_id) {
+                    $product = $product_by_ids[$product_id];
+                    $d = new StockUpdateDetail();
+                    $d->id = $row_id;
+                    $d->update_id = $item->id;
+                    $d->product_id = $product_id;
+                    $d->quantity = -numberFromInput($request->qty[$row_id]);
+                    $d->cost = $product->cost;
+                    $d->stock_before = $product->stock;
+                    $d->price = numberFromInput($request->price[$row_id]);
+                    $item->total_cost += ($d->cost * $d->quantity);
+                    $item->total_price += ($d->price * $d->quantity);
+
+                    // saat ini belum ada diskon dan pajak, cukup set total dari total harga
+                    $item->total = $item->total_price;
+
+                    $d->save();
+                }
             }
 
             if ($item->status == StockUpdate::STATUS_COMPLETED) {
                 $details = StockUpdateDetail::with('product')->whereRaw('update_id=' . $item->id)->get();
                 foreach ($details as $detail) {
                     $product = $detail->product;
-                    $detail->cost = $product->cost;
-                    $detail->stock_before = $product->stock;
                     $product->stock -= $detail->quantity;
                     $product->save();
-                    $detail->save();
                 }
             }
 
@@ -88,12 +107,6 @@ class SalesOrderController extends Controller
 
             $data['New Data'] = $item->toArray();
 
-            // UserActivity::log(
-            //     UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
-            //     ($id == 0 ? 'Tambah' : 'Perbarui') . ' Kategori Produk',
-            //     'Kategori Produk ' . e($item->name) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
-            //     $data
-            // );
             DB::commit();
 
             if ($item->status == StockUpdate::STATUS_OPEN) {
