@@ -160,14 +160,20 @@ use App\Models\StockUpdate;
     let submit = false;
 
     function updateSubtotal() {
+      total = 0;
       let $tbody = $('#product-list tbody');
-      console.log($tbody.children());
-      $tbody.children().each(function(i, el) {
+      let children = $tbody.children();
+      children.each(function(i, el) {
+        if (i == 0) {
+          return;
+        }
         let qty = $(el).find('.qty').val();
         let price = $(el).find('.price').val();
         let subtotal = localeNumberToNumber(qty) * localeNumberToNumber(price);
-        console.log(subtotal);
+        $(el).find('.subtotal').text(toLocaleNumber(subtotal));
+        total += subtotal;
       });
+
       updateTotal();
     }
 
@@ -236,7 +242,7 @@ use App\Models\StockUpdate;
           '<td>' + product.uom + '</td>' +
           '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
           ']" value="' + toLocaleNumber(item.price) + '"></td>' +
-          '<td id="subtotal-' + product.id + '">' + toLocaleNumber(product.price * qty) + '</td>' +
+          '<td id="subtotal-' + product.id + '" class="subtotal">' + toLocaleNumber(product.price * qty) + '</td>' +
           '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
           '</tr>');
       }
@@ -268,21 +274,14 @@ use App\Models\StockUpdate;
       }
 
       // reset nomor urut dan field row 
-      total = 0;
       children.each(function(i, el) {
-        let $qty = $(el).find('.qty');
-        let $price = $(el).find('.price');
-        let subtotal = localeNumberToNumber($qty.find('input').val()) * localeNumberToNumber($price.find('input').val());
-
         $(el).find('.num').text(i);
         $(el).find('.product_id').attr('name', 'product_id[' + i + ']');
-        $qty.attr('name', 'qty[' + i + ']');
-        $price.attr('name', 'price[' + i + ']');
-
-        total += subtotal;
+        $(el).find('.qty').attr('name', 'qty[' + i + ']');
+        $(el).find('.price').attr('name', 'price[' + i + ']');
       });
 
-      updateTotal();
+      updateSubtotal();
     }
 
     $(document).ready(function() {
