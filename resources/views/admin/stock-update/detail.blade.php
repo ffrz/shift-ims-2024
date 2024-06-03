@@ -13,6 +13,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
+          <h3>{{ 'Rincian ' . $item->typeFormatted() . ' #' . $item->id2Formatted() }}</h3>
           <table class="table no-border table-sm" style="width:100%">
             <p class="mt-0 mb-0">Dibuat oleh {{ $item->created_by->username }} pada
               {{ format_datetime($item->created_datetime) }}</p>
@@ -34,8 +35,10 @@
               <th>Stok Lama</th>
               <th>Stok Baru</th>
               <th>Selisih</th>
+              <th>Modal</th>
+              <th>Harga</th>
               <th>Selisih Modal</th>
-              <th>Selisih Harga Jual</th>
+              <th>Selisih Harga</th>
             </thead>
             <tbody>
               @php
@@ -56,6 +59,8 @@
                   <td class="text-right">{{ format_number($detail->stock_before) }}</td>
                   <td class="text-right">{{ format_number($detail->stock_before + $detail->quantity) }}</td>
                   <td class="text-right">{{ ($detail->quantity > 0 ? '+' : '') . format_number($detail->quantity) }}</td>
+                  <td class="text-right">{{ format_number($detail->cost) }}</td>
+                  <td class="text-right">{{ format_number($detail->price) }}</td>
                   <td class="text-right">{{ format_number($subtotal_cost) }}</td>
                   <td class="text-right">{{ format_number($subtotal_price) }}</td>
                 </tr>
@@ -63,7 +68,7 @@
             </tbody>
             <tfoot>
               <tr class="bg-primary">
-                <th colspan="6">Total</th>
+                <th colspan="8">Total</th>
                 <th class="text-right">{{ format_number($total_cost) }}</th>
                 <th class="text-right">{{ format_number($total_price) }}</th>
               </tr>
