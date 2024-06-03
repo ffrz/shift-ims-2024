@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AclResource;
 use App\Models\Customer;
+use App\Models\Party;
 use App\Models\Product;
 use App\Models\StockUpdate;
 use App\Models\StockUpdateDetail;
@@ -130,7 +131,7 @@ class SalesOrderController extends Controller
                 $barcodes[$product->barcode] = $product->idFormatted();
             }
         }
-        $customers = Customer::orderBy('name', 'asc')->get();
+        $customers = Party::where('type', '=', Party::TYPE_CUSTOMER)->orderBy('name', 'asc')->get();
         $details = $item->details;
         return view('admin.sales-order.edit', compact('item', 'customers', 'products', 'barcodes', 'details', 'product_code_by_ids'));
     }
