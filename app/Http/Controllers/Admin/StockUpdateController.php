@@ -27,7 +27,7 @@ class StockUpdateController extends Controller
         return view('admin.stock-update.index', compact('items'));
     }
 
-    public function delete($id)
+    public function delete(Request $request,$id)
     {
         if (!$item = StockUpdate::find($id))
             $message = 'Pembaruan stok tidak ditemukan.';
@@ -56,9 +56,11 @@ class StockUpdateController extends Controller
             //     $message,
             //     $item->toArray()
             // );
-        }
 
-        return redirect('admin/stock-update')->with('info', $message);
+        }
+        $goto = $request->get('goto', url('admin/stock-update'));
+
+        return redirect($goto)->with('info', $message);
     }
     
     public function detail(Request $request, $id)

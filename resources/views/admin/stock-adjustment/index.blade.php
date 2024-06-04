@@ -55,7 +55,7 @@
                               class="fa fa-edit" title="Edit"></i></a>
                         @endif
                         <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                          href="<?= url("/admin/stock-update/delete/$item->id") ?>" class="btn btn-danger btn-sm"><i
+                          href="<?= url("/admin/stock-update/delete/$item->id?goto=" . url('/admin/stock-adjustment')) ?>" class="btn btn-danger btn-sm"><i
                             class="fa fa-trash" title="Hapus"></i></a>
                       </div>
                     </td>
