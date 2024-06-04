@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SalesOrderController;
 use App\Http\Controllers\Admin\ServiceOrderController;
@@ -65,6 +66,14 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
     });
 
     Route::controller(SalesOrderController::class)->prefix('sales-order')->group(function () {
+        Route::get('', 'index');
+        Route::get('create', 'create');
+        Route::match(['get', 'post'], 'edit/{id}', 'edit');
+        Route::get('delete/{id}', 'delete');
+        Route::post('save-detail/{id}', 'saveDetail');
+    });
+
+    Route::controller(PurchaseOrderController::class)->prefix('purchase-order')->group(function () {
         Route::get('', 'index');
         Route::get('create', 'create');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
