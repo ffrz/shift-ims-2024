@@ -33,3 +33,14 @@ body {
     padding: 0.5cm;
     background: #fff;
 }
+
+.table th {
+    text-align: center;
+}
+
+.report .table-bordered thead th,
+.report .table-bordered tfoot th,
+.report .table-bordered tbody td {
+    border:1px solid #000;
+    background: #fff;
+}

@@ -60,6 +60,16 @@
                 @enderror
               </div>
               <div class="form-group">
+                <label for="company_headline">Headline Usaha</label>
+                <input type="text" class="form-control @error('company_headline') is-invalid @enderror" id="company_headline"
+                  placeholder="Komputer, Laptop, Printer, CCTV, Networking, Software" name="company_headline" value="{{ Setting::value('company.headline', '') }}">
+                @error('company_headline')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
+              </div>
+              <div class="form-group">
                 <label for="company_owner">Nama Pemilik</label>
                 <input type="text" class="form-control @error('company_owner') is-invalid @enderror" id="company_owner"
                   placeholder="Nama Pemilik" name="company_owner" value="{{ Setting::value('company.owner') }}">

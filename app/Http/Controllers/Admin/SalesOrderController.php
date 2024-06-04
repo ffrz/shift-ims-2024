@@ -150,4 +150,14 @@ class SalesOrderController extends Controller
         $details = $item->details;
         return view('admin.sales-order.edit', compact('item', 'parties', 'products', 'barcodes', 'details', 'product_code_by_ids'));
     }
+
+    public function detail(Request $request, $id)
+    {
+        $item = StockUpdate::with(['created_by', 'closed_by'])->find($id);
+        $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
+        if ($request->get('print') == 1) {
+            return view('admin.sales-order.print', compact('item', 'details'));
+        }
+        return view('admin.sales-order.detail', compact('item', 'details'));
+    }
 }

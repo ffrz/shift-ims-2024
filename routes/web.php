@@ -70,7 +70,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('create', 'create');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::get('delete/{id}', 'delete');
-        Route::post('save-detail/{id}', 'saveDetail');
+        Route::get('detail/{id}', 'detail');
     });
 
     Route::controller(PurchaseOrderController::class)->prefix('purchase-order')->group(function () {
@@ -78,7 +78,7 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::get('create', 'create');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
         Route::get('delete/{id}', 'delete');
-        Route::post('save-detail/{id}', 'saveDetail');
+        Route::get('detail/{id}', 'detail');
     });
 
     Route::controller(SupplierController::class)->prefix('supplier')->group(function () {
