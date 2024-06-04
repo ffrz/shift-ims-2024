@@ -82,7 +82,7 @@ use App\Models\StockUpdate;
               <label for="id" class="col-sm-4 col-form-label">#No Invoice:</label>
               <div class="col">
                 <input type="text" class="form-control" id="id" name=""
-                  value="{{ $item->idFormatted() }}" readonly>
+                  value="{{ $item->id2Formatted() }}" readonly>
               </div>
             </div>
           </div>
@@ -206,7 +206,7 @@ use App\Models\StockUpdate;
       $('#total').text(toLocaleNumber(total));
     }
 
-    function addProduct() {
+    function addItem() {
       let code_text_edit = $('#product_code_textedit');
       let text = code_text_edit.val();
       text = text.replace(/\s/g, "");
@@ -234,13 +234,12 @@ use App\Models\StockUpdate;
         return;
       }
 
-      addToCart(product, qty);
-      updateTotal();
+      setItemData(product, qty, product.price);
       code_text_edit.val('');
       code_text_edit.focus();
     }
 
-    function addToCart(product, qty) {
+    function setItemData(product, qty, price) {
       qty = Math.abs(qty);
 
       let $item = $('#item-' + product.id);
@@ -264,32 +263,32 @@ use App\Models\StockUpdate;
           ']" value="' + toLocaleNumber(qty) + '"></td> ' +
           '<td>' + product.uom + '</td>' +
           '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
-          ']" value="' + toLocaleNumber(product.price) + '"></td>' +
-          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * qty) +
+          ']" value="' + toLocaleNumber(price) + '"></td>' +
+          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(price * qty) +
           '</td>' +
-          '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-cancel"></i></button></td>' +
+          '<td><button onclick="removeItem(this)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-cancel"></i></button></td>' +
           '</tr>'
         );
         Inputmask("decimal", Object.assign({
           allowMinus: false
         }, INPUTMASK_OPTIONS)).mask("#item-" + product.id + " .qty, #item-" + product.id + " .price");
-        total += product.price * qty;
+        total += price * qty;
         updateTotal();
       }
     }
 
     $('#add-item').click(function(e) {
       e.preventDefault();
-      addProduct();
+      addItem();
     });
 
     $(document).on("keydown", "#product_code_textedit", function(e) {
       if (e.key == "Enter") {
-        addProduct();
+        addItem();
       }
     });
 
-    function removeCartItem(self) {
+    function removeItem(self) {
       let $tr = $(self).parent().parent();
       let $tbody = $tr.parent();
 
@@ -331,7 +330,7 @@ use App\Models\StockUpdate;
 
       details.forEach(detail => {
         const code = product_code_by_ids[detail.product_id];
-        addToCart(products[code], detail.quantity);
+        setItemData(products[code], detail.quantity, detail.price);
         updateTotal();
       });
 

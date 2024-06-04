@@ -132,6 +132,7 @@ class SalesOrderController extends Controller
         }
 
         $tmp_products = Product::select(['id', 'code', 'description', 'stock', 'uom', 'price', 'barcode'])
+            ->whereRaw('active=1')
             ->orderBy('code', 'asc')->get();
         $products = [];
         $product_code_by_ids = [];
@@ -148,24 +149,5 @@ class SalesOrderController extends Controller
         $parties = Party::where('type', '=', Party::TYPE_CUSTOMER)->orderBy('name', 'asc')->get();
         $details = $item->details;
         return view('admin.sales-order.edit', compact('item', 'parties', 'products', 'barcodes', 'details', 'product_code_by_ids'));
-    }
-
-    public function delete($id)
-    {
-        $item = StockUpdate::findOrFail($id);
-        if ($item->status == StockUpdate::STATUS_COMPLETED) {
-            // rollback;
-        }
-        if ($item->delete($id)) {
-            $message = 'Telah dihapus ' . e($item->name) . ' telah dihapus.';
-            UserActivity::log(
-                UserActivity::PRODUCT_CATEGORY_MANAGEMENT,
-                'Hapus Kategori',
-                $message,
-                $item->toArray()
-            );
-        }
-
-        return redirect('admin/sales-order')->with('info', $message);
     }
 }

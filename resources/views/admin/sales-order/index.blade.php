@@ -4,7 +4,6 @@
     'title' => 'Order Penjualan',
     'menu_active' => 'sales',
     'nav_active' => 'sales-order',
-    'back_button_link' => url('/admin/sales-order'),
 ])
 
 @section('right-menu')
