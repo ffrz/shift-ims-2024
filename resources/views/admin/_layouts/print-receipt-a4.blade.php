@@ -1,20 +1,21 @@
+@php use App\Models\Setting; @endphp
 <!DOCTYPE html>
-<html lang="en" class="receipt-58">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ $title }}</title>
-  <link rel="stylesheet" href="/assets/css/report.css">
+  <link rel="stylesheet" href="/assets/css/print.css">
   @vite([])
 </head>
 
 <body>
-  <div class="wrapper">
-    <section class="invoice">
+  <section class="invoice">
+    <div class="page">
       @yield('content')
-    </section>
-  </div>
+    </div>
+  </section>
   <script>
     window.addEventListener("load", window.print());
   </script>

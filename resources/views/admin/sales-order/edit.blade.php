@@ -88,7 +88,7 @@ use App\Models\StockUpdate;
           </div>
           <div class="col-md-5">
             <div class="ml-5" style="font-weight:bold;font-size:70px;"><span>Rp.
-              </span><span id="total">0</span>,-</div>
+              </span><span id="total">0</span></div>
           </div>
         </div>
       </div>
@@ -111,22 +111,24 @@ use App\Models\StockUpdate;
                 </button>
               </div>
             </div>
-            <table id="product-list" class="table table-sm table-bordered table-hover">
-              <thead>
-                <th style="width:3%">No</th>
-                <th>Produk</th>
-                <th style="width:10%">Qty</th>
-                <th style="width:10%">Satuan</th>
-                <th style="width:10%">Harga</th>
-                <th style="width:10%">Jml Harga</th>
-                <th style="width:3%"></th>
-              </thead>
-              <tbody>
-                <tr id="empty-item-row">
-                  <td colspan="7" class="text-center text-muted"><i>Belum ada item.</i></td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table id="product-list" class="table table-sm table-bordered table-hover">
+                <thead>
+                  <th style="width:3%">No</th>
+                  <th>Produk</th>
+                  <th style="width:10%">Qty</th>
+                  <th style="width:10%">Satuan</th>
+                  <th style="width:10%">Harga</th>
+                  <th style="width:10%">Jml Harga</th>
+                  <th style="width:3%"></th>
+                </thead>
+                <tbody>
+                  <tr id="empty-item-row">
+                    <td colspan="7" class="text-center text-muted"><i>Belum ada item.</i></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

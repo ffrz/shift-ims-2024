@@ -5,7 +5,7 @@
 ])
 @section('right-menu')
   <li class="nav-item">
-    <a href="?print=1" class="btn btn-default"><i class="fa fa-print mr-1"></i>Invoice</a>
+    <a href="?print=1" class="btn btn-default"><i class="fa fa-print mr-1"></i>Nota</a>
     <a href="?print=2" class="btn btn-default"><i class="fa fa-print mr-1"></i>Struk Kecil</a>
   </li>
 @endSection

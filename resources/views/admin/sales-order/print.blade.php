@@ -2,7 +2,7 @@
   use App\Models\Setting;
   $title = '#' . $item->id2Formatted();
 @endphp
-@extends('admin._layouts.print-invoice2')
+@extends('admin._layouts.print-receipt-a4')
 @section('content')
   <table style="width:100%">
     <tr>

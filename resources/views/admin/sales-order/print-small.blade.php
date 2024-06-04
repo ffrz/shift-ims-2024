@@ -2,8 +2,13 @@
   use App\Models\Setting;
   $title = '#' . $item->id2Formatted();
 @endphp
-@extends('admin._layouts.print-invoice')
+@extends('admin._layouts.print-receipt-58')
 @section('content')
+  <div class="no-print text-center m-3">
+      <a class="btn" href="{{ url('admin/sales-order/create') }}">+ Order Baru</a>
+      <a class="btn" href="{{ url('admin/sales-order') }}">&leftarrow; List Order Penjualan</a>
+      <a class="btn" href="{{ url('admin/sales-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
+  </div>
   <table style="width:100%">
     <tr>
       <td class="text-center">
