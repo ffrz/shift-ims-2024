@@ -30,7 +30,7 @@ class StockUpdateController extends Controller
     public function delete($id)
     {
         if (!$item = StockUpdate::find($id))
-            $message = 'Penyesuaian stok tidak ditemukan.';
+            $message = 'Pembaruan stok tidak ditemukan.';
         else {
             $details = StockUpdateDetail::where('update_id', '=', $item->id)->get();
             $quantities = [];

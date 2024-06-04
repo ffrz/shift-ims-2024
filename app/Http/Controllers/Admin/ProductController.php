@@ -62,7 +62,7 @@ class ProductController extends Controller
         $categories = ProductCategory::orderBy('name', 'asc')->get();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
         $items = $q->with(['category', 'supplier'])
-            ->orderBy('id', 'desc')
+            ->orderBy('code', 'asc')
             ->paginate(10);
 
         return view('admin.product.index', compact('items', 'filter', 'suppliers', 'categories'));
