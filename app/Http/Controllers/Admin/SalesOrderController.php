@@ -61,6 +61,20 @@ class SalesOrderController extends Controller
             }
 
             DB::beginTransaction();
+            if (!$item->party_id) {
+                if (!empty($item->party_name)) {
+                    
+                    $party = new Party();
+                    $party->type = Party::TYPE_CUSTOMER;
+                    $party->name = $request->party_name;
+                    $party->phone = $request->party_phone;
+                    $party->address = $request->party_address;
+                    $party->id2 = $party->getNextId2($party->type);
+                    $party->save();
+                    $item->party_id = $party->id;
+                }
+            }
+
             if ($request->action == 'complete' || $request->action == 'cancel') {
                 $item->status = $request->action == 'complete' ? StockUpdate::STATUS_COMPLETED : StockUpdate::STATUS_CANCELED;
                 $item->closed_datetime = current_datetime();
@@ -131,31 +145,9 @@ class SalesOrderController extends Controller
                 $barcodes[$product->barcode] = $product->idFormatted();
             }
         }
-        $customers = Party::where('type', '=', Party::TYPE_CUSTOMER)->orderBy('name', 'asc')->get();
+        $parties = Party::where('type', '=', Party::TYPE_CUSTOMER)->orderBy('name', 'asc')->get();
         $details = $item->details;
-        return view('admin.sales-order.edit', compact('item', 'customers', 'products', 'barcodes', 'details', 'product_code_by_ids'));
-    }
-
-    public function saveDetail(Request $request)
-    {
-        $order = StockUpdate::findOrFail($request->order_id);
-        DB::beginTransaction();
-        DB::delete('delete from stock_update_details where update_id = ?', [$order->id]);
-        foreach ($request->items as $k => $item) {
-            $d = new StockUpdateDetail();
-            $d->id = $k + 1;
-            $d->update_id = $order->id;
-            $d->product_id = $item['id'];
-            $d->quantity = $item['qty'];
-            $d->price = $item['price'];
-            $d->save();
-        }
-        DB::commit();
-        return response()->json([
-            'status' => 'success',
-            'data' => [],
-            'message' => 'Information saved successfully!'
-        ], 200);
+        return view('admin.sales-order.edit', compact('item', 'parties', 'products', 'barcodes', 'details', 'product_code_by_ids'));
     }
 
     public function delete($id)
