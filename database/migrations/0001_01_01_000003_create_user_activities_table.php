@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('type')->default('');
             $table->string('name')->default('');
             $table->text('description');
-            $table->json('data')->nullable()->default(null);
+            $table->longText('data')->nullable()->default(null);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->index('datetime');
