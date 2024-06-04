@@ -50,7 +50,7 @@ class ServiceOrderController extends Controller
                 ->orWhere('device_sn', 'like', '%' . $filter['search'] . '%');
         }
 
-        $q->orderBy('id', 'asc');
+        $q->orderBy('id', 'desc');
 
         $items = $q->paginate(10);
 
