@@ -18,7 +18,8 @@
     width: 100% !important;
 }
 
-.table-sm td, .table-sm th {
+.table-sm td,
+.table-sm th {
     padding-left: .5rem;
     padding-riht: .5rem;
 }
@@ -29,12 +30,19 @@
     color: #888;
 }
 
-body { 
+body {
     overflow-x: hidden;
- }
+}
 
- .table.info td {
+.table.info td {
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     padding: 1px 3px;
- }
+}
+
+.pos-editor #product-list input {
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #888;
+}

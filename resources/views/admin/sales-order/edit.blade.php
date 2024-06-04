@@ -7,7 +7,7 @@ use App\Models\StockUpdate;
     'nav_active' => 'sales_order',
 ])
 @section('content')
-  <form method="POST" id="editor" action="{{ url('admin/sales-order/edit/' . (int) $item->id) }}">
+  <form method="POST" id="editor" class="pos-editor" action="{{ url('admin/sales-order/edit/' . (int) $item->id) }}">
     @csrf
     <input type="hidden" name="id" value="{{ $item->id }}">
     <div class="card">
@@ -18,26 +18,50 @@ use App\Models\StockUpdate;
               <label for="party_id" class="col-sm-2 col-form-label">Pelanggan</label>
               <div class="col-sm-10">
                 <select class="custom-select select2" id="party_id" name="party_id">
-                  <option value="" {{ !$item->party_id ? 'selected' : '' }}>-- Pilih Pelanggan --</option>
-                  @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}"
-                      {{ old('party_id', $item->party_id) == $customer->id ? 'selected' : '' }}>
-                      {{ $customer->name }}
+                  <option value="" {{ !$item->party_id ? 'selected' : '' }}>Pelanggan Baru</option>
+                  @foreach ($parties as $party)
+                    <option value="{{ $party->id }}"
+                      {{ old('party_id', $item->party_id) == $party->id ? 'selected' : '' }}>
+                      {{ $party->idFormatted() }} - {{ $party->name }}
                     </option>
                   @endforeach
                 </select>
               </div>
             </div>
             <div class="form-group row">
-              <label for="phone" class="col-sm-2 col-form-label">Kontak</label>
+              <label for="party_name" class="col-sm-2 col-form-label">Nama</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" name="customer_phone" value="">
+                <input type="text" id="party_name" class="form-control" name="party_name"
+                  value="{{ old('party_name', $item->party_name) }}">
+                @error('party_name')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
               </div>
             </div>
             <div class="form-group row">
-              <label for="address" class="col-sm-2 col-form-label">Alamat</label>
+              <label for="party_phone" class="col-sm-2 col-form-label">Kontak</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" name="customer_address" value="">
+                <input type="text" id="party_phone" class="form-control" name="party_phone"
+                  value="{{ old('party_phone', $item->party_phone) }}">
+                @error('party_phone')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="party_address" class="col-sm-2 col-form-label">Alamat</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="party_address"
+                  value="{{ old('party_address', $item->party_address) }}">
+                @error('party_address')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
               </div>
             </div>
           </div>
@@ -89,12 +113,13 @@ use App\Models\StockUpdate;
             </div>
             <table id="product-list" class="table table-sm table-bordered table-hover">
               <thead>
-                <th>No</th>
+                <th style="width:3%">No</th>
                 <th>Produk</th>
-                <th>Jml</th>
-                <th>Satuan</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
+                <th style="width:10%">Qty</th>
+                <th style="width:10%">Satuan</th>
+                <th style="width:10%">Harga</th>
+                <th style="width:10%">Jml Harga</th>
+                <th style="width:3%"></th>
               </thead>
               <tbody>
                 <tr id="empty-item-row">
@@ -151,10 +176,10 @@ use App\Models\StockUpdate;
 
 @section('footscript')
   <script>
-    let cart_item_by_ids = {};
     let products = {!! json_encode($products) !!};
     let barcodes = {!! json_encode($barcodes) !!};
     let details = {!! json_encode($details) !!};
+    let parties = {!! json_encode($parties) !!}
     let product_code_by_ids = {!! json_encode($product_code_by_ids) !!};
     let total = 0;
     let submit = false;
@@ -216,38 +241,41 @@ use App\Models\StockUpdate;
     }
 
     function addToCart(product, qty) {
-      let item = cart_item_by_ids[product.id];
-      if (cart_item_by_ids[product.id]) {
-        item.qty += qty;
-        $('#qty-' + product.id + ' input').val(toLocaleNumber(item.qty));
-        $('#subtotal-' + product.id).text(toLocaleNumber(item.qty * product.price));
+      qty = Math.abs(qty);
+
+      let $item = $('#item-' + product.id);
+      if ($item.length != 0) {
+        // add to existing item in table
+        let $qty = $item.find('.qty');
+        let $price = $item.find('.price');
+        let newQty = localeNumberToNumber($qty.val()) + qty;
+        $qty.val(toLocaleNumber(newQty));
+        updateSubtotal();
       } else {
-        item = {
-          product: product,
-          qty: qty,
-          price: Number(product.price),
-        };
         $('#empty-item-row').hide();
-        cart_item_by_ids[product.id] = item;
         let $tbody = $('#product-list tbody');
         let row = $tbody.children().length;
         $tbody.append(
-          '<tr id="' + product.id + '" data-id="' + product.id + '">' +
+          '<tr id="item-' + product.id + '">' +
           '<td class="text-right num">' + row + '</td>' +
           '<td>' + product.code + '<input type="hidden" class="product_id" name="product_id[' + row + ']" value="' +
           product.id + '"></td>' +
-          '<td id="qty-' + product.id +
-          '" class="text-right"><input class="text-right qty" onchange="updateSubtotal()" name="qty[' + row +
-          ']" value="' + toLocaleNumber(Math.abs(item.qty)) + '"></td> ' +
+          '<td class="text-right"><input class="text-right qty" onchange="updateSubtotal()" name="qty[' + row +
+          ']" value="' + toLocaleNumber(qty) + '"></td> ' +
           '<td>' + product.uom + '</td>' +
           '<td class="text-right"><input class="text-right price" onchange="updateSubtotal()" name="price[' + row +
-          ']" value="' + toLocaleNumber(item.price) + '"></td>' +
-          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * Math.abs(
-            qty)) + '</td>' +
-          '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-default"><i class="fa fa-cancel"></i></button></td>' +
-          '</tr>');
+          ']" value="' + toLocaleNumber(product.price) + '"></td>' +
+          '<td id="subtotal-' + product.id + '" class="subtotal text-right">' + toLocaleNumber(product.price * qty) +
+          '</td>' +
+          '<td><button onclick="removeCartItem(this)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-cancel"></i></button></td>' +
+          '</tr>'
+        );
+        Inputmask("decimal", Object.assign({
+          allowMinus: false
+        }, INPUTMASK_OPTIONS)).mask("#item-" + product.id + " .qty, #item-" + product.id + " .price");
+        total += product.price * qty;
+        updateTotal();
       }
-      total += product.price * Math.abs(qty);
     }
 
     $('#add-item').click(function(e) {
@@ -265,7 +293,6 @@ use App\Models\StockUpdate;
       let $tr = $(self).parent().parent();
       let $tbody = $tr.parent();
 
-      delete cart_item_by_ids[$tr.data('id')];
       $tr.remove();
 
       // tampilkan item kosong
@@ -285,6 +312,18 @@ use App\Models\StockUpdate;
       updateSubtotal();
     }
 
+    $('#party_id').change(function() {
+      let id = $(this).val();
+      var party = parties.filter(obj => {
+        return obj.id == id;
+      });
+      if (party.length > 0) {
+        $('#party_name').val(party[0].name);
+        $('#party_phone').val(party[0].phone);
+        $('#party_address').val(party[0].address);
+      }
+    });
+
     $(document).ready(function() {
       $(function() {
         $('.select2').select2({});
@@ -298,7 +337,7 @@ use App\Models\StockUpdate;
 
       Inputmask("decimal", Object.assign({
         allowMinus: false
-      }, INPUTMASK_OPTIONS)).mask("#down_payment,#estimated_cost,#total_cost");
+      }, INPUTMASK_OPTIONS)).mask(".qty,.price");
     });
   </script>
 @endsection
