@@ -36,11 +36,11 @@
   </table>
   <table class="mt-3 table table-bordered table-striped table-condensed center-th table-sm" style="width:100%">
     <thead>
-      <th>No</th>
+      <th style="width:1%">No</th>
       <th>Produk</th>
-      <th>Qty</th>
-      <th>Harga</th>
-      <th>Subtotal</th>
+      <th style="width:3cm">Qty</th>
+      <th style="width:3cm">Harga (Rp)</th>
+      <th style="width:3cm">Subtotal (Rp)</th>
     </thead>
     <tbody>
       @php
@@ -70,18 +70,21 @@
       </tr>
     </tfoot>
   </table>
-  <div><i>Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }}</i></div>
   <table style="width:100%;">
     <tr>
       <td style="font-style:italic;">
         Catatan:<br>
         - Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan.<br>
-        - Garansi hangus jika segel rusak, human error, atau force majeure
+        - Garansi hangus jika segel rusak, human error atau force majeure.
+        <br><br>
       </td>
       <td style="width:4cm;text-align:center;">
-        Hormat Kami,<br><br><br><br>
+        Hormat Kami,<br><br><br>
         {{ Auth::user()->fullname }}
       </td>
     </tr>
   </table>
+  <div class="text-muted">
+    Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }} - {{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}
+  </div>
 @endSection

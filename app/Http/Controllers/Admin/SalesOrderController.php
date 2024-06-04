@@ -128,7 +128,7 @@ class SalesOrderController extends Controller
                 return redirect('admin/sales-order/edit/' . $item->id)->with('info', 'Order penjualan telah disimpan.');
             }
 
-            return redirect('admin/sales-order/')->with('info', 'Order penjualan telah selesai.');
+            return redirect('admin/sales-order/detail/' . $item->id)->with('info', 'Order penjualan telah selesai.');
         }
 
         $tmp_products = Product::select(['id', 'code', 'description', 'stock', 'uom', 'price', 'barcode'])
@@ -157,6 +157,9 @@ class SalesOrderController extends Controller
         $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
         if ($request->get('print') == 1) {
             return view('admin.sales-order.print', compact('item', 'details'));
+        }
+        else if ($request->get('print') == 2) {
+            return view('admin.sales-order.print-small', compact('item', 'details'));
         }
         return view('admin.sales-order.detail', compact('item', 'details'));
     }

@@ -1,10 +1,27 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: bold;
+html,
+body {
+    margin: 0 auto;
+    max-width: 21cm;
+    font-size: 10pt;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@media print {
+
+    html,
+    body {
+        height: 100%;
+        position: absolute;
+    }
+}
+
+@media print {
+
+    html.receipt-58,
+    .receipt-58 body {
+        width: 58mm;
+    }
 }
 
 .report-table {
@@ -23,12 +40,6 @@ h6 {
     text-align: center;
 }
 
-body {
-    margin: 0 auto;
-    max-width: 21cm;
-    font-size: 10pt;
-}
-
 .page {
     padding: 0.5cm;
     background: #fff;
@@ -38,9 +49,24 @@ body {
     text-align: center;
 }
 
+table {
+    margin: 0;
+    padding: 0;
+}
+
 .report .table-bordered thead th,
 .report .table-bordered tfoot th,
 .report .table-bordered tbody td {
-    border:1px solid #000;
+    border: 1px solid #000;
     background: #fff;
+}
+
+hr {
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid #000;
+}
+
+.text-center {
+    text-align: center;
 }
