@@ -5,6 +5,8 @@
 ])
 @section('right-menu')
   <li class="nav-item">
+    <a href="<?= url('/admin/sales-order/create') ?>" class="btn plus-btn btn-primary mr-1" title="Baru"><i
+        class="fa fa-plus"></i></a>
     <a href="?print=1" class="btn btn-default"><i class="fa fa-print mr-1"></i>Nota</a>
     <a href="?print=2" class="btn btn-default"><i class="fa fa-print mr-1"></i>Struk Kecil</a>
   </li>
@@ -24,7 +26,8 @@
               <td style="width:5%;white-space:nowrap;">Kode Pelanggan</td>
               <td style="width:1%">:</td>
               @if ($item->party)
-                <td><a href="{{ url('admin/customer/detail/' . $item->party_id) }}">{{ $item->party->idFormatted() }}</a></td>
+                <td><a href="{{ url('admin/customer/detail/' . $item->party_id) }}">{{ $item->party->idFormatted() }}</a>
+                </td>
               @else
                 <td></td>
               @endif
