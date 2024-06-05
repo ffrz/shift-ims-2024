@@ -17,12 +17,26 @@ use Illuminate\Support\Facades\Validator;
 class PurchaseOrderController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = StockUpdate::with('party')->whereRaw('type = ' . StockUpdate::TYPE_PURCHASE_ORDER)
+        $filter = [
+            'status' => (int)$request->get('status', 0),
+            'search' => $request->get('search'),
+        ];
+
+        $q = StockUpdate::query();
+        if ($filter['status'] != -1) {
+            $q->where('status', '=', $filter['status']);
+        }
+
+        if (!empty($filter['search'])) {
+            $q->where('party_name', 'like', '%' . $filter['search'] . '%');
+        }
+
+        $items = $q->with('party')->whereRaw('type = ' . StockUpdate::TYPE_PURCHASE_ORDER)
             ->orderBy('id', 'desc')
             ->paginate(10);
-        $filter = [];
+            
         return view('admin.purchase-order.index', compact('items', 'filter'));
     }
 

@@ -112,9 +112,19 @@ class StockUpdate extends BaseModel
 
     public function statusFormatted()
     {
-        switch ($this->status) {
+        return static::formatStatus($this->status);
+    }
+
+    public function typeFormatted()
+    {
+        return static::formatType($this->type);
+    }
+
+    public static function formatStatus($status)
+    {
+        switch ($status) {
             case self::STATUS_OPEN:
-                return 'Disimpan';
+                return 'Aktif';
             case self::STATUS_COMPLETED:
                 return 'Selesai';
             case self::STATUS_CANCELED:
@@ -124,9 +134,9 @@ class StockUpdate extends BaseModel
         return 'Unknown Status';
     }
 
-    public function typeFormatted()
+    public static function formatType($type)
     {
-        switch ($this->type) {
+        switch ($type) {
             case self::TYPE_SINGLE_ADJUSTMENT:
                 return 'Edit Stok';
             case self::TYPE_MASS_ADJUSTMENT:
@@ -141,7 +151,7 @@ class StockUpdate extends BaseModel
                 return 'Retur Penjualan';
         }
 
-        return 'Unknown Status';
+        return 'Unknown Type';
     }
 
     public function details()

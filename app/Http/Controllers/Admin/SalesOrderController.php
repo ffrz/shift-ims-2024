@@ -17,12 +17,27 @@ use Illuminate\Support\Facades\Validator;
 class SalesOrderController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = StockUpdate::with('party')->whereRaw('type = ' . StockUpdate::TYPE_SALES_ORDER)
+        $filter = [
+            'status' => (int)$request->get('status', 0),
+            'search' => $request->get('search'),
+        ];
+
+        $q = StockUpdate::query();
+        if ($filter['status'] != -1) {
+            $q->where('status', '=', $filter['status']);
+        }
+
+        if (!empty($filter['search'])) {
+            $q->where('party_name', 'like', '%' . $filter['search'] . '%');
+        }
+
+        $items = $q->with('party')
+            ->whereRaw('type = ' . StockUpdate::TYPE_SALES_ORDER)
             ->orderBy('id', 'desc')
             ->paginate(10);
-        $filter = [];
+
         return view('admin.sales-order.index', compact('items', 'filter'));
     }
 
@@ -63,7 +78,7 @@ class SalesOrderController extends Controller
             DB::beginTransaction();
             if (!$item->party_id) {
                 if (!empty($item->party_name)) {
-                    
+
                     $party = new Party();
                     $party->type = Party::TYPE_CUSTOMER;
                     $party->name = $request->party_name;
@@ -86,7 +101,7 @@ class SalesOrderController extends Controller
 
             $item->total_cost = 0;
             $item->total_price = 0;
-            
+
             DB::delete('delete from stock_update_details where update_id = ?', [$item->id]);
             if (!empty($request->product_id)) {
                 foreach ($request->product_id as $row_id => $product_id) {
@@ -157,8 +172,7 @@ class SalesOrderController extends Controller
         $details = StockUpdateDetail::with(['product'])->where('update_id', '=', $item->id)->get();
         if ($request->get('print') == 1) {
             return view('admin.sales-order.print', compact('item', 'details'));
-        }
-        else if ($request->get('print') == 2) {
+        } else if ($request->get('print') == 2) {
             return view('admin.sales-order.print-small', compact('item', 'details'));
         }
         return view('admin.sales-order.detail', compact('item', 'details'));

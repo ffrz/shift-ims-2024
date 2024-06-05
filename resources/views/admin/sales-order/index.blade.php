@@ -14,100 +14,55 @@
 @endSection
 
 @section('content')
-  @if (false)
-    <div class="accordion" id="filterBox">
-      <div class="card">
-        <form mmethod="GET" action="?">
-          <div class="card-header" id="filterHeading">
-            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
-              data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
-              <i class="fa fa-filter mr-2"> </i> Penyaringan
-            </button>
-          </div>
-          <div id="filterCollapse" class="collapse" aria-labelledby="filterHeading" data-parent="#filterBox">
-            <div class="card-body">
-              <div class="form-row">
-                <div class="form-group col-md-2">
-                  <label for="order_status">Status Order:</label>
-                  <select class="custom-select select2 form-control" id="order_status" name="order_status">
-                    <option value="-1" <?= $filter['order_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
-                    <option value="{{ ServiceOrder::ORDER_STATUS_ACTIVE }}"
-                      {{ $filter['order_status'] == ServiceOrder::ORDER_STATUS_ACTIVE ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_ACTIVE) }}</option>
-                    <option value="{{ ServiceOrder::ORDER_STATUS_COMPLETED }}"
-                      {{ $filter['order_status'] == ServiceOrder::ORDER_STATUS_COMPLETED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_COMPLETED) }}</option>
-                    <option value="{{ ServiceOrder::ORDER_STATUS_CANCELED }}"
-                      {{ $filter['order_status'] == ServiceOrder::ORDER_STATUS_CANCELED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatOrderStatus(ServiceOrder::ORDER_STATUS_CANCELED) }}</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="service_status">Status Servis:</label>
-                  <select class="custom-select select2 form-control" id="service_status" name="service_status">
-                    <option value="-1" <?= $filter['service_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
-                    <option value="{{ ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED }}"
-                      {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_NOT_YET_CHECKED) }}</option>
-                    <option value="{{ ServiceOrder::SERVICE_STATUS_CHECKED }}"
-                      {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_CHECKED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_CHECKED) }}</option>
-                    <option value="{{ ServiceOrder::SERVICE_STATUS_WORKED }}"
-                      {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_WORKED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_WORKED) }}</option>
-                    <option value="{{ ServiceOrder::SERVICE_STATUS_SUCCESS }}"
-                      {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_SUCCESS ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_SUCCESS) }}</option>
-                    <option value="{{ ServiceOrder::SERVICE_STATUS_FAILED }}"
-                      {{ $filter['service_status'] == ServiceOrder::SERVICE_STATUS_FAILED ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatServiceStatus(ServiceOrder::SERVICE_STATUS_FAILED) }}</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="payment_status">Status Pembayaran:</label>
-                  <select class="custom-select select2 form-control" id="payment_status" name="payment_status">
-                    <option value="-1" <?= $filter['payment_status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
-                    <option value="{{ ServiceOrder::PAYMENT_STATUS_UNPAID }}"
-                      {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_UNPAID ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_UNPAID) }}</option>
-                    <option value="{{ ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID }}"
-                      {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_PARTIALLY_PAID) }}</option>
-                    <option value="{{ ServiceOrder::PAYMENT_STATUS_FULLY_PAID }}"
-                      {{ $filter['payment_status'] == ServiceOrder::PAYMENT_STATUS_FULLY_PAID ? 'selected' : '' }}>
-                      {{ ServiceOrder::formatPaymentStatus(ServiceOrder::PAYMENT_STATUS_FULLY_PAID) }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary"><i class="fas fa-check mr-2"></i> Terapkan</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  @endif
   <div class="card card-light">
     <div class="card-body">
-      <div class="row mt-3">
+      <form action="?">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group form-inline">
+              <label class="mr-2" for="status">Status Order:</label>
+              <select class="form-control" id="status" name="status" onchange="this.form.submit()">
+                <option value="-1" <?= $filter['status'] == -1 ? 'selected' : '' ?>>Semua Status</option>
+                <option value="{{ StockUpdate::STATUS_OPEN }}"
+                  {{ $filter['status'] == StockUpdate::STATUS_OPEN ? 'selected' : '' }}>
+                  {{ StockUpdate::formatStatus(StockUpdate::STATUS_OPEN) }}</option>
+                <option value="{{ StockUpdate::STATUS_COMPLETED }}"
+                  {{ $filter['status'] == StockUpdate::STATUS_COMPLETED ? 'selected' : '' }}>
+                  {{ StockUpdate::formatStatus(StockUpdate::STATUS_COMPLETED) }}</option>
+                <option value="{{ StockUpdate::STATUS_CANCELED }}"
+                  {{ $filter['status'] == StockUpdate::STATUS_CANCELED ? 'selected' : '' }}>
+                  {{ StockUpdate::formatStatus(StockUpdate::STATUS_CANCELED) }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <div class="form-group form-inline">
+              <label class="mr-2" for="search">Cari:</label>
+              <input type="text" class="form-control" name="search" id="search" value="{{ $filter['search'] }}"
+                autofocus placeholder="Cari pelanggan">
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
         <div class="col-md-12">
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Tanggal</th>
-                  <th>Status</th>
+                  <th style="width:12%;">#</th>
+                  <th style="width:12%;">Tanggal</th>
+                  <th style="width:1%;">Status</th>
                   <th>Pelanggan</th>
                   <th>Total</th>
                   <th>Piutang</th>
-                  <th>Aksi</th>
+                  <th style="width:1%;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 @forelse ($items as $item)
-                  <tr class="{{ $item->status == StockUpdate::STATUS_CANCELED ? 'table-danger' : ($item->status == StockUpdate::STATUS_OPEN ? 'table-warning' : '') }}">
+                  <tr
+                    class="{{ $item->status == StockUpdate::STATUS_CANCELED ? 'table-danger' : ($item->status == StockUpdate::STATUS_OPEN ? 'table-warning' : '') }}">
                     <td>{{ $item->idFormatted() }}</td>
                     <td>{{ format_datetime($item->datetime) }}</td>
                     <td>{{ $item->statusFormatted() }}</td>
@@ -124,8 +79,8 @@
                               class="fa fa-edit" title="Edit"></i></a>
                         @endif
                         <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                          href="<?= url("/admin/stock-update/delete/$item->id?goto=" . url('admin/sales-order')) ?>" class="btn btn-danger btn-sm"><i
-                            class="fa fa-trash" title="Hapus"></i></a>
+                          href="<?= url("/admin/stock-update/delete/$item->id?goto=" . url('admin/sales-order')) ?>"
+                          class="btn btn-danger btn-sm"><i class="fa fa-trash" title="Hapus"></i></a>
                       </div>
                     </td>
                   </tr>
