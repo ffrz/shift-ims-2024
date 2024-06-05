@@ -11,7 +11,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>{{ $data['active_service_order_count'] }}</h3>
+              <h4>{{ $data['active_service_order_count'] }}</h4>
               <p>Order Servis Aktif</p>
             </div>
             <div class="icon">
@@ -24,7 +24,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>{{ $data['active_sales_count'] }}</h3>
+              <h4>{{ $data['active_sales_count'] }}</h4>
               <p>Order Penjualan Aktif</p>
             </div>
             <div class="icon">
@@ -37,7 +37,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3><sup style="font-size: 20px">Rp. </sup>{{ format_number($data['total_sales_this_month']) }}</h3>
+              <h4><sup style="font-size: 20px">Rp. </sup>{{ format_number($data['total_sales_this_month']) }}</h4>
               <p>Omset Penjualan Bulan Ini</p>
             </div>
             <div class="icon">
@@ -49,7 +49,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>{{ $data['sales_count_this_month'] }}</h3>
+              <h4>{{ $data['sales_count_this_month'] }}</h4>
               <p>Order Penjualan Bulan Ini</p>
             </div>
             <div class="icon">
@@ -60,10 +60,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-6 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>Rp. {{ format_number($data['total_inventory_asset']) }}</h3>
+              <h4>Rp. {{ format_number($data['total_inventory_asset']) }}</h4>
               <p>Total Modal Inventori</p>
             </div>
             <div class="icon">
@@ -73,10 +73,10 @@
                 class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-6 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>Rp. {{ format_number($data['total_inventory_asset_price']) }}</h3>
+              <h4>Rp. {{ format_number($data['total_inventory_asset_price']) }}</h4>
               <p>Total Nilai Jual Inventori</p>
             </div>
             <div class="icon">

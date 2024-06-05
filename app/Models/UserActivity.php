@@ -19,6 +19,7 @@ class UserActivity extends Model
     public const PRODUCT_MANAGEMENT = 'product-mgmt';
     public const SUPPLIER_MANAGEMENT = 'supplier-mgmt';
     public const CUSTOMER_MANAGEMENT = 'customer-mgmt';
+    public const COST_CATEGORY_MANAGEMENT = 'cost-category-mgmt';
 
     private static $_types = [
         self::AUTHENTICATION => 'Otentikasi',
@@ -30,6 +31,7 @@ class UserActivity extends Model
         self::PRODUCT_MANAGEMENT => 'Pengelolaan Produk',
         self::CUSTOMER_MANAGEMENT => 'Pengelolaan Pelanggan',
         self::SUPPLIER_MANAGEMENT => 'Pengelolaan Pemasok',
+        self::COST_CATEGORY_MANAGEMENT => 'Pengelolaan Kategori Biaya',
     ];
 
     protected $casts = [
@@ -86,16 +88,8 @@ class UserActivity extends Model
 
     public static function formatType($type)
     {
-        switch ($type) {
-            case self::AUTHENTICATION: return 'Otentikasi';
-            case self::SETTINGS: return 'Pengaturan';
-            case self::USER_MANAGEMENT: return 'Pengelolaan Pengguna';
-            case self::USER_GROUP_MANAGEMENT: return 'Pengelolaan Grup Pengguna';
-            case self::SERVICE_ORDER_MANAGEMENT: return 'Pengelolaan Order Servis';
-            case self::PRODUCT_CATEGORY_MANAGEMENT: return 'Pengelolaan Kategori Produk';
-            case self::PRODUCT_MANAGEMENT: return 'Pengelolaan Produk';
-            case self::CUSTOMER_MANAGEMENT: return 'Pengelolaan Pelanggan';
-            case self::SUPPLIER_MANAGEMENT: return 'Pengelolaan Pemasok';
+        if (isset(self::$_types[$type])) {
+            return self::$_types[$type];
         }
 
         throw new Exception('tipe event tidak terdaftar');

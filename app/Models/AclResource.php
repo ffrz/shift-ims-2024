@@ -11,6 +11,7 @@ class AclResource
     const INVENTORY_MENU = 'inventory-menu';
     const SERVICE_MENU = 'service-menu';
     const REPORT_MENU = 'report-menu';
+    const COST_MENU = 'cost-menu';
 
     // system
     const VIEW_REPORTS = 'view-reports'; // sementara digrup, mungkin kedepannya diset spesifik
@@ -26,6 +27,8 @@ class AclResource
     const DELETE_SERVICE_ORDER = 'delete-service-order';
 
     const PRODUCT_CATEGORY_MANAGEMENT = 'product-category-management';
+
+    const COST_CATEGORY_MANAGEMENT = 'cost-category-management';
 
     const PRODUCT_LIST = 'product-list';
     const ADD_PRODUCT = 'add-product';

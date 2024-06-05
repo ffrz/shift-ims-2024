@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CostCategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductCategoryController;
@@ -142,6 +143,12 @@ Route::middleware([Authenticate::class, OnlyAdmin::class])->prefix('admin')->gro
         Route::match(['get', 'post'], 'create', 'create');
         Route::get('print/{id}', 'print');
         Route::match(['get', 'post'], 'edit/{id}', 'edit');
+    });
+
+    Route::controller(CostCategoryController::class)->prefix('cost-category')->group(function () {
+        Route::get('', 'index');
+        Route::match(['get', 'post'], 'edit/{id}', 'edit');
+        Route::get('delete/{id}', 'delete');
     });
 
     Route::get('refresh-csrf', function () {

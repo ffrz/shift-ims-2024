@@ -150,6 +150,37 @@ if (!isset($menu_active)) {
         @endif
         {{-- End of Purchasing Menu --}}
 
+        {{-- Cost Menu Begin --}}
+        @if (Auth::user()->canAccess(AclResource::COST_MENU))
+          <li class="nav-item {{ $menu_active == 'cost' ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $menu_active == 'cost' ? 'active' : '' }}">
+              <i class="nav-icon fas fa-money-bill"></i>
+              <p>
+                Pengeluaran
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('/admin/cost') }}"
+                  class="nav-link {{ $nav_active == 'cost' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-money-bills"></i>
+                  <p>Pengeluaran</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('/admin/cost-category') }}"
+                  class="nav-link {{ $nav_active == 'cost-category' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-boxes"></i>
+                  <p>Kategori Pengeluaran</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+        @endif
+        {{-- End of Cost Menu --}}
+
         {{-- Report Menu --}}
         @if (Auth::user()->canAccess(AclResource::REPORT_MENU))
           <li class="nav-item {{ $menu_active == 'report' ? 'menu-open' : '' }}">
