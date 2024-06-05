@@ -35,6 +35,58 @@
           </div>
         </div>
         <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3><sup style="font-size: 20px">Rp. </sup>{{ format_number($data['total_sales_this_month']) }}</h3>
+              <p>Omset Penjualan Bulan Ini</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-money-bills"></i>
+            </div>
+            <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>{{ $data['sales_count_this_month'] }}</h3>
+              <p>Order Penjualan Bulan Ini</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-receipt"></i>
+            </div>
+            <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>Rp. {{ format_number($data['total_inventory_asset']) }}</h3>
+              <p>Total Modal Inventori</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-boxes"></i>
+            </div>
+            <a href="/admin/product" class="small-box-footer"><i
+                class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>Rp. {{ format_number($data['total_inventory_asset_price']) }}</h3>
+              <p>Total Nilai Jual Inventori</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-boxes"></i>
+            </div>
+            <a href="/admin/product" class="small-box-footer"><i
+                class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        {{-- <div class="col-lg-3 col-6">
           <div class="small-box bg-success">
             <div class="inner">
               <h3><sup style="font-size: 20px">Rp. </sup>{{ format_number($data['total_sales_this_month']) }}</h3>
@@ -57,7 +109,7 @@
             </div>
             <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
           </div>
-        </div>
+        </div> --}}
       </div>
     </div>
   </section>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ServiceOrder;
 use App\Models\StockUpdate;
 use App\Models\User;
@@ -37,11 +38,21 @@ class DashboardController extends Controller
             'status' => StockUpdate::STATUS_OPEN,
         ])[0]->count;
 
+        $total_inventory_asset = DB::select('select ifnull(sum(stock*cost), 0) as sum from products where type=:type and active=1 and stock > 0', [
+            'type' => Product::STOCKED
+        ])[0]->sum;
+
+        $total_inventory_asset_price = DB::select('select ifnull(sum(stock*price), 0) as sum from products where type=:type and active=1 and stock > 0', [
+            'type' => Product::STOCKED
+        ])[0]->sum;
+
         $data = [
             'active_service_order_count' => ServiceOrder::where('order_status', '=', 'active')->count(),
             'total_sales_this_month' => $total_sales_this_month,
             'sales_count_this_month' => $sales_count_this_month,
             'active_sales_count' => $active_sales_count,
+            'total_inventory_asset' => $total_inventory_asset,
+            'total_inventory_asset_price' => $total_inventory_asset_price,
         ];
         
         return view('admin.dashboard.index', compact('data'));
