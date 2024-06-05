@@ -117,7 +117,7 @@ class ServiceOrderController extends Controller
         UserActivity::log(
             UserActivity::SERVICE_ORDER_MANAGEMENT,
             'Memperbarui status servis',
-            'Status Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
+            'Status Order servis ' . $item->idFormatted() . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
             $item->toArray()
         );
 
@@ -237,12 +237,12 @@ class ServiceOrderController extends Controller
             UserActivity::log(
                 UserActivity::SERVICE_ORDER_MANAGEMENT,
                 ($id == 0 ? 'Tambah' : 'Perbarui') . ' Order Servis',
-                'Order servis ' . e(ServiceOrder::formatOrderId($item->id)) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
+                'Order servis ' . e($item->idFormatted()) . ' telah ' . ($id == 0 ? 'dibuat' : 'diperbarui'),
                 $data
             );
             DB::commit();
 
-            return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Order servis ' . ServiceOrder::formatOrderId($item->id) . ' telah disimpan.');
+            return redirect('admin/service-order/detail/' . $item->id)->with('info', 'Order servis ' . $item->idFormatted() . ' telah disimpan.');
         }
 
         $device_types = ServiceOrder::groupBy('device_type')->orderBy('device_type', 'asc')
