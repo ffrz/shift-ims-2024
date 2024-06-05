@@ -265,7 +265,7 @@ class ServiceOrderController extends Controller
         $item = ServiceOrder::findOrFail($id);
 
         if ($item->delete($id)) {
-            $message = 'Order #' . e($item->orderId()) . ' telah dihapus.';
+            $message = 'Order #' . e($item->idFormatted()) . ' telah dihapus.';
             UserActivity::log(
                 UserActivity::SERVICE_ORDER_MANAGEMENT,
                 'Hapus Order',

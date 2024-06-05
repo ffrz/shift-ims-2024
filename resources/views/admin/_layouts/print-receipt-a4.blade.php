@@ -11,13 +11,9 @@
 </head>
 
 <body>
-  <section class="invoice">
-    <div class="page">
-      @yield('content')
-    </div>
-  </section>
+  @yield('content')
   <script>
-    //window.addEventListener("load", window.print());
+    window.addEventListener("load", window.print());
   </script>
 </body>
 

@@ -300,7 +300,7 @@ $title = ($item->id ? 'Edit' : 'Buat') . ' Order Servis';
           <div class="form-group">
             <label for="id">#No Order:</label>
             <input type="text" class="form-control" id="id" name=""
-              value="{{ $item->id ? ServiceOrder::formatOrderId($item->id) : '-- otomatis --' }}" readonly>
+              value="{{ $item->id ? $item->idFormatted() : '-- otomatis --' }}" readonly>
           </div>
           <div class="form-group">
             <label for="order_status">Status:</label>

@@ -55,14 +55,9 @@ class ServiceOrder extends BaseModel
         $this->closed_by_uid = Auth::user()->id;
     }
 
-    public function orderId()
+    public function idFormatted()
     {
-        return self::formatOrderId($this->id);
-    }
-
-    static function formatOrderId($id)
-    {
-        return 'SVC-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+        return 'SVC-' . date('Ymd', strtotime($this->date_created)) . '-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
 
     static function formatOrderStatus($status)

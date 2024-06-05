@@ -10,11 +10,7 @@
 </head>
 
 <body>
-  <div class="wrapper">
-    <section class="invoice">
-      @yield('content')
-    </section>
-  </div>
+  @yield('content')
   <script>
     window.addEventListener("load", window.print());
   </script>

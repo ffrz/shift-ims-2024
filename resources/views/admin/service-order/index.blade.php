@@ -121,7 +121,7 @@
                 <tbody>
                   @forelse ($items as $item)
                     <tr>
-                      <td>{{ $item->formatOrderId($item->id) }}</td>
+                      <td>{{ $item->idFormatted() }}</td>
                       <td>{{ $item->date_received }}</td>
                       <td>{{ $item->customer_name }}</td>
                       <td>{{ $item->customer_phone }}</td>

@@ -23,7 +23,7 @@ $title = 'Rincian Order Servis';
               <tr>
                 <td style="width:30%"># Order</td>
                 <td style="width:2%">:</td>
-                <td>{{ $item->orderId() }}</td>
+                <td>{{ $item->idFormatted() }}</td>
               </tr>
               <tr>
                 <td>Status</td>

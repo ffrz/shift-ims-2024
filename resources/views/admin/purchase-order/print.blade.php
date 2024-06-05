@@ -1,6 +1,6 @@
 <?php use App\Models\Setting; ?>
 @extends('admin._layouts.print-invoice', [
-    'title' => 'Cetak Kartu Servis #' . $item->orderId(),
+    'title' => 'Cetak Kartu Servis #' . $item->idFormatted(),
 ])
 
 @section('content')
@@ -21,7 +21,7 @@
     <hr>
     <div style="width:58mm">
       <div>
-        #{{ $item->orderId() }} | {{ format_date($item->date_received) }}<br>
+        #{{ $item->idFormatted() }} | {{ format_date($item->date_received) }}<br>
         Atas Nama: {{ $item->customer_name }} - {{ $item->customer_address }}<br>
         HP/WA: {{ $item->customer_phone }}
       </div>

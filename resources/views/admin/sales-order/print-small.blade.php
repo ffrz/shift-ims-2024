@@ -5,10 +5,11 @@
 @extends('admin._layouts.print-receipt-58')
 @section('content')
   <div class="no-print text-center">
-      <a class="btn" href="{{ url('admin/sales-order/create') }}">+ Order Baru</a>
-      <a class="btn" href="{{ url('admin/sales-order') }}">&leftarrow; List Order Penjualan</a>
-      <a class="btn" href="{{ url('admin/sales-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
-      <br><br><br>
+    <br>
+    <a class="btn" href="{{ url('admin/sales-order/create') }}">+ Order Baru</a>
+    <a class="btn" href="{{ url('admin/sales-order') }}">&leftarrow; List Order Penjualan</a>
+    <a class="btn" href="{{ url('admin/sales-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
+    <br><br><br>
   </div>
   <table style="width:100%">
     <tr>
@@ -24,6 +25,9 @@
         @endif
         @if (!empty(Setting::value('company.phone')))
           Tlp. {{ Setting::value('company.phone') }}<br>
+        @endif
+        @if (!empty(Setting::value('company.website')))
+          Tlp. {{ Setting::value('company.website') }}<br>
         @endif
         <hr>
       </td>

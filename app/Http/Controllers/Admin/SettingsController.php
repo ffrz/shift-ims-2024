@@ -46,6 +46,7 @@ class SettingsController extends Controller
         Setting::setValue('company.phone', $request->post('company_phone', ''));
         Setting::setValue('company.owner', $request->post('company_owner', ''));
         Setting::setValue('company.headline', $request->post('company_headline', ''));
+        Setting::setValue('company.website', $request->post('company_website', ''));
         DB::commit();
 
         $data = [

@@ -5,6 +5,7 @@
 @extends('admin._layouts.print-receipt-a4')
 @section('content')
   <div class="no-print text-center">
+    <br>
     <a class="btn" href="{{ url('admin/sales-order/create') }}">+ Order Baru</a>
     <a class="btn" href="{{ url('admin/sales-order') }}">&leftarrow; List Order Penjualan</a>
     <a class="btn" href="{{ url('admin/sales-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
@@ -14,36 +15,46 @@
   <table style="width:100%">
     <tr>
       <td>
-        <h5 class="m-0">{{ Setting::value('company.name') }}</h5>
-        @if (!empty(Setting::value('company.headline')))
-          <h6 class="m-0">{{ Setting::value('company.headline') }}</h6>
-        @endif
-        @if (!empty(Setting::value('company.address')))
-          <i>{{ Setting::value('company.address') }}<br>
-        @endif
-        @if (!empty(Setting::value('company.phone')))
-          HP/WA {{ Setting::value('company.phone') }}<br>
-        @endif
-        @if (!empty(Setting::value('company.website')))
-          HP/WA {{ Setting::value('company.website') }}
-        @endif
-        </i>
+        <img src="{{ Setting::value('company.logo_path', url('/dist/img/logo.png')) }}" alt="" width="48"
+          height="48">
       </td>
-      <td style="width:40%;border-left:1px solid #888;padding-left:10px;">
-        <div><b>{{ $title }}</b></div>
+      <td>
+        <h5 class="m-0 text-primary">{{ Setting::value('company.name') }}</h5>
+        @if (!empty(Setting::value('company.headline')))
+          <h6 class="m-0 text-primary">{{ Setting::value('company.headline') }}</h6>
+        @endif
+        <i>
+          @if (!empty(Setting::value('company.address')))
+            {{ Setting::value('company.address') }}<br>
+          @endif
+          @if (!empty(Setting::value('company.phone')))
+            Telp. {{ Setting::value('company.phone') }}
+          @endif
+          @if (!empty(Setting::value('company.website')))
+            - {{ Setting::value('company.website') }}
+          @endif
+        </i>
+        <br>
+      </td>
+      <td style="width:35%;;padding-left:10px;">
         <table>
+          <tr>
+            <td>No. Invoice</td>
+            <td>:</td>
+            <td>{{ $item->id2Formatted() }}</td>
+          </tr>
           <tr>
             <td>Pelanggan</td>
             <td>:</td>
             <td>{{ $item->party_name }}</td>
           </tr>
           <tr>
-            <td>No Telepon</td>
+            <td>No. Telepon</td>
             <td>:</td>
             <td>{{ $item->party_phone }}</td>
           </tr>
           <tr>
-            <td>Aalamat</td>
+            <td>Alamat</td>
             <td>:</td>
             <td>{{ $item->party_address }}</td>
           </tr>
@@ -91,10 +102,12 @@
   <br>
   <table style="width:100%;">
     <tr>
-      <td style="font-style:italic;">
-        Catatan:<br>
-        - Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan.<br>
-        - Garansi hangus jika segel rusak, human error atau force majeure.<br>
+      <td>
+        <div class="warning-notes">
+          Catatan:<br>
+          - Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan.<br>
+          - Garansi hangus jika segel rusak, human error atau force majeure.<br>
+        </div>
         <br>
         <small>Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }} -
           {{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}</small>

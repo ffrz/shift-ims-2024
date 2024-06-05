@@ -1,45 +1,70 @@
-<?php use App\Models\Setting; ?>
-@extends('admin._layouts.print-invoice', [
-    'title' => 'Cetak Kartu Servis #' . $item->orderId(),
-])
+@php
+  use App\Models\Setting;
+  $title = 'Kartu Servis: #' . $item->idFormatted();
+@endphp
+@extends('admin._layouts.print-service-note', ['title' => $title])
 
 @section('content')
-  <style>
-    hr {
-      border: 1px solid black;
-    }
-
-    *,
-    h4 {
-      font-weight: bold;
-    }
-  </style>
-  <h4>{{ Setting::value('app.business_name') }}</h4>
-  <div>{{ Setting::value('app.business_address') }}</div>
-  <div>{{ Setting::value('app.business_phone') }}</div>
-  @for ($i = 1; $i <= 2; $i++)
-    <hr>
-    <div style="width:58mm">
-      <div>
-        #{{ $item->orderId() }} | {{ format_date($item->date_received) }}<br>
-        Atas Nama: {{ $item->customer_name }} - {{ $item->customer_address }}<br>
-        HP/WA: {{ $item->customer_phone }}
-      </div>
-      <div>
-        Perangkat: {{ $item->device }} <br>
-        Kelengkapan: {{ $item->equipments }} <br>
-        Kendala: {{ $item->problems }} <br>
-        Tindakan: {{ $item->actions }} <br>
-        @if ($item->down_payment > 0)
-          Uang Muka: {{ format_number($item->down_payment) }}
+  <div class="no-print text-center">
+    <br>
+    <a class="btn" href="{{ url('admin/service-order/edit') }}">+ Order Baru</a>
+    <a class="btn" href="{{ url('admin/service-order') }}">&leftarrow; List Order Servis</a>
+    <a class="btn" href="{{ url('admin/service-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
+    <br><br><br>
+  </div>
+  <table style="width:100%">
+    <tr>
+      <td>
+        <img src="{{ Setting::value('company.logo_path', url('/dist/img/logo.png')) }}" alt="" width="42"
+          height="42">
+      </td>
+      <td>
+        <h5 class="m-0 text-primary">{{ Setting::value('company.name') }}</h5>
+        @if (!empty(Setting::value('company.headline')))
+          <h6 class="m-0">{{ Setting::value('company.headline') }}</h6>
         @endif
-        @if ($item->estimated_cost > 0)
-          Biaya Perkiraan: Rp. {{ format_number($item->estimated_cost) }}
-        @endif
-        @if ($item->notes > 0)
-          !! {{ format_number($item->notes) }}
-        @endif
-      </div>
-    </div>
-  @endfor
+        <i>
+          @if (!empty(Setting::value('company.address')))
+            {{ Setting::value('company.address') }}
+          @endif
+          @if (!empty(Setting::value('company.phone')))
+            - Telp. {{ Setting::value('company.phone') }}
+          @endif
+          @if (!empty(Setting::value('company.website')))
+            - {{ Setting::value('company.website') }}
+          @endif
+        </i>
+      </td>
+      <td class="text-right va-bottom">
+        <h6 class="text-primary">TANDA TERIMA SERVIS</h6>
+        {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }}
+        <small><br>{{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}</small>
+      </td>
+    </tr>
+  </table>
+  <hr style="border-style:double;margin:3px 0;">
+  @include('admin.service-order._service-note-main-content')
+  <table style="width:100%;font-size:9pt;">
+    <tr>
+      <td style="vertical-align:top;">
+        <div class="warning-notes">
+          CATATAN:<br>
+          - Barang yang dititipkan dan tidak diambil dalam waktu 30 hari diluar tanggung jawab kami.<br>
+          - Garansi mulai dihitung sejak tanggal selesai servis.
+          <br>
+        </div>
+      </td>
+      <td style="width:4cm;text-align:center;">
+        Diterima,<br><br>
+        <b>{{ Auth::user()->fullname }}</b>
+      </td>
+    </tr>
+  </table>
+  <hr style="margin:5px 0;">
+  <h6>TANDA TERIMA SERVIS - {{ Str::upper(Setting::value('company.name')) }}</h6>
+  <div> <small>Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }} -
+      {{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}</small></div>
+  <div style="font-size:9pt;">
+    @include('admin.service-order._service-note-main-content')
+  </div>
 @endSection

@@ -90,6 +90,16 @@
                 @enderror
               </div>
               <div class="form-group">
+                <label for="company_website">Website</label>
+                <input type="text" class="form-control @error('company_website') is-invalid @enderror" id="company_website"
+                  placeholder="www.perusahaan.com" name="company_website" value="{{ Setting::value('company.website') }}">
+                @error('company_website')
+                  <span class="text-danger">
+                    {{ $message }}
+                  </span>
+                @enderror
+              </div>
+              <div class="form-group">
                 <label for="company_address">Alamat</label>
                 <textarea class="form-control" id="company_address" name="company_address">{{ Setting::value('company.address') }}</textarea>
               </div>

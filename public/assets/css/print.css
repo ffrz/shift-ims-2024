@@ -62,7 +62,8 @@ hr {
         width: 58mm;
     }
 
-    html.page-a4, .page-a4 body {
+    html.page-a4,
+    .page-a4 body {
         width: 21cm;
     }
 
@@ -91,6 +92,59 @@ hr {
     border-color: #ccc;
 }
 
-h1, h2, h3, h4, h5, h6 { margin: 0; padding: 0; font-weight: bold;}
-h5 {font-size: 12pt; }
-h6 {font-size: 11pt; }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+h5 {
+    font-size: 12pt;
+}
+
+h6 {
+    font-size: 11pt;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+table.info {
+    margin: 10px 0;
+}
+
+table.info table td {
+    border: none;
+    padding: 2px 5px;
+    border-bottom: 1px solid #888;
+}
+
+.text-primary {
+    color: rgb(5, 133, 219);
+}
+
+.va-top {
+    vertical-align: top;
+}
+
+.va-bottom {
+    vertical-align: bottom;
+}
+
+.pt-2 {
+    padding-top: 5px;
+}
+
+.warning-notes {
+    font-style: italic;
+    color: red;
+    font-size: 9pt;
+}
