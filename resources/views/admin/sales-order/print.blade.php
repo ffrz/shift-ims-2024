@@ -4,13 +4,30 @@
 @endphp
 @extends('admin._layouts.print-receipt-a4')
 @section('content')
+  <div class="no-print text-center">
+    <a class="btn" href="{{ url('admin/sales-order/create') }}">+ Order Baru</a>
+    <a class="btn" href="{{ url('admin/sales-order') }}">&leftarrow; List Order Penjualan</a>
+    <a class="btn" href="{{ url('admin/sales-order/detail/' . $item->id) }}">&leftarrow; Rincian</a>
+    <br><br><br>
+  </div>
+
   <table style="width:100%">
     <tr>
       <td>
         <h5 class="m-0">{{ Setting::value('company.name') }}</h5>
-        <h6 class="m-0">{{ Setting::value('company.headline') }}</h6>
-        <div>{{ Setting::value('company.address') }}</div>
-        <div>HP/WA {{ Setting::value('company.phone') }}</div>
+        @if (!empty(Setting::value('company.headline')))
+          <h6 class="m-0">{{ Setting::value('company.headline') }}</h6>
+        @endif
+        @if (!empty(Setting::value('company.address')))
+          <i>{{ Setting::value('company.address') }}<br>
+        @endif
+        @if (!empty(Setting::value('company.phone')))
+          HP/WA {{ Setting::value('company.phone') }}<br>
+        @endif
+        @if (!empty(Setting::value('company.website')))
+          HP/WA {{ Setting::value('company.website') }}
+        @endif
+        </i>
       </td>
       <td style="width:40%;border-left:1px solid #888;padding-left:10px;">
         <div><b>{{ $title }}</b></div>
@@ -34,7 +51,8 @@
       </td>
     </tr>
   </table>
-  <table class="mt-3 table table-bordered table-striped table-condensed center-th table-sm" style="width:100%">
+  <br>
+  <table class="table table-bordered table-striped table-condensed center-th table-sm" style="width:100%">
     <thead>
       <th style="width:1%">No</th>
       <th>Produk</th>
@@ -70,21 +88,21 @@
       </tr>
     </tfoot>
   </table>
+  <br>
   <table style="width:100%;">
     <tr>
       <td style="font-style:italic;">
         Catatan:<br>
         - Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan.<br>
-        - Garansi hangus jika segel rusak, human error atau force majeure.
-        <br><br>
+        - Garansi hangus jika segel rusak, human error atau force majeure.<br>
+        <br>
+        <small>Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }} -
+          {{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}</small>
       </td>
       <td style="width:4cm;text-align:center;">
-        Hormat Kami,<br><br><br>
+        Hormat Kami,<br><br><br><br>
         {{ Auth::user()->fullname }}
       </td>
     </tr>
   </table>
-  <div class="text-muted">
-    Dicetak oleh {{ Auth::user()->username }} | {{ format_datetime(current_datetime()) }} - {{ env('APP_NAME') . ' v' . env('APP_VERSION_STR') }}
-  </div>
 @endSection

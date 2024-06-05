@@ -1,6 +1,6 @@
 @php use App\Models\Setting; @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="page-a4">
 
 <head>
   <meta charset="utf-8">
@@ -17,7 +17,7 @@
     </div>
   </section>
   <script>
-    window.addEventListener("load", window.print());
+    //window.addEventListener("load", window.print());
   </script>
 </body>
 
