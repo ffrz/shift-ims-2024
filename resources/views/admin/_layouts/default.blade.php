@@ -162,6 +162,10 @@
         $('[name="csrf-token"]').attr('content', data)
       });
     }, 60 * 60 * 1000);
+
+    $(document).on('select2:open', () => {
+      document.querySelector('.select2-search__field').focus();
+    });
   </script>
 </body>
 

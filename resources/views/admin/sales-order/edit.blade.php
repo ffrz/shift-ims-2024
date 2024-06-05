@@ -237,8 +237,6 @@ use App\Models\StockUpdate;
       }
 
       setItemData(product, qty, product.price);
-      code_text_edit.val('');
-      code_text_edit.focus();
     }
 
     function setItemData(product, qty, price) {
