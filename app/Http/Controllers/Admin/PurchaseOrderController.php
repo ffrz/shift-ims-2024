@@ -161,7 +161,11 @@ class PurchaseOrderController extends Controller
                 $barcodes[$product->barcode] = $product->idFormatted();
             }
         }
-        $parties = Party::where('type', '=', Party::TYPE_SUPPLIER)->orderBy('name', 'asc')->get();
+        $parties = Party::where('type', '=', Party::TYPE_SUPPLIER)
+            ->whereRaw('active=1')
+            ->orderBy('name', 'asc')
+            ->get();
+
         $details = $item->details;
         
         return view('admin.purchase-order.edit', compact('item', 'parties', 'products', 'barcodes', 'details', 'product_code_by_ids'));

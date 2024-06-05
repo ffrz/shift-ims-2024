@@ -161,7 +161,10 @@ class SalesOrderController extends Controller
                 $barcodes[$product->barcode] = $product->idFormatted();
             }
         }
-        $parties = Party::where('type', '=', Party::TYPE_CUSTOMER)->orderBy('name', 'asc')->get();
+        $parties = Party::where('type', '=', Party::TYPE_CUSTOMER)
+            ->whereRaw('active=1')
+            ->orderBy('name', 'asc')
+            ->get();
         $details = $item->details;
         return view('admin.sales-order.edit', compact('item', 'parties', 'products', 'barcodes', 'details', 'product_code_by_ids'));
     }

@@ -55,7 +55,7 @@ use App\Models\StockUpdate;
             <div class="form-group row">
               <label for="party_address" class="col-sm-2 col-form-label">Alamat</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" name="party_address"
+                <input type="text" class="form-control" id="party_address" name="party_address"
                   value="{{ old('party_address', $item->party_address) }}">
                 @error('party_address')
                   <span class="text-danger">
@@ -275,6 +275,11 @@ use App\Models\StockUpdate;
         total += price * qty;
         updateTotal();
       }
+
+      setTimeout(() => {
+        
+      }, 10);
+      $('#product_code_textedit').val('');
     }
 
     $('#add-item').click(function(e) {
