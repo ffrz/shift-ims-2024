@@ -10,7 +10,7 @@
   <li class="nav-item">
     <a href="<?= url('/admin/service-order/edit/0') ?>" class="btn plus-btn btn-primary mr-2" title="Baru"><i
         class="fa fa-plus"></i></a>
-        
+
   </li>
 @endSection
 
@@ -127,9 +127,27 @@
                       <td>{{ $item->customer_phone }}</td>
                       <td>{{ $item->customer_address }}</td>
                       <td>{{ $item->device }}</td>
-                      <td>{{ $item->formatOrderStatus($item->order_status) }}</td>
-                      <td>{{ $item->formatServiceStatus($item->service_status) }}</td>
-                      <td>{{ $item->formatPaymentStatus($item->payment_status) }}</td>
+                      <td class="text-center">
+                        <span
+                          class="btn btn-sm {{ $item->order_status == ServiceOrder::ORDER_STATUS_COMPLETED
+                              ? 'btn-success'
+                              : ($item->order_status == ServiceOrder::ORDER_STATUS_CANCELED
+                                  ? 'btn-danger'
+                                  : 'btn-warning') }}"><b>{{ $item->formatOrderStatus($item->order_status) }}</b></span>
+                      </td>
+                      <td class="text-center">
+                        <span
+                          class="btn btn-sm {{ $item->service_status == ServiceOrder::SERVICE_STATUS_SUCCESS
+                              ? 'btn-success'
+                              : ($item->service_status == ServiceOrder::SERVICE_STATUS_FAILED
+                                  ? 'btn-danger'
+                                  : 'btn-warning') }}"><b>{{ $item->formatServiceStatus($item->service_status) }}</b></span>
+                      </td>
+                      <td class="text-center">
+                        <span
+                          class="btn btn-sm {{ $item->payment_status == ServiceOrder::PAYMENT_STATUS_FULLY_PAID ? 'bg-success' : 'bg-warning' }}">
+                          <b>{{ $item->formatPaymentStatus($item->payment_status) }}</b></span>
+                      </td>
                       <td class="text-center">
                         <div class="btn-group">
                           @if (empty($item->deleted_at))
