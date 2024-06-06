@@ -44,11 +44,10 @@ class DashboardController extends Controller
             'status' => StockUpdate::STATUS_OPEN,
         ])[0]->count;
 
-        $sales_count_today = DB::select('select ifnull(count(0), 0) as count from stock_updates where type=:type and status=:status and (datetime between :start and :end)', [
+        $sales_count_today = DB::select('select ifnull(count(0), 0) as count from stock_updates where type=:type and status=:status and date(datetime)=:date', [
             'type' => StockUpdate::TYPE_SALES_ORDER,
             'status' => StockUpdate::STATUS_COMPLETED,
-            'start' => $start_datetime_this_month,
-            'end' => $end_datetime_this_month,
+            'date' => today(),
         ])[0]->count;
 
         $total_inventory_asset = DB::select('select ifnull(sum(stock*cost), 0) as sum from products where type=:type and active=1 and stock > 0', [
