@@ -68,7 +68,7 @@ class DashboardController extends Controller
             'total_sales_this_month' => $total_sales_this_month,
             'sales_count_this_month' => $sales_count_today,
             'total_sales_today' => $total_sales_today,
-            'sales_count_today' => $sales_count_this_month,
+            'sales_count_today' => $sales_count_today,
             'active_sales_count' => $active_sales_count,
             'total_inventory_asset' => $total_inventory_asset,
             'total_inventory_asset_price' => $total_inventory_asset_price,
