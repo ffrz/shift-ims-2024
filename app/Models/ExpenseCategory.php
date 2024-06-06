@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class CostCategory extends BaseModel
+class ExpenseCategory extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

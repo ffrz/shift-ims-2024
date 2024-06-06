@@ -1,15 +1,15 @@
 <?php $title = ($item->id ? 'Edit' : 'Tambah') . ' Kategori'; ?>
 @extends('admin._layouts.default', [
     'title' => $title,
-    'menu_active' => 'cost',
-    'nav_active' => 'cost-category',
-    'form_action' => url('admin/cost-category/edit/' . (int) $item->id),
+    'menu_active' => 'expense',
+    'nav_active' => 'expense-category',
+    'form_action' => url('admin/expense-category/edit/' . (int) $item->id),
 ])
 
 @section('right-menu')
   <li class="nav-item">
     <button type="submit" class="btn btn-primary mr-1"><i class="fas fa-save mr-1"></i> Simpan</button>
-    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/cost-category/') }}"><i
+    <a onclick="return confirm('Batalkan perubahan?')" class="btn btn-default" href="{{ url('/admin/expense-category/') }}"><i
         class="fas fa-cancel mr-1"></i>Batal</a>
   </li>
 @endSection

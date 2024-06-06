@@ -19,7 +19,8 @@ class UserActivity extends Model
     public const PRODUCT_MANAGEMENT = 'product-mgmt';
     public const SUPPLIER_MANAGEMENT = 'supplier-mgmt';
     public const CUSTOMER_MANAGEMENT = 'customer-mgmt';
-    public const COST_CATEGORY_MANAGEMENT = 'cost-category-mgmt';
+    public const EXPENSE_CATEGORY_MANAGEMENT = 'expense-category-mgmt';
+    public const EXPENSE_MANAGEMENT = 'expense-mgmt';
 
     private static $_types = [
         self::AUTHENTICATION => 'Otentikasi',
@@ -31,7 +32,8 @@ class UserActivity extends Model
         self::PRODUCT_MANAGEMENT => 'Pengelolaan Produk',
         self::CUSTOMER_MANAGEMENT => 'Pengelolaan Pelanggan',
         self::SUPPLIER_MANAGEMENT => 'Pengelolaan Pemasok',
-        self::COST_CATEGORY_MANAGEMENT => 'Pengelolaan Kategori Biaya',
+        self::EXPENSE_CATEGORY_MANAGEMENT => 'Pengelolaan Kategori Biaya',
+        self::EXPENSE_MANAGEMENT => 'Pengelolaan Kategori Biaya',
     ];
 
     protected $casts = [

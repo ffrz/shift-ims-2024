@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             ServiceOrderSeeder::class,
             ProductCategorySeeder::class,
             ProductSeeder::class,
-            CostCategorySedder::class,
+            ExpenseCategorySeeder::class,
         ]);
     }
 }

@@ -9,17 +9,17 @@ use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CostCategoryController extends Controller
+class ExpenseController extends Controller
 {
     public function __construct()
     {
-        ensure_user_can_access(AclResource::COST_CATEGORY_MANAGEMENT);
+        // ensure_user_can_access(AclResource::COST_CATEGORY_MANAGEMENT);
     }
     
     public function index()
     {
-        $items = CostCategory::orderBy('name', 'asc')->get();
-        return view('admin.cost-category.index', compact('items'));
+        $items = Cost::orderBy('id', 'desc')->get();
+        return view('admin.cost.index', compact('items'));
     }
 
     public function edit(Request $request, $id = 0)

@@ -150,10 +150,10 @@ if (!isset($menu_active)) {
         @endif
         {{-- End of Purchasing Menu --}}
 
-        {{-- Cost Menu Begin --}}
-        @if (Auth::user()->canAccess(AclResource::COST_MENU))
-          <li class="nav-item {{ $menu_active == 'cost' ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ $menu_active == 'cost' ? 'active' : '' }}">
+        {{-- Expense Menu Begin --}}
+        @if (Auth::user()->canAccess(AclResource::EXPENSE_MENU))
+          <li class="nav-item {{ $menu_active == 'expense' ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $menu_active == 'expense' ? 'active' : '' }}">
               <i class="nav-icon fas fa-money-bill"></i>
               <p>
                 Pengeluaran
@@ -162,15 +162,15 @@ if (!isset($menu_active)) {
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('/admin/cost') }}"
-                  class="nav-link {{ $nav_active == 'cost' ? 'active' : '' }}">
+                <a href="{{ url('/admin/expense') }}"
+                  class="nav-link {{ $nav_active == 'expense' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-money-bills"></i>
                   <p>Pengeluaran</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('/admin/cost-category') }}"
-                  class="nav-link {{ $nav_active == 'cost-category' ? 'active' : '' }}">
+                <a href="{{ url('/admin/expense-category') }}"
+                  class="nav-link {{ $nav_active == 'expense-category' ? 'active' : '' }}">
                   <i class="nav-icon fas fa-boxes"></i>
                   <p>Kategori Pengeluaran</p>
                 </a>
@@ -179,7 +179,7 @@ if (!isset($menu_active)) {
           </li>
           
         @endif
-        {{-- End of Cost Menu --}}
+        {{-- End of Expense Menu --}}
 
         {{-- Report Menu --}}
         @if (Auth::user()->canAccess(AclResource::REPORT_MENU))
