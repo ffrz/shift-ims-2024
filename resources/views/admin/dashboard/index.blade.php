@@ -107,30 +107,32 @@
             <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        {{-- <div class="col-lg-3 col-6">
-          <div class="small-box bg-success">
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
             <div class="inner">
-              <h3><sup style="font-size: 20px">Rp. </sup>{{ format_number($data['total_sales_this_month']) }}</h3>
-              <p>Omset Penjualan Bulan Ini</p>
+              <h4>Rp. {{ format_number($data['gross_sales_this_month']) }}</h4>
+              <p>Laba Kotor Bulan Ini</p>
             </div>
             <div class="icon">
-              <i class="fa fa-money-bills"></i>
+              <i class="fas fa-money-bill-wave"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/admin/product" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <div class="col-lg-3 col-6">
-          <div class="small-box bg-success">
+          <div class="small-box bg-info">
             <div class="inner">
-              <h3>{{ $data['sales_count_this_month'] }}</h3>
-              <p>Order Penjualan Bulan Ini</p>
+              <h4>Rp. {{ format_number($data['expenses_this_month']) }}</h4>
+              <p>Pengeluaran Bulan Ini</p>
             </div>
             <div class="icon">
-              <i class="fa fa-receipt"></i>
+              <i class="fas fa-money-bill-wave"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/admin/product" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
           </div>
-        </div> --}}
+        </div>
       </div>
     </div>
   </section>
