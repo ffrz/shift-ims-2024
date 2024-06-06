@@ -79,7 +79,7 @@
                               class="fa fa-edit" title="Edit"></i></a>
                         @endif
                         <a onclick="return confirm('Anda yakin akan menghapus rekaman ini?')"
-                          href="<?= url("/admin/stock-update/delete/$item->id?goto=sales-order") ?>"
+                          href="<?= url("/admin/stock-update/delete/$item->id?goto=goto=" . url('admin/purchase-order')) ?>"
                           class="btn btn-danger btn-sm"><i class="fa fa-trash" title="Hapus"></i></a>
                       </div>
                     </td>
