@@ -19,9 +19,6 @@ class DashboardController extends Controller
         $start_datetime_this_month = date('Y-m-01 00:00:00');
         $end_datetime_this_month = date('Y-m-t 23:59:59');
 
-        $start_datetime_today = date('Y-m-d 00:00:00');
-        $end_datetime_today = date('Y-m-d 23:59:59');
-
         $total_sales_this_month = DB::select('select ifnull(abs(sum(total)), 0) as sum from stock_updates where type=:type and status=:status and (datetime between :start and :end)', [
             'type' => StockUpdate::TYPE_SALES_ORDER,
             'status' => StockUpdate::STATUS_COMPLETED,
@@ -36,11 +33,10 @@ class DashboardController extends Controller
             'end' => $end_datetime_this_month,
         ])[0]->count;
 
-        $total_sales_today = DB::select('select ifnull(abs(sum(total)), 0) as sum from stock_updates where type=:type and status=:status and (datetime between :start and :end)', [
+        $total_sales_today = DB::select('select ifnull(abs(sum(total)), 0) as sum from stock_updates where type=:type and status=:status and date(datetime)=:date', [
             'type' => StockUpdate::TYPE_SALES_ORDER,
             'status' => StockUpdate::STATUS_COMPLETED,
-            'start' => $start_datetime_today,
-            'end' => $end_datetime_today,
+            'date' => today(),
         ])[0]->sum;
 
         $active_sales_count = DB::select('select ifnull(count(0), 0) as count from stock_updates where type=:type and status=:status', [
@@ -66,7 +62,7 @@ class DashboardController extends Controller
         $data = [
             'active_service_order_count' => ServiceOrder::where('order_status', '=', 'active')->count(),
             'total_sales_this_month' => $total_sales_this_month,
-            'sales_count_this_month' => $sales_count_today,
+            'sales_count_this_month' => $sales_count_this_month,
             'total_sales_today' => $total_sales_today,
             'sales_count_today' => $sales_count_today,
             'active_sales_count' => $active_sales_count,
