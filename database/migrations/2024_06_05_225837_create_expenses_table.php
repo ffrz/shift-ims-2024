@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable()->default(null);
             $table->date('date');
             $table->string('description', 200);
+            $table->decimal('amount', 10);
             $table->text('notes')->nullable()->default(null);
             $table->datetime('created_datetime')->nullable()->default(null);
             $table->datetime('updated_datetime')->nullable()->default(null);
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by_uid')->nullable()->default(null);
             $table->foreign('created_by_uid')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by_uid')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('category_id')->references('id')->on('expense_categories')->onDelete('restrict');
+            $table->foreign('category_id')->references('id')->on('expense_categories')->onDelete('set null');
         });
     }
 

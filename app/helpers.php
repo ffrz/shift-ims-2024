@@ -2,6 +2,24 @@
 
 use Illuminate\Support\Facades\Auth;
 
+function years($from, $to) {
+    $years = [];
+    for ($y = $from; $y <= $to; $y++) {
+        $years[] = $y;
+    }
+    return $years;
+}
+
+function months() {
+    $months = [];
+    
+    for ($m = 1; $m <= 12; $m++) {
+        $months[$m] = month_names($m);
+    }
+
+    return $months;
+}
+
 function current_user_id() {
     return Auth::user()->id;
 }

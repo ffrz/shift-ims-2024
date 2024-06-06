@@ -14,7 +14,7 @@ class Expense extends BaseModel
 
         'date',
         'description',
-        'total',
+        'amount',
         'notes',
         
         'created_datetime',
